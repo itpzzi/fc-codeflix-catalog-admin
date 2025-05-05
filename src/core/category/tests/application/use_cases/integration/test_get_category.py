@@ -17,23 +17,17 @@ from src.core.category.application.usecases.get_category import (
 class TestGetCategory:
     def test_get_category_by_id(self):
         category_movie = Category(
-            name="Filme",
-            description="Filmes em geral.",
-            is_active=True
+            name="Filme", description="Filmes em geral.", is_active=True
         )
         category_show = Category(
-            name="Série",
-            description="Muitos episódios para curtir.",
-            is_active=True
+            name="Série", description="Muitos episódios para curtir.", is_active=True
         )
         repository = InMemoryCategoryRepository(
             categories=[category_movie, category_show]
         )
 
         use_case = GetCategoryUseCase(repository=repository)
-        request = GetCategoryRequest(
-            id=category_movie.id
-        )
+        request = GetCategoryRequest(id=category_movie.id)
         response = use_case.execute(request=request)
 
         assert response == GetCategoryResponse(
@@ -45,14 +39,10 @@ class TestGetCategory:
 
     def test_get_category_by_id_with_invalid_id(self):
         category_movie = Category(
-            name="Filme",
-            description="Filmes em geral.",
-            is_active=True
+            name="Filme", description="Filmes em geral.", is_active=True
         )
         category_show = Category(
-            name="Série",
-            description="Muitos episódios para curtir.",
-            is_active=True
+            name="Série", description="Muitos episódios para curtir.", is_active=True
         )
         repository = InMemoryCategoryRepository(
             categories=[category_movie, category_show]
@@ -60,8 +50,8 @@ class TestGetCategory:
         fake_id = uuid.uuid4()
 
         use_case = GetCategoryUseCase(repository=repository)
-        request = GetCategoryRequest(
-            id=fake_id
-        )
-        with pytest.raises(CategoryNotFound, match=f"Category {fake_id} not found") as exc:
+        request = GetCategoryRequest(id=fake_id)
+        with pytest.raises(
+            CategoryNotFound, match=f"Category {fake_id} not found"
+        ) as exc:
             use_case.execute(request=request)

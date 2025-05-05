@@ -1,0 +1,29 @@
+from dataclasses import dataclass
+from uuid import UUID
+
+from src.core.category.application.category_repository import (
+    CategoryRepositoryInterface,
+)
+from src.core.category.application.exceptions import CategoryNotFound, InvalidCategory
+from src.core.category.domain.category import Category
+
+
+@dataclass
+class DeleteCategoryRequest:
+    id: UUID
+
+
+class DeleteCategoryUseCase:
+
+    def __init__(self, repository: CategoryRepositoryInterface):
+        self.repository = repository
+
+    def execute(self, request: DeleteCategoryRequest) -> None:
+        category_from_repo = self.repository.get_by_id(request.id)
+
+        if category_from_repo is None:
+            raise CategoryNotFound(
+                f"Cannot deleted non-existent category. {request.id} not found"
+            )
+
+        self.repository.delete(category_from_repo.id)

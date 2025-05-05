@@ -28,16 +28,16 @@ class GetCategoryUseCase:
         self.repository = repository
 
     def execute(self, request: GetCategoryRequest) -> GetCategoryResponse:
-        repo_cat = self.repository.get_by_id(request.id)
-        if repo_cat is None:
+        category_from_repo = self.repository.get_by_id(request.id)
+        if category_from_repo is None:
             raise CategoryNotFound(f"Category {request.id} not found")
 
         try:
             category = Category(
-                id=repo_cat.id,
-                name=repo_cat.name,
-                description=repo_cat.description,
-                is_active=repo_cat.is_active,
+                id=category_from_repo.id,
+                name=category_from_repo.name,
+                description=category_from_repo.description,
+                is_active=category_from_repo.is_active,
             )
         except ValueError as error:
             raise InvalidCategory(error)

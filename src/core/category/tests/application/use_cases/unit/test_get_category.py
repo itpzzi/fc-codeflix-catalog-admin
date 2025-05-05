@@ -3,7 +3,9 @@ import uuid
 
 import pytest
 
-from src.core.category.application.category_repository import CategoryRepositoryInterface
+from src.core.category.application.category_repository import (
+    CategoryRepositoryInterface,
+)
 from src.core.category.application.exceptions import CategoryNotFound
 from src.core.category.domain.category import Category
 

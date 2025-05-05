@@ -18,6 +18,7 @@ class TestSave:
         assert len(repository.categories) == 1
         assert repository.categories[0] == category
 
+
 class TestGet:
     def test_can_get_by_id(self):
         category_movie = Category(
@@ -33,7 +34,6 @@ class TestGet:
             categories=[category_movie, category_show]
         )
 
-
         response = repository.get_by_id(category_show.id)
 
         assert len(repository.categories) == 2
@@ -41,7 +41,7 @@ class TestGet:
         assert response.name == "Show"
         assert response.description == "Espetaculos"
         assert response.is_active is True
-        
+
     def test_return_none_for_non_existent_id(self):
         category_movie = Category(
             name="Filme",
@@ -57,8 +57,28 @@ class TestGet:
         )
         fake_id = uuid.uuid4()
 
-
         response = repository.get_by_id(fake_id)
 
         assert len(repository.categories) == 2
+        assert response is None
+
+
+class TestDelete:
+    def test_can_delete_category(self):
+        category_movie = Category(
+            name="Filme",
+            description="Categoria para filmes",
+        )
+        category_show = Category(
+            name="Show",
+            description="Espetaculos",
+        )
+
+        repository = InMemoryCategoryRepository(
+            categories=[category_movie, category_show]
+        )
+
+        response = repository.delete(category_movie.id)
+
+        assert len(repository.categories) == 1
         assert response is None
