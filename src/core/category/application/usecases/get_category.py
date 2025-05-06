@@ -42,4 +42,9 @@ class GetCategoryUseCase:
         except ValueError as error:
             raise InvalidCategory(error)
 
-        return GetCategoryResponse(**asdict(category))
+        return GetCategoryResponse(
+            id=category.id,
+            name=category.name,
+            description=category.description,
+            is_active=category.is_active,
+        )
