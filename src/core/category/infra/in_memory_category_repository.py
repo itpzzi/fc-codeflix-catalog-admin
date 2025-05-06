@@ -1,3 +1,4 @@
+from typing import List
 from uuid import UUID
 from src.core.category.domain.category import Category
 from src.core.category.application.category_repository import (
@@ -27,3 +28,6 @@ class InMemoryCategoryRepository(CategoryRepositoryInterface):
         if old_category:
             self.categories.remove(old_category)
             self.categories.append(category)
+
+    def list(self) -> List[Category]:
+        return self.categories.copy()
