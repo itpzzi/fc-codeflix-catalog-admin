@@ -14,8 +14,13 @@ class CategoryOutput:
 
 
 @dataclass
+class ListCategoryRequest:
+    pass
+
+
+@dataclass
 class ListCategoryResponse:
-    categories: list[CategoryOutput]
+    data: list[CategoryOutput]
 
 
 class ListCategoryUseCase:
@@ -23,11 +28,11 @@ class ListCategoryUseCase:
     def __init__(self, repository: ICategoryRepository):
         self.repository = repository
 
-    def execute(self) -> ListCategoryResponse:
+    def execute(self, request: ListCategoryRequest) -> ListCategoryResponse:
         categories = self.repository.list()
 
         return ListCategoryResponse(
-            categories=[
+            data=[
                 CategoryOutput(
                     name=category.name,
                     description=category.description,
