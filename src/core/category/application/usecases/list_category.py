@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from uuid import UUID
-from src.core.category.application.category_repository import (
-    CategoryRepositoryInterface,
+from src.core.category.domain.category_repository import (
+    ICategoryRepository,
 )
 
 
@@ -20,7 +20,7 @@ class ListCategoryResponse:
 
 class ListCategoryUseCase:
 
-    def __init__(self, repository: CategoryRepositoryInterface):
+    def __init__(self, repository: ICategoryRepository):
         self.repository = repository
 
     def execute(self) -> ListCategoryResponse:

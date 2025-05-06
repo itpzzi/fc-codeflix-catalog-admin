@@ -11,8 +11,8 @@ from src.core.category.application.usecases.delete_category import (
     DeleteCategoryUseCase,
 )
 from src.core.category.domain.category import Category
-from src.core.category.application.category_repository import (
-    CategoryRepositoryInterface,
+from src.core.category.domain.category_repository import (
+    ICategoryRepository,
 )
 
 

@@ -3,8 +3,8 @@ from uuid import UUID
 import pytest
 
 from src.core.category.application.exceptions import InvalidCategory
-from src.core.category.application.category_repository import (
-    CategoryRepositoryInterface,
+from src.core.category.domain.category_repository import (
+    ICategoryRepository,
 )
 from src.core.category.application.usecases.create_category import (
     CreateCategoryRequest,
@@ -15,7 +15,7 @@ from src.core.category.application.usecases.create_category import (
 
 class TestCreateCategory:
     def test_create_category_with_valid_data(self):
-        repository = MagicMock(CategoryRepositoryInterface)
+        repository = MagicMock(ICategoryRepository)
         use_case = CreateCategoryUseCase(repository=repository)
         request = CreateCategoryRequest(
             name="Filme", description="Filme", is_active=False
@@ -29,7 +29,7 @@ class TestCreateCategory:
         assert repository.save.called is True
 
     def test_create_category_with_invalid_data(self):
-        repository = MagicMock(CategoryRepositoryInterface)
+        repository = MagicMock(ICategoryRepository)
         use_case = CreateCategoryUseCase(repository=repository)
 
         with pytest.raises(InvalidCategory, match="name cannot be empty") as exec_info:

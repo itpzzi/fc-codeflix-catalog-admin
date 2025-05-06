@@ -3,8 +3,8 @@ import uuid
 
 import pytest
 
-from src.core.category.application.category_repository import (
-    CategoryRepositoryInterface,
+from src.core.category.domain.category_repository import (
+    ICategoryRepository,
 )
 from src.core.category.application.exceptions import CategoryNotFound
 from src.core.category.domain.category import Category
@@ -24,7 +24,7 @@ class TestGetCategory:
             description="Categoria para filmes",
             is_active=True,
         )
-        mock_repository = create_autospec(CategoryRepositoryInterface)
+        mock_repository = create_autospec(ICategoryRepository)
         mock_repository.get_by_id.return_value = mock_category
 
         use_case = GetCategoryUseCase(repository=mock_repository)
@@ -40,7 +40,7 @@ class TestGetCategory:
         )
 
     def test_when_category_not_found_then_raise_exception(self):
-        mock_repository = create_autospec(CategoryRepositoryInterface)
+        mock_repository = create_autospec(ICategoryRepository)
         mock_repository.get_by_id.return_value = None
 
         use_case = GetCategoryUseCase(repository=mock_repository)

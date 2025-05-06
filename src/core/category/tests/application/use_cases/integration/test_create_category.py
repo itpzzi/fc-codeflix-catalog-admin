@@ -6,8 +6,8 @@ from src.core.category.infra.in_memory_category_repository import (
     InMemoryCategoryRepository,
 )
 from src.core.category.application.exceptions import InvalidCategory
-from src.core.category.application.category_repository import (
-    CategoryRepositoryInterface,
+from src.core.category.domain.category_repository import (
+    ICategoryRepository,
 )
 from src.core.category.application.usecases.create_category import (
     CreateCategoryRequest,

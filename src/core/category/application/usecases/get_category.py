@@ -1,8 +1,8 @@
 from dataclasses import asdict, dataclass
 from uuid import UUID
 
-from src.core.category.application.category_repository import (
-    CategoryRepositoryInterface,
+from src.core.category.domain.category_repository import (
+    ICategoryRepository,
 )
 from src.core.category.application.exceptions import InvalidCategory
 from src.core.category.application.exceptions import CategoryNotFound
@@ -24,7 +24,7 @@ class GetCategoryResponse:
 
 class GetCategoryUseCase:
 
-    def __init__(self, repository: CategoryRepositoryInterface):
+    def __init__(self, repository: ICategoryRepository):
         self.repository = repository
 
     def execute(self, request: GetCategoryRequest) -> GetCategoryResponse:

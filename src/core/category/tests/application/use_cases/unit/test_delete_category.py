@@ -8,8 +8,8 @@ from src.core.category.application.usecases.delete_category import (
     DeleteCategoryUseCase,
 )
 from src.core.category.domain.category import Category
-from src.core.category.application.category_repository import (
-    CategoryRepositoryInterface,
+from src.core.category.domain.category_repository import (
+    ICategoryRepository,
 )
 
 
@@ -21,7 +21,7 @@ class TestDeleteCategory:
             description="Categoria para filmes",
             is_active=True,
         )
-        mock_repository = create_autospec(CategoryRepositoryInterface)
+        mock_repository = create_autospec(ICategoryRepository)
         mock_repository.get_by_id.return_value = mock_category
 
         use_case = DeleteCategoryUseCase(repository=mock_repository)
@@ -32,7 +32,7 @@ class TestDeleteCategory:
         mock_repository.delete.assert_called_once_with = mock_category.id
 
     def test_when_category_not_found_then_raises_exception(self):
-        mock_repository = create_autospec(CategoryRepositoryInterface)
+        mock_repository = create_autospec(ICategoryRepository)
         mock_repository.get_by_id.return_value = None
 
         use_case = DeleteCategoryUseCase(repository=mock_repository)

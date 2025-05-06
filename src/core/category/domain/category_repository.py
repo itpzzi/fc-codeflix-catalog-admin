@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from src.core.category.domain.category import Category
 
 
-class CategoryRepositoryInterface(ABC):
+class ICategoryRepository(ABC):
     @abstractmethod
     def save(self, category) -> Category:
         raise NotImplementedError

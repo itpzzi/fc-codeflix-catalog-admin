@@ -1,7 +1,7 @@
 from unittest.mock import create_autospec
 import uuid
-from src.core.category.application.category_repository import (
-    CategoryRepositoryInterface,
+from src.core.category.domain.category_repository import (
+    ICategoryRepository,
 )
 from src.core.category.application.usecases.update_category import (
     UpdateCategoryRequest,
@@ -18,7 +18,7 @@ class TestUpdateCategory:
             description="Categoria para filmes",
             is_active=True,
         )
-        mock_repository = create_autospec(CategoryRepositoryInterface)
+        mock_repository = create_autospec(ICategoryRepository)
         mock_repository.get_by_id.return_value = mock_category
 
         use_case = UpdateCategoryUseCase(repository=mock_repository)
@@ -37,7 +37,7 @@ class TestUpdateCategory:
             description="Categoria para filmes",
             is_active=True,
         )
-        mock_repository = create_autospec(CategoryRepositoryInterface)
+        mock_repository = create_autospec(ICategoryRepository)
         mock_repository.get_by_id.return_value = mock_category
 
         use_case = UpdateCategoryUseCase(repository=mock_repository)
@@ -58,7 +58,7 @@ class TestUpdateCategory:
             description="Categoria para filmes",
             is_active=True,
         )
-        mock_repository = create_autospec(CategoryRepositoryInterface)
+        mock_repository = create_autospec(ICategoryRepository)
         mock_repository.get_by_id.return_value = mock_category
 
         use_case = UpdateCategoryUseCase(repository=mock_repository)
@@ -78,7 +78,7 @@ class TestUpdateCategory:
             description="Categoria para filmes",
             is_active=False,
         )
-        mock_repository = create_autospec(CategoryRepositoryInterface)
+        mock_repository = create_autospec(ICategoryRepository)
         mock_repository.get_by_id.return_value = mock_category
 
         use_case = UpdateCategoryUseCase(repository=mock_repository)

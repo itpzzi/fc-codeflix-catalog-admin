@@ -5,8 +5,8 @@ from src.core.category.application.usecases.list_category import (
     ListCategoryResponse,
     ListCategoryUseCase,
 )
-from src.core.category.application.category_repository import (
-    CategoryRepositoryInterface,
+from src.core.category.domain.category_repository import (
+    ICategoryRepository,
 )
 from src.core.category.domain.category import Category
 
@@ -25,7 +25,7 @@ class TestListCategory:
             description="Categoria para sequências",
             is_active=False,
         )
-        mock_repository = create_autospec(CategoryRepositoryInterface)
+        mock_repository = create_autospec(ICategoryRepository)
         mock_repository.list.return_value = [mock_category1, mock_category2]
         use_case = ListCategoryUseCase(repository=mock_repository)
 

@@ -1,12 +1,12 @@
 from typing import List
 from uuid import UUID
 from src.core.category.domain.category import Category
-from src.core.category.application.category_repository import (
-    CategoryRepositoryInterface,
+from src.core.category.domain.category_repository import (
+    ICategoryRepository,
 )
 
 
-class InMemoryCategoryRepository(CategoryRepositoryInterface):
+class InMemoryCategoryRepository(ICategoryRepository):
     def __init__(self, categories=None):
         self.categories = categories or []
 
