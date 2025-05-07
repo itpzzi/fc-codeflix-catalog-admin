@@ -3,10 +3,10 @@ from uuid import UUID
 import pytest
 from unittest.mock import MagicMock, create_autospec
 
-from core.category.domain.category import Category
-from core.category.domain.category_repository import ICategoryRepository
-from core.genre.domain.genre import Genre
-from core.genre.domain.genre_repository import IGenreRepository
+from src.core.category.domain.category import Category
+from src.core.category.domain.category_repository import ICategoryRepository
+from src.core.genre.domain.genre import Genre
+from src.core.genre.domain.genre_repository import IGenreRepository
 from src.core.category.infra.in_memory_category_repository import (
     InMemoryCategoryRepository,
 )
