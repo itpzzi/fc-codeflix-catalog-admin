@@ -24,14 +24,14 @@ class UpdateCategoryUseCase:
     def execute(self, request: UpdateCategoryRequest) -> None:
         category_from_repo = self.repository.get_by_id(request.id)
 
-        current_name = category_from_repo.name
-        current_description = category_from_repo.description
-        current_is_active = category_from_repo.is_active
-
         if category_from_repo is None:
             raise CategoryNotFound(
                 f"Cannot update non-existent category. {request.id} not found"
             )
+
+        current_name = category_from_repo.name
+        current_description = category_from_repo.description
+        current_is_active = category_from_repo.is_active
 
         if request.name is not None:
             current_name = request.name
