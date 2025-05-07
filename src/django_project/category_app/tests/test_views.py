@@ -234,3 +234,115 @@ class TestDeleteAPI:
 
         deleted_category = category_repository.get_by_id(category_movie.id)
         assert deleted_category is None
+
+
+@pytest.mark.django_db
+class TestPartialUpdateAPI:
+    def test_when_category_with_id_does_not_exist_then_return_404(
+        self,
+        category_movie: Category,
+        category_repository: DjangoORMCategoryRepository,
+    ) -> None:
+        category_repository.save(category_movie)
+
+        url = f"/api/categories/{uuid.uuid4()}/"
+        data = {
+            "name": "Filme Atualizado",
+            "description": "Longas divertidos atualizados",
+            "is_active": False,
+        }
+        response = APIClient().patch(url, data, format="json")
+
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    @pytest.mark.parametrize(
+        "payload, expected_changes",
+        [
+            ({"name": "Movie"}, lambda c: (c.name == "Movie")),
+            (
+                {"description": "Funny long movies"},
+                lambda c: (c.description == "Funny long movies"),
+            ),
+            ({"is_active": False}, lambda c: (c.is_active is False)),
+        ],
+    )
+    def test_partial_update_single_field(
+        self,
+        category_movie: Category,
+        category_repository: DjangoORMCategoryRepository,
+        payload,
+        expected_changes,
+    ) -> None:
+        category_repository.save(category_movie)
+        url = f"/api/categories/{category_movie.id}/"
+        response = APIClient().patch(url, payload, format="json")
+
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        updated = category_repository.get_by_id(category_movie.id)
+
+        assert updated.id == category_movie.id
+        assert expected_changes(updated)
+        # Verifica que os campos não enviados se mantêm
+        for field in {"name", "description", "is_active"} - payload.keys():
+            assert getattr(updated, field) == getattr(category_movie, field)
+
+    def test_partial_update_multiple_fields(
+        self,
+        category_movie: Category,
+        category_repository: DjangoORMCategoryRepository,
+    ) -> None:
+        category_repository.save(category_movie)
+
+        url = f"/api/categories/{category_movie.id}/"
+        payload = {
+            "name": "Atualizado",
+            "is_active": False,
+        }
+        response = APIClient().patch(url, payload, format="json")
+
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        updated = category_repository.get_by_id(category_movie.id)
+
+        assert updated.name == "Atualizado"
+        assert updated.is_active is False
+        assert updated.description == category_movie.description
+
+    def test_partial_update_with_empty_payload_returns_400(
+        self,
+        category_movie: Category,
+        category_repository: DjangoORMCategoryRepository,
+    ) -> None:
+        category_repository.save(category_movie)
+
+        url = f"/api/categories/{category_movie.id}/"
+        response = APIClient().patch(url, {}, format="json")
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert "non_field_errors" in response.data
+        assert (
+            "At least one field must be provided for partial update."
+            in response.data["non_field_errors"]
+        )
+
+    @pytest.mark.parametrize(
+        "payload, expected_field",
+        [
+            ({"name": ""}, "name"),
+            ({"description": None}, "description"),
+            ({"is_active": "not_a_bool"}, "is_active"),
+        ],
+    )
+    def test_partial_update_invalid_single_field_returns_400(
+        self,
+        category_movie: Category,
+        category_repository: DjangoORMCategoryRepository,
+        payload,
+        expected_field,
+    ) -> None:
+        category_repository.save(category_movie)
+
+        url = f"/api/categories/{category_movie.id}/"
+        response = APIClient().patch(url, payload, format="json")
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert expected_field in response.data

@@ -40,6 +40,15 @@ class UpdateCategoryRequestSerializer(serializers.Serializer):
     )
     is_active = serializers.BooleanField(required=True)
 
+    def validate(self, attrs):
+        if self.partial and not any(
+            f in attrs for f in ["name", "description", "is_active"]
+        ):
+            raise serializers.ValidationError(
+                "At least one field must be provided for partial update."
+            )
+        return attrs
+
 
 class DeleteCategoryRequestSerializer(serializers.Serializer):
     id = serializers.UUIDField(required=True)
