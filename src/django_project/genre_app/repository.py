@@ -24,25 +24,25 @@ class DjangoORMGenreRepository(IGenreRepository):
 
     def get_by_id(self, id: UUID) -> Genre | None:
         try:
-            genre_model = self.model.objects.get(id=id)
+            genre_model = self.model.objects.get(pk=id)
+
+            only_categories_ids = get_category_ids(genre_model=genre_model)
+
+            return Genre(
+                id=genre_model.id,
+                name=genre_model.name,
+                is_active=genre_model.is_active,
+                categories=only_categories_ids,
+            )
         except self.model.DoesNotExist:
             return None
-
-        only_categories_ids = get_category_ids(genre_model=genre_model)
-
-        return Genre(
-            id=genre_model.id,
-            name=genre_model.name,
-            is_active=genre_model.is_active,
-            categories=only_categories_ids,
-        )
 
     def delete(self, id: UUID) -> None:
         self.model.objects.filter(id=id).delete()
 
     def update(self, genre: Genre) -> None:
         try:
-            genre_model = self.model.objects.get(id=genre.id)
+            genre_model = self.model.objects.get(pk=genre.id)
         except self.model.DoesNotExist:
             return None
 
