@@ -32,7 +32,7 @@ class CreateGenreUseCase:
         self.repository = repository
         self.category_repository = category_repository
 
-    def _pre_validated_categories(self, request: CreateGenreRequest):
+    def _validate_categories_exists(self, request: CreateGenreRequest):
         existent_categories_ids = {
             category.id for category in self.category_repository.list()
         }
@@ -43,7 +43,7 @@ class CreateGenreUseCase:
             )
 
     def execute(self, request: CreateGenreRequest) -> CreateGenreResponse:
-        self._pre_validated_categories(request)
+        self._validate_categories_exists(request)
 
         try:
             genre = Genre(

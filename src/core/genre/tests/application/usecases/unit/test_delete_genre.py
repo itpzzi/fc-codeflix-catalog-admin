@@ -17,7 +17,7 @@ def adventure_genre():
 
 
 @pytest.fixture
-def mock_genre_repository(adventure_genre):
+def mock_genre_repository():
     repository = create_autospec(IGenreRepository)
     return repository
 
