@@ -11,7 +11,7 @@ from rest_framework.status import (
     HTTP_204_NO_CONTENT,
 )
 
-from django_project.category_app.serializers import (
+from src.django_project.category_app.serializers import (
     CreateCategoryRequestSerializer,
     CreateCategoryResponseSerializer,
     DeleteCategoryRequestSerializer,
@@ -21,7 +21,7 @@ from django_project.category_app.serializers import (
     UpdateCategoryRequestSerializer,
 )
 from src.core.category.application.exceptions import CategoryNotFound
-from django_project.category_app.repository import DjangoORMCategoryRepository
+from src.django_project.category_app.repository import DjangoORMCategoryRepository
 
 from src.core.category.application.usecases.list_category import (
     ListCategoryUseCase,
