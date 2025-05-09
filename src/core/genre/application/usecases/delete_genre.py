@@ -25,7 +25,7 @@ class DeleteGenreUseCase:
 
         if not genre_from_repo:
             raise GenreNotFound(
-                f"Cannot deleted non-existent genre. {request.id} not found"
+                f"Cannot delete non-existent genre. {request.id} not found"
             )
 
         self.repository.delete(genre_from_repo.id)

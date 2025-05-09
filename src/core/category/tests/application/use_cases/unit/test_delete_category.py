@@ -40,7 +40,7 @@ class TestDeleteCategory:
 
         with pytest.raises(
             CategoryNotFound,
-            match=f"Cannot deleted non-existent category. {request.id} not found",
+            match=f"Cannot delete non-existent category. {request.id} not found",
         ):
             use_case.execute(request)
 

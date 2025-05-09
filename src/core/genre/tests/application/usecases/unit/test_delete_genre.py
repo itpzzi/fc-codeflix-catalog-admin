@@ -1,7 +1,7 @@
 from unittest.mock import create_autospec
 import pytest
 import uuid
-from core.genre.domain.genre_repository import IGenreRepository
+from src.core.genre.domain.genre_repository import IGenreRepository
 from src.core.genre.application.usecases.delete_genre import (
     DeleteGenreUseCase,
     DeleteGenreRequest,
@@ -40,7 +40,7 @@ class TestDeleteGenre:
 
         with pytest.raises(
             GenreNotFound,
-            match=f"Cannot deleted non-existent genre. {request.id} not found",
+            match=f"Cannot delete non-existent genre. {request.id} not found",
         ):
             use_case.execute(request)
 

@@ -23,7 +23,7 @@ class DeleteCategoryUseCase:
 
         if category_from_repo is None:
             raise CategoryNotFound(
-                f"Cannot deleted non-existent category. {request.id} not found"
+                f"Cannot delete non-existent category. {request.id} not found"
             )
 
         self.repository.delete(category_from_repo.id)

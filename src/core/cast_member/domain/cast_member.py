@@ -17,6 +17,12 @@ class CastMember:
     def __post_init__(self):
         self.validate()
 
+    def update_cast_member(self, name: str, type: CastMemberType):
+        self.name = name
+        self.type = type
+
+        self.validate()
+
     def validate(self):
         self._validate_id_is_valid_uuid4(self.id)
         self._validate_name_is_valid(self.name)

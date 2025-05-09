@@ -11,12 +11,12 @@ from core.cast_member.domain.cast_member_repository import ICastMemberRepository
 
 
 @pytest.fixture
-def actor_cast_member():
+def mock_cast_member_steve():
     return CastMember(name="Steve", type=CastMemberType.ACTOR)
 
 
 @pytest.fixture
-def director_cast_member():
+def mock_cast_member_zombie():
     return CastMember(name="Zombie", type=CastMemberType.DIRECTOR)
 
 
@@ -26,29 +26,32 @@ def mock_repository():
 
 
 @pytest.fixture
-def repository_with_two_cast_members(
-    mock_repository, actor_cast_member, director_cast_member
+def mock_repository_with_cast_members(
+    mock_repository, mock_cast_member_steve, mock_cast_member_zombie
 ):
-    mock_repository.list.return_value = [actor_cast_member, director_cast_member]
+    mock_repository.list.return_value = [
+        mock_cast_member_steve,
+        mock_cast_member_zombie,
+    ]
     return mock_repository
 
 
 class TestListCastMember:
     def test_list_all_cast_members(
         self,
-        repository_with_two_cast_members,
-        actor_cast_member,
-        director_cast_member,
+        mock_cast_member_steve,
+        mock_cast_member_zombie,
+        mock_repository_with_cast_members,
     ):
         request = ListCastMemberRequest()
-        use_case = ListCastMemberUseCase(repository=repository_with_two_cast_members)
+        use_case = ListCastMemberUseCase(repository=mock_repository_with_cast_members)
         expected_data = [
             ListCastMemberOutput(
                 id=cast_member.id,
                 name=cast_member.name,
                 type=cast_member.type,
             )
-            for cast_member in [actor_cast_member, director_cast_member]
+            for cast_member in [mock_cast_member_steve, mock_cast_member_zombie]
         ]
 
         response = use_case.execute(request=request)
@@ -56,12 +59,12 @@ class TestListCastMember:
         assert response == ListCastMemberResponse(data=expected_data)
         assert len(response.data) == 2
 
-    def test_return_empty_list_when_repository_is_empty(self, mock_repository):
-        mock_repository.list.return_value = []
+    def test_list_empty_list_for_an_empty_repository(self, mock_repository):
+        empty_repository = mock_repository
         request = ListCastMemberRequest()
-        use_case = ListCastMemberUseCase(repository=mock_repository)
+        use_case = ListCastMemberUseCase(repository=empty_repository)
+        expected_data = []
 
         response = use_case.execute(request=request)
 
-        assert response == ListCastMemberResponse(data=[])
-        assert len(response.data) == 0
+        assert response == ListCastMemberResponse(data=expected_data)
