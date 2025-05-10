@@ -27,19 +27,12 @@ def actor_cast_member():
 
 
 class TestCreateCastMember:
-    def test_create_cast_member_with_valid_payload(
-        self,
-        repository,
-        actor_cast_member
-    ):
-        use_case = CreateCastMemberUseCase(
-            repository=repository
-        )
+    def test_create_cast_member_with_valid_payload(self, repository, actor_cast_member):
+        use_case = CreateCastMemberUseCase(repository=repository)
 
         output = use_case.execute(
             CreateCastMemberRequest(
-                name=actor_cast_member.name,
-                type=actor_cast_member.type
+                name=actor_cast_member.name, type=actor_cast_member.type
             )
         )
 
