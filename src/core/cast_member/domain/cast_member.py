@@ -41,7 +41,7 @@ class CastMember:
             raise ValueError("name cannot be longer than 255 characters")
 
     def _validate_type_is_valid(self, value: CastMemberType):
-        if not isinstance(value, CastMemberType):
+        if value not in CastMemberType:
             raise ValueError("type must be a valid CastMemberType")
 
     def __eq__(self, other) -> bool:
