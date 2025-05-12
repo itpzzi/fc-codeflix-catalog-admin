@@ -27,7 +27,7 @@ def director_member():
 @pytest.mark.django_db
 class TestCreateAPI:
     def test_create_cast_member(self, actor_member, repository):
-        url = "/api/cast-members/"
+        url = "/api/cast_members/"
         data = {
             "name": actor_member.name,
             "type": actor_member.type,
@@ -52,7 +52,7 @@ class TestCreateAPI:
         assert created_item.type == actor_member.type
 
     def test_raises_400_for_invalid_payload(self, actor_member):
-        url = "/api/cast-members/"
+        url = "/api/cast_members/"
         data = {"name": actor_member.name, "type": "producer"}
 
         response = APIClient().post(url, data=data, format="json")
@@ -83,7 +83,7 @@ class TestListAPI:
             ]
         }
 
-        url = "/api/cast-members/"
+        url = "/api/cast_members/"
         response = APIClient().get(url)
 
         assert response.data == expected_data
@@ -93,7 +93,7 @@ class TestListAPI:
 @pytest.mark.django_db
 class TestDeleteAPI:
     def test_raise_400_for_invalid_pk(self):
-        url = "/api/cast-members/invalid_id/"
+        url = "/api/cast_members/invalid_id/"
 
         response = APIClient().delete(url)
 
@@ -102,7 +102,7 @@ class TestDeleteAPI:
 
     def test_raise_404_for_nonexistent_cast_member(self):
         fake_id = uuid.uuid4()
-        url = f"/api/cast-members/{fake_id}/"
+        url = f"/api/cast_members/{fake_id}/"
 
         response = APIClient().delete(url)
 
@@ -110,7 +110,7 @@ class TestDeleteAPI:
 
     def test_delete_an_existent_cast_member(self, actor_member, repository):
         repository.save(actor_member)
-        url = f"/api/cast-members/{actor_member.id}/"
+        url = f"/api/cast_members/{actor_member.id}/"
 
         response = APIClient().delete(url)
 
@@ -120,7 +120,7 @@ class TestDeleteAPI:
 @pytest.mark.django_db
 class TestUpdateAPI:
     def test_when_request_data_is_invalid_then_return_400(self):
-        url = "/api/cast-members/invalid_id/"
+        url = "/api/cast_members/invalid_id/"
         data = {"name": "", "type": "producer"}
 
         response = APIClient().put(url, data=data, format="json")
@@ -137,7 +137,7 @@ class TestUpdateAPI:
     def test_when_member_does_not_exist_then_return_404(self, actor_member, repository):
         repository.save(actor_member)
 
-        url = f"/api/cast-members/{uuid.uuid4()}/"
+        url = f"/api/cast_members/{uuid.uuid4()}/"
         data = {"name": actor_member.name, "type": actor_member.type}
 
         response = APIClient().put(url, data=data, format="json")
@@ -150,7 +150,7 @@ class TestUpdateAPI:
     ):
         repository.save(actor_member)
 
-        url = f"/api/cast-members/{actor_member.id}/"
+        url = f"/api/cast_members/{actor_member.id}/"
         data = {"name": "Skeleton", "type": CastMemberType.DIRECTOR}
 
         response = APIClient().put(url, data=data, format="json")

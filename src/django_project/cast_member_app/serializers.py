@@ -5,15 +5,19 @@ from core.cast_member.domain.cast_member import CastMemberType
 
 class CastMemberTypeField(serializers.ChoiceField):
     def __init__(self, **kwargs):
-        choices = [(type_.value, type_.name) for type_ in CastMemberType]
+        choices = [(type.value, type.name) for type in CastMemberType]
         super().__init__(choices=choices, **kwargs)
+
+    def to_internal_value(self, data):
+        return CastMemberType(super().to_internal_value(data))
+
+    def to_representation(self, value):
+        return str(super().to_representation(value))
 
 
 class CreateCastMemberRequestSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=255)
-    type = serializers.ChoiceField(
-        choices=[(type.value, type.name) for type in CastMemberType]
-    )
+    type = CastMemberTypeField()
 
 
 class CreateCastMemberResponseSerializer(serializers.Serializer):

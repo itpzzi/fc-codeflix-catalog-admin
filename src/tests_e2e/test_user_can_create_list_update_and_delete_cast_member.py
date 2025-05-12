@@ -14,19 +14,19 @@ class TestCreateAndDeleteCastMember:
         self, api_client: APIClient
     ) -> None:
         # Verifica que a lista de membros está inicialmente vazia
-        response = api_client.get("/api/cast-members/")
+        response = api_client.get("/api/cast_members/")
         assert response.status_code == 200
         assert response.data == {"data": []}
 
         # Criação de uma novo membro
-        create_url = "/api/cast-members/"
+        create_url = "/api/cast_members/"
         create_payload = {"name": "Zombie", "type": "director"}
         create_response = api_client.post(create_url, data=create_payload)
         assert create_response.status_code == 201
         created_cast_member_id = create_response.data["id"]
 
         # Verifica que o membro criado aparece na listagem
-        list_response = api_client.get("/api/cast-members/")
+        list_response = api_client.get("/api/cast_members/")
         assert list_response.status_code == 200
         assert list_response.data == {
             "data": [
@@ -35,18 +35,18 @@ class TestCreateAndDeleteCastMember:
         }
 
         # Verifica que o membro criado rejeita ser atualizado com parâmetros inválidos
-        update_url = f"/api/cast-members/{created_cast_member_id}/"
+        update_url = f"/api/cast_members/{created_cast_member_id}/"
         update_payload = {"name": "Steve... Again", "type": "producer"}
         update_response = api_client.put(update_url, data=update_payload)
         assert update_response.status_code == 400
         assert '"producer" is not a valid choice.' in update_response.data["type"]
 
         # Exclusão do membro
-        delete_url = f"/api/cast-members/{created_cast_member_id}/"
+        delete_url = f"/api/cast_members/{created_cast_member_id}/"
         delete_response = api_client.delete(delete_url)
         assert delete_response.status_code == 204
 
         # Verifica que a lista de membros está novamente vazia
-        final_list_response = api_client.get("/api/cast-members/")
+        final_list_response = api_client.get("/api/cast_members/")
         assert final_list_response.status_code == 200
         assert final_list_response.data == {"data": []}

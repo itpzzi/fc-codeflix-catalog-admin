@@ -28,7 +28,7 @@ router = DefaultRouter()
 
 router.register(r"api/categories", CategoryViewSet, basename="category")
 router.register(r"api/genres", GenreViewSet, basename="genre")
-router.register(r"api/cast-members", CastMemberViewSet, basename="cast_member")
+router.register(r"api/cast_members", CastMemberViewSet, basename="cast_member")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
