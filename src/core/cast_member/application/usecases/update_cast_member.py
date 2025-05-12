@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from uuid import UUID
-from core.cast_member.application.exceptions import (
+from src.core.cast_member.application.exceptions import (
     CastMemberNotFound,
     InvalidCastMember,
 )
-from core.cast_member.domain.cast_member import CastMemberType
-from core.cast_member.domain.cast_member_repository import ICastMemberRepository
+from src.core.cast_member.domain.cast_member import CastMemberType
+from src.core.cast_member.domain.cast_member_repository import ICastMemberRepository
 
 
 @dataclass

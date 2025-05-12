@@ -1,15 +1,15 @@
 import uuid
 import pytest
 from unittest.mock import create_autospec
-from core.cast_member.application.exceptions import (
+from src.core.cast_member.application.exceptions import (
     CastMemberNotFound,
     InvalidCastMember,
 )
-from core.cast_member.application.usecases.update_cast_member import (
+from src.core.cast_member.application.usecases.update_cast_member import (
     UpdateCastMemberRequest,
     UpdateCastMemberUseCase,
 )
-from core.cast_member.domain.cast_member import CastMember, CastMemberType
+from src.core.cast_member.domain.cast_member import CastMember, CastMemberType
 from src.core.cast_member.domain.cast_member_repository import ICastMemberRepository
 
 
