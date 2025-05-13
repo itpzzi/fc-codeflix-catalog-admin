@@ -20,7 +20,7 @@ class CreateCategoryOutput:
     id: UUID
 
 
-class CreateCategoryUseCase:
+class CreateCategory:
 
     def __init__(self, repository: ICategoryRepository):
         self.repository = repository

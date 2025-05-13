@@ -26,7 +26,7 @@ class UpdateGenreOutput:
     pass
 
 
-class UpdateGenreUseCase:
+class UpdateGenre:
 
     def __init__(
         self, repository: IGenreRepository, category_repository: ICategoryRepository

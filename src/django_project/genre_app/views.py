@@ -27,19 +27,19 @@ from src.django_project.genre_app.serializers import (
 from src.django_project.genre_app.repository import DjangoORMGenreRepository
 
 from src.core.genre.application.usecases.list_genre import (
-    ListGenreUseCase,
+    ListGenre,
     ListGenreInput,
 )
 from src.core.genre.application.usecases.create_genre import (
-    CreateGenreUseCase,
+    CreateGenre,
     CreateGenreInput,
 )
 from src.core.genre.application.usecases.delete_genre import (
-    DeleteGenreUseCase,
+    DeleteGenre,
     DeleteGenreInput,
 )
 from src.core.genre.application.usecases.update_genre import (
-    UpdateGenreUseCase,
+    UpdateGenre,
     UpdateGenreInput,
 )
 
@@ -47,7 +47,7 @@ from src.core.genre.application.usecases.update_genre import (
 class GenreViewSet(viewsets.ViewSet):
     def list(self, request: Request) -> Response:
         input = ListGenreInput()
-        use_case = ListGenreUseCase(repository=DjangoORMGenreRepository())
+        use_case = ListGenre(repository=DjangoORMGenreRepository())
 
         output = use_case.execute(input)
 
@@ -59,7 +59,7 @@ class GenreViewSet(viewsets.ViewSet):
         deserializer.is_valid(raise_exception=True)
 
         input = CreateGenreInput(**deserializer.validated_data)
-        use_case = CreateGenreUseCase(
+        use_case = CreateGenre(
             repository=DjangoORMGenreRepository(),
             category_repository=DjangoORMCategoryRepository(),
         )
@@ -84,7 +84,7 @@ class GenreViewSet(viewsets.ViewSet):
         deserializer.is_valid(raise_exception=True)
 
         input = UpdateGenreInput(**deserializer.validated_data)
-        use_case = UpdateGenreUseCase(
+        use_case = UpdateGenre(
             repository=DjangoORMGenreRepository(),
             category_repository=DjangoORMCategoryRepository(),
         )
@@ -102,7 +102,7 @@ class GenreViewSet(viewsets.ViewSet):
         deserializer.is_valid(raise_exception=True)
 
         input = DeleteGenreInput(**deserializer.validated_data)
-        use_case = DeleteGenreUseCase(repository=DjangoORMGenreRepository())
+        use_case = DeleteGenre(repository=DjangoORMGenreRepository())
         try:
             use_case.execute(input)
         except GenreNotFound:

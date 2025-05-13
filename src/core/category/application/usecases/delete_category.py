@@ -13,7 +13,7 @@ class DeleteCategoryInput:
     id: UUID
 
 
-class DeleteCategoryUseCase:
+class DeleteCategory:
 
     def __init__(self, repository: ICategoryRepository):
         self.repository = repository

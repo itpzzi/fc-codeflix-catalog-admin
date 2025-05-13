@@ -20,7 +20,7 @@ class UpdateCastMemberOutput:
     pass
 
 
-class UpdateCastMemberUseCase:
+class UpdateCastMember:
 
     def __init__(self, repository: ICastMemberRepository):
         self.repository = repository

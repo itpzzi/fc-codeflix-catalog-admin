@@ -11,7 +11,7 @@ from src.core.genre.application.usecases.list_genre import (
     GenreOutput,
     ListGenreInput,
     ListGenreOutput,
-    ListGenreUseCase,
+    ListGenre,
 )
 from src.core.genre.domain.genre import Genre
 from src.core.genre.domain.genre_repository import IGenreRepository
@@ -60,7 +60,7 @@ class TestListGenre:
             category.id for category in category_repository_with_categories.list()
         }
         input = ListGenreInput()
-        use_case = ListGenreUseCase(
+        use_case = ListGenre(
             repository=genre_repository,
         )
         genre_fantasy = Genre(name="Fantasy", categories=categories_ids)
@@ -94,7 +94,7 @@ class TestListGenre:
         genre_repository,
     ):
         input = ListGenreInput()
-        use_case = ListGenreUseCase(
+        use_case = ListGenre(
             repository=genre_repository,
         )
 

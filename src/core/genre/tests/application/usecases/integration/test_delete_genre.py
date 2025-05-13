@@ -1,7 +1,7 @@
 import pytest
 import uuid
 from src.core.genre.application.usecases.delete_genre import (
-    DeleteGenreUseCase,
+    DeleteGenre,
     DeleteGenreInput,
 )
 from src.core.genre.application.exceptions import GenreNotFound
@@ -24,7 +24,7 @@ def genre_repository(adventure_genre):
 class TestDeleteGenre:
     def test_delete_genre_from_repository(self, genre_repository, adventure_genre):
         initial_count = len(genre_repository.genres)
-        use_case = DeleteGenreUseCase(repository=genre_repository)
+        use_case = DeleteGenre(repository=genre_repository)
         input = DeleteGenreInput(id=adventure_genre.id)
 
         use_case.execute(input=input)
@@ -33,7 +33,7 @@ class TestDeleteGenre:
         assert all(item.id != adventure_genre.id for item in genre_repository.genres)
 
     def test_when_genre_not_found_then_raises_exception(self, genre_repository):
-        use_case = DeleteGenreUseCase(repository=genre_repository)
+        use_case = DeleteGenre(repository=genre_repository)
         fake_id = uuid.uuid4()
         input = DeleteGenreInput(id=fake_id)
 

@@ -6,15 +6,15 @@ from rest_framework.response import Response
 
 from core.cast_member.application.usecases.delete_cast_member import (
     DeleteCastMemberInput,
-    DeleteCastMemberUseCase,
+    DeleteCastMember,
 )
 from core.cast_member.application.usecases.list_cast_member import (
     ListCastMemberInput,
-    ListCastMemberUseCase,
+    ListCastMember,
 )
 from core.cast_member.application.usecases.update_cast_member import (
     UpdateCastMemberInput,
-    UpdateCastMemberUseCase,
+    UpdateCastMember,
 )
 from src.core.cast_member.application.exceptions import (
     CastMemberNotFound,
@@ -22,7 +22,7 @@ from src.core.cast_member.application.exceptions import (
 )
 from core.cast_member.application.usecases.create_cast_member import (
     CreateCastMemberInput,
-    CreateCastMemberUseCase,
+    CreateCastMember,
 )
 from django_project.cast_member_app.repository import DjangoORMCastMemberRepository
 from django_project.cast_member_app.serializers import (
@@ -41,7 +41,7 @@ class CastMemberViewSet(viewsets.ViewSet):
         deserializer.is_valid(raise_exception=True)
 
         input = CreateCastMemberInput(**deserializer.validated_data)
-        use_case = CreateCastMemberUseCase(repository=DjangoORMCastMemberRepository())
+        use_case = CreateCastMember(repository=DjangoORMCastMemberRepository())
 
         try:
             output = use_case.execute(input=input)
@@ -57,7 +57,7 @@ class CastMemberViewSet(viewsets.ViewSet):
 
     def list(self, request: Request) -> Response:
         input = ListCastMemberInput()
-        use_case = ListCastMemberUseCase(repository=DjangoORMCastMemberRepository())
+        use_case = ListCastMember(repository=DjangoORMCastMemberRepository())
 
         output = use_case.execute(input=input)
 
@@ -70,7 +70,7 @@ class CastMemberViewSet(viewsets.ViewSet):
         deserializer.is_valid(raise_exception=True)
 
         input = DeleteCastMemberInput(**deserializer.validated_data)
-        use_case = DeleteCastMemberUseCase(repository=DjangoORMCastMemberRepository())
+        use_case = DeleteCastMember(repository=DjangoORMCastMemberRepository())
 
         try:
             use_case.execute(input=input)
@@ -89,7 +89,7 @@ class CastMemberViewSet(viewsets.ViewSet):
         deserializer.is_valid(raise_exception=True)
 
         input = UpdateCastMemberInput(**deserializer.validated_data)
-        use_case = UpdateCastMemberUseCase(repository=DjangoORMCastMemberRepository())
+        use_case = UpdateCastMember(repository=DjangoORMCastMemberRepository())
 
         try:
             use_case.execute(input=input)

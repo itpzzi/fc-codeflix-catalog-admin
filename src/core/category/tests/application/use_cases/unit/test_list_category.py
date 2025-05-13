@@ -4,7 +4,7 @@ import uuid
 from src.core.category.application.usecases.list_category import (
     ListCategoryInput,
     ListCategoryOutput,
-    ListCategoryUseCase,
+    ListCategory,
 )
 from src.core.category.domain.category_repository import (
     ICategoryRepository,
@@ -29,7 +29,7 @@ class TestListCategory:
         mock_repository = create_autospec(ICategoryRepository)
         mock_repository.list.return_value = [mock_category1, mock_category2]
         input = ListCategoryInput()
-        use_case = ListCategoryUseCase(repository=mock_repository)
+        use_case = ListCategory(repository=mock_repository)
 
         output = use_case.execute(input=input)
 

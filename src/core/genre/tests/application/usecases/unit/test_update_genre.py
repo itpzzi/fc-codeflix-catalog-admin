@@ -13,7 +13,7 @@ from src.core.genre.application.exceptions import (
 )
 from src.core.genre.application.usecases.update_genre import (
     UpdateGenreInput,
-    UpdateGenreUseCase,
+    UpdateGenre,
 )
 from src.core.genre.domain.genre import Genre
 from src.core.genre.domain.genre_repository import IGenreRepository
@@ -33,8 +33,8 @@ def mock_category_repository() -> ICategoryRepository:
 def use_case(
     mock_genre_repository: IGenreRepository,
     mock_category_repository: ICategoryRepository,
-) -> UpdateGenreUseCase:
-    return UpdateGenreUseCase(
+) -> UpdateGenre:
+    return UpdateGenre(
         repository=mock_genre_repository,
         category_repository=mock_category_repository,
     )
@@ -47,12 +47,12 @@ def mock_empty_category_repository() -> ICategoryRepository:
     return repository
 
 
-class TestUpdateGenreUseCase:
+class TestUpdateGenre:
 
     def test_should_raise_when_genre_not_found(
         self,
         mock_genre_repository: IGenreRepository,
-        use_case: UpdateGenreUseCase,
+        use_case: UpdateGenre,
     ) -> None:
         genre_id = uuid.uuid4()
         input = UpdateGenreInput(
@@ -73,7 +73,7 @@ class TestUpdateGenreUseCase:
         mock_genre_repository: IGenreRepository,
         mock_empty_category_repository: ICategoryRepository,
     ) -> None:
-        use_case = UpdateGenreUseCase(
+        use_case = UpdateGenre(
             repository=mock_genre_repository,
             category_repository=mock_empty_category_repository,
         )
@@ -98,7 +98,7 @@ class TestUpdateGenreUseCase:
         mock_genre_repository: IGenreRepository,
         mock_category_repository: ICategoryRepository,
     ) -> None:
-        use_case = UpdateGenreUseCase(
+        use_case = UpdateGenre(
             repository=mock_genre_repository,
             category_repository=mock_category_repository,
         )
@@ -149,7 +149,7 @@ class TestUpdateGenreUseCase:
         mock_genre_repository.get_by_id.return_value = existing_genre
         mock_category_repository.list.return_value = existing_categories
 
-        use_case = UpdateGenreUseCase(
+        use_case = UpdateGenre(
             repository=mock_genre_repository,
             category_repository=mock_category_repository,
         )

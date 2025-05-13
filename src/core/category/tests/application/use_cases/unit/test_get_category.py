@@ -12,7 +12,7 @@ from src.core.category.domain.category import Category
 from src.core.category.application.usecases.get_category import (
     GetCategoryInput,
     GetCategoryOutput,
-    GetCategoryUseCase,
+    GetCategory,
 )
 
 
@@ -27,7 +27,7 @@ class TestGetCategory:
         mock_repository = create_autospec(ICategoryRepository)
         mock_repository.get_by_id.return_value = mock_category
 
-        use_case = GetCategoryUseCase(repository=mock_repository)
+        use_case = GetCategory(repository=mock_repository)
         input = GetCategoryInput(id=mock_category.id)
 
         output = use_case.execute(input=input)
@@ -43,7 +43,7 @@ class TestGetCategory:
         mock_repository = create_autospec(ICategoryRepository)
         mock_repository.get_by_id.return_value = None
 
-        use_case = GetCategoryUseCase(repository=mock_repository)
+        use_case = GetCategory(repository=mock_repository)
         input = GetCategoryInput(id=uuid.uuid4())
 
         with pytest.raises(CategoryNotFound):

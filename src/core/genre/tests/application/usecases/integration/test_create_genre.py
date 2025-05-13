@@ -18,7 +18,7 @@ from src.core.genre.application.exceptions import (
 from src.core.genre.application.usecases.create_genre import (
     CreateGenreInput,
     CreateGenreOutput,
-    CreateGenreUseCase,
+    CreateGenre,
 )
 
 # -------------------- Fixtures -------------------- #
@@ -62,7 +62,7 @@ class TestCreateGenre:
         empty_category_repository,
         genre_repository,
     ):
-        use_case = CreateGenreUseCase(
+        use_case = CreateGenre(
             repository=genre_repository,
             category_repository=empty_category_repository,
         )
@@ -87,7 +87,7 @@ class TestCreateGenre:
         category_repository_with_categories,
         genre_repository,
     ) -> None:
-        use_case = CreateGenreUseCase(
+        use_case = CreateGenre(
             repository=genre_repository,
             category_repository=category_repository_with_categories,
         )
@@ -108,7 +108,7 @@ class TestCreateGenre:
         category_repository_with_categories,
         genre_repository,
     ):
-        use_case = CreateGenreUseCase(
+        use_case = CreateGenre(
             repository=genre_repository,
             category_repository=category_repository_with_categories,
         )
@@ -132,7 +132,7 @@ class TestCreateGenre:
         genre_repository,
         category_repository_with_categories,
     ):
-        use_case = CreateGenreUseCase(
+        use_case = CreateGenre(
             repository=genre_repository,
             category_repository=category_repository_with_categories,
         )

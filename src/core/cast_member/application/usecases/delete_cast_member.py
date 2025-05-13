@@ -14,7 +14,7 @@ class DeleteCastMemberOutput:
     pass
 
 
-class DeleteCastMemberUseCase:
+class DeleteCastMember:
     def __init__(self, repository: ICastMemberRepository):
         self.repository = repository
 

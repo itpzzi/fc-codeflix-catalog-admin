@@ -8,7 +8,7 @@ from src.core.category.domain.category_repository import ICategoryRepository
 from src.core.genre.application.usecases.create_genre import (
     CreateGenreInput,
     CreateGenreOutput,
-    CreateGenreUseCase,
+    CreateGenre,
 )
 from src.core.genre.application.exceptions import (
     InvalidGenre,
@@ -55,7 +55,7 @@ class TestCreateGenre:
         mock_empty_category_repository,
         mock_genre_repository,
     ):
-        use_case = CreateGenreUseCase(
+        use_case = CreateGenre(
             repository=mock_genre_repository,
             category_repository=mock_empty_category_repository,
         )
@@ -80,7 +80,7 @@ class TestCreateGenre:
         mock_category_repository_with_categories,
         mock_genre_repository,
     ) -> None:
-        use_case = CreateGenreUseCase(
+        use_case = CreateGenre(
             repository=mock_genre_repository,
             category_repository=mock_category_repository_with_categories,
         )
@@ -101,7 +101,7 @@ class TestCreateGenre:
         mock_category_repository_with_categories,
         mock_genre_repository,
     ):
-        use_case = CreateGenreUseCase(
+        use_case = CreateGenre(
             repository=mock_genre_repository,
             category_repository=mock_category_repository_with_categories,
         )
@@ -128,7 +128,7 @@ class TestCreateGenre:
         mock_genre_repository,
         mock_category_repository_with_categories,
     ):
-        use_case = CreateGenreUseCase(
+        use_case = CreateGenre(
             repository=mock_genre_repository,
             category_repository=mock_category_repository_with_categories,
         )

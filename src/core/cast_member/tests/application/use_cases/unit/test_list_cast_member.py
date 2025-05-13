@@ -4,7 +4,7 @@ from core.cast_member.application.usecases.list_cast_member import (
     ListCastMemberItem,
     ListCastMemberInput,
     ListCastMemberOutput,
-    ListCastMemberUseCase,
+    ListCastMember,
 )
 from core.cast_member.domain.cast_member import CastMember, CastMemberType
 from core.cast_member.domain.cast_member_repository import ICastMemberRepository
@@ -44,7 +44,7 @@ class TestListCastMember:
         mock_repository_with_cast_members,
     ):
         input = ListCastMemberInput()
-        use_case = ListCastMemberUseCase(repository=mock_repository_with_cast_members)
+        use_case = ListCastMember(repository=mock_repository_with_cast_members)
         expected_data = [
             ListCastMemberItem(
                 id=cast_member.id,
@@ -62,7 +62,7 @@ class TestListCastMember:
     def test_list_empty_list_for_an_empty_repository(self, mock_repository):
         empty_repository = mock_repository
         input = ListCastMemberInput()
-        use_case = ListCastMemberUseCase(repository=empty_repository)
+        use_case = ListCastMember(repository=empty_repository)
         expected_data = []
 
         output = use_case.execute(input=input)

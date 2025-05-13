@@ -7,7 +7,7 @@ from src.core.cast_member.application.exceptions import (
 )
 from src.core.cast_member.application.usecases.update_cast_member import (
     UpdateCastMemberInput,
-    UpdateCastMemberUseCase,
+    UpdateCastMember,
 )
 from src.core.cast_member.domain.cast_member import CastMember, CastMemberType
 from src.core.cast_member.domain.cast_member_repository import ICastMemberRepository
@@ -30,7 +30,7 @@ def mock_cast_member():
 class TestUpdateCastMember:
     def test_raise_exception_when_cast_member_not_found(self, mock_repository):
         mock_repository.get_by_id.return_value = None
-        use_case = UpdateCastMemberUseCase(repository=mock_repository)
+        use_case = UpdateCastMember(repository=mock_repository)
         fake_id = "non-existent-id"
 
         input = UpdateCastMemberInput(id=fake_id, name="Any Name", type="actor")
@@ -45,7 +45,7 @@ class TestUpdateCastMember:
         self, mock_repository, mock_cast_member
     ):
         mock_repository.get_by_id.return_value = mock_cast_member
-        use_case = UpdateCastMemberUseCase(repository=mock_repository)
+        use_case = UpdateCastMember(repository=mock_repository)
 
         input = UpdateCastMemberInput(
             id=mock_cast_member.id, name="", type="invalid-type"
@@ -60,7 +60,7 @@ class TestUpdateCastMember:
         self, mock_repository, mock_cast_member
     ):
         mock_repository.get_by_id.return_value = mock_cast_member
-        use_case = UpdateCastMemberUseCase(repository=mock_repository)
+        use_case = UpdateCastMember(repository=mock_repository)
 
         input = UpdateCastMemberInput(
             id=mock_cast_member.id, name="Zombie", type=CastMemberType.DIRECTOR

@@ -16,7 +16,7 @@ class CreateCastMemberOutput:
     id: UUID
 
 
-class CreateCastMemberUseCase:
+class CreateCastMember:
     def __init__(self, repository: ICastMemberRepository):
         self.repository = repository
 

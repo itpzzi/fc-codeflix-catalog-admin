@@ -9,7 +9,7 @@ from src.core.cast_member.infra.in_memory_cast_member_repository import (
 from src.core.cast_member.application.usecases.create_cast_member import (
     CreateCastMemberInput,
     CreateCastMemberOutput,
-    CreateCastMemberUseCase,
+    CreateCastMember,
 )
 
 
@@ -28,7 +28,7 @@ def actor_cast_member():
 
 class TestCreateCastMember:
     def test_create_cast_member_with_valid_payload(self, repository, actor_cast_member):
-        use_case = CreateCastMemberUseCase(repository=repository)
+        use_case = CreateCastMember(repository=repository)
 
         output = use_case.execute(
             CreateCastMemberInput(

@@ -22,7 +22,7 @@ class GetCategoryOutput:
     is_active: bool
 
 
-class GetCategoryUseCase:
+class GetCategory:
 
     def __init__(self, repository: ICategoryRepository):
         self.repository = repository

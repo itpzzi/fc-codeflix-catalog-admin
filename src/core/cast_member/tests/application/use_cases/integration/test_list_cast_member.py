@@ -7,7 +7,7 @@ from core.cast_member.application.usecases.list_cast_member import (
 from src.core.cast_member.application.usecases.list_cast_member import (
     ListCastMemberOutput,
     ListCastMemberInput,
-    ListCastMemberUseCase,
+    ListCastMember,
     ListCastMemberItem,
 )
 from src.core.cast_member.domain.cast_member import CastMember, CastMemberType
@@ -45,7 +45,7 @@ class TestListCastMember:
         repository.save(director_cast_member)
 
         input = ListCastMemberInput()
-        use_case = ListCastMemberUseCase(repository=repository)
+        use_case = ListCastMember(repository=repository)
 
         output = use_case.execute(input=input)
 
@@ -68,7 +68,7 @@ class TestListCastMember:
 
     def test_when_no_cast_members_then_return_empty_list(self):
         repository = InMemoryCastMemberRepository(cast_members=[])
-        use_case = ListCastMemberUseCase(repository=repository)
+        use_case = ListCastMember(repository=repository)
         input = ListCastMemberInput()
 
         output = use_case.execute(input=input)

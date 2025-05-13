@@ -3,7 +3,7 @@ from unittest.mock import create_autospec
 from src.core.cast_member.domain.cast_member import CastMember, CastMemberType
 from src.core.cast_member.domain.cast_member_repository import ICastMemberRepository
 from src.core.cast_member.application.usecases.delete_cast_member import (
-    DeleteCastMemberUseCase,
+    DeleteCastMember,
     DeleteCastMemberInput,
 )
 from src.core.cast_member.application.exceptions import CastMemberNotFound
@@ -25,7 +25,7 @@ class TestDeleteCastMember:
     ):
         mock_repository.get_by_id.return_value = actor_cast_member
         input = DeleteCastMemberInput(id=actor_cast_member.id)
-        use_case = DeleteCastMemberUseCase(repository=mock_repository)
+        use_case = DeleteCastMember(repository=mock_repository)
 
         use_case.execute(input=input)
 
@@ -36,7 +36,7 @@ class TestDeleteCastMember:
     ):
         mock_repository.get_by_id.return_value = None
         input = DeleteCastMemberInput(id=actor_cast_member.id)
-        use_case = DeleteCastMemberUseCase(repository=mock_repository)
+        use_case = DeleteCastMember(repository=mock_repository)
 
         with pytest.raises(CastMemberNotFound) as exc:
             use_case.execute(input=input)

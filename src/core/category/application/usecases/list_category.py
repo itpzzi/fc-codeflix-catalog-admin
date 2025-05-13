@@ -23,7 +23,7 @@ class ListCategoryOutput:
     data: list[CategoryOutput]
 
 
-class ListCategoryUseCase:
+class ListCategory:
 
     def __init__(self, repository: ICategoryRepository):
         self.repository = repository

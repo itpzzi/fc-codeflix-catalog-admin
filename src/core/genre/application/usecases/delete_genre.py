@@ -15,7 +15,7 @@ class DeleteGenreOutput:
     pass
 
 
-class DeleteGenreUseCase:
+class DeleteGenre:
 
     def __init__(self, repository: IGenreRepository):
         self.repository = repository

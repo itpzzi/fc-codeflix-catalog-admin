@@ -24,7 +24,7 @@ class CreateGenreOutput:
     id: UUID
 
 
-class CreateGenreUseCase:
+class CreateGenre:
 
     def __init__(
         self, repository: IGenreRepository, category_repository: ICategoryRepository

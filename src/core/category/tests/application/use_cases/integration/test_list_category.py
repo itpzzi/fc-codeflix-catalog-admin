@@ -8,7 +8,7 @@ from src.core.category.application.usecases.list_category import (
     CategoryOutput,
     ListCategoryInput,
     ListCategoryOutput,
-    ListCategoryUseCase,
+    ListCategory,
 )
 from src.core.category.domain.category import Category
 
@@ -32,7 +32,7 @@ class TestListCategory:
         repository.save(mock_category2)
 
         input = ListCategoryInput()
-        use_case = ListCategoryUseCase(repository=repository)
+        use_case = ListCategory(repository=repository)
 
         output = use_case.execute(input=input)
 
@@ -57,7 +57,7 @@ class TestListCategory:
 
     def test_when_no_categories_then_return_empty_list(self):
         repository = InMemoryCategoryRepository(categories=[])
-        use_case = ListCategoryUseCase(repository=repository)
+        use_case = ListCategory(repository=repository)
         input = ListCategoryInput()
 
         output = use_case.execute(input=input)

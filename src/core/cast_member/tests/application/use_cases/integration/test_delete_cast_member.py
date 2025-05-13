@@ -7,7 +7,7 @@ from src.core.cast_member.infra.in_memory_cast_member_repository import (
 )
 from src.core.cast_member.application.usecases.delete_cast_member import (
     DeleteCastMemberInput,
-    DeleteCastMemberUseCase,
+    DeleteCastMember,
 )
 from src.core.cast_member.domain.cast_member import CastMember, CastMemberType
 
@@ -39,7 +39,7 @@ class TestDeleteCastMember:
     def test_should_delete_cast_member_from_repository(
         self, repository, director_cast_member
     ):
-        use_case = DeleteCastMemberUseCase(repository=repository)
+        use_case = DeleteCastMember(repository=repository)
         cast_member_id = director_cast_member.id
 
         assert (

@@ -5,7 +5,7 @@ import pytest
 from src.core.category.application.exceptions import CategoryNotFound
 from src.core.category.application.usecases.delete_category import (
     DeleteCategoryInput,
-    DeleteCategoryUseCase,
+    DeleteCategory,
 )
 from src.core.category.domain.category import Category
 from src.core.category.domain.category_repository import (
@@ -24,7 +24,7 @@ class TestDeleteCategory:
         mock_repository = create_autospec(ICategoryRepository)
         mock_repository.get_by_id.return_value = mock_category
 
-        use_case = DeleteCategoryUseCase(repository=mock_repository)
+        use_case = DeleteCategory(repository=mock_repository)
         input = DeleteCategoryInput(id=mock_category.id)
 
         use_case.execute(input=input)
@@ -35,7 +35,7 @@ class TestDeleteCategory:
         mock_repository = create_autospec(ICategoryRepository)
         mock_repository.get_by_id.return_value = None
 
-        use_case = DeleteCategoryUseCase(repository=mock_repository)
+        use_case = DeleteCategory(repository=mock_repository)
         input = DeleteCategoryInput(id=uuid.uuid4())
 
         with pytest.raises(

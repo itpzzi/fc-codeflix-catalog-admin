@@ -9,14 +9,14 @@ from src.core.category.domain.category_repository import (
 from src.core.category.application.usecases.create_category import (
     CreateCategoryInput,
     CreateCategoryOutput,
-    CreateCategoryUseCase,
+    CreateCategory,
 )
 
 
 class TestCreateCategory:
     def test_create_category_with_valid_data(self):
         repository = MagicMock(ICategoryRepository)
-        use_case = CreateCategoryUseCase(repository=repository)
+        use_case = CreateCategory(repository=repository)
         input = CreateCategoryInput(name="Filme", description="Filme", is_active=False)
 
         output = use_case.execute(input=input)
@@ -28,7 +28,7 @@ class TestCreateCategory:
 
     def test_create_category_with_invalid_data(self):
         repository = MagicMock(ICategoryRepository)
-        use_case = CreateCategoryUseCase(repository=repository)
+        use_case = CreateCategory(repository=repository)
 
         with pytest.raises(InvalidCategory, match="name cannot be empty") as exec_info:
             use_case.execute(CreateCategoryInput(name=""))

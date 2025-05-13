@@ -21,7 +21,7 @@ class ListCastMemberOutput:
     data: list[ListCastMemberItem]
 
 
-class ListCastMemberUseCase:
+class ListCastMember:
 
     def __init__(self, repository: ICastMemberRepository) -> None:
         self.repository = repository

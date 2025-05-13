@@ -22,7 +22,7 @@ class ListGenreOutput:
     data: list[GenreOutput]
 
 
-class ListGenreUseCase:
+class ListGenre:
 
     def __init__(self, repository: IGenreRepository):
         self.repository = repository

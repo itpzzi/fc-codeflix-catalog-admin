@@ -16,7 +16,7 @@ class UpdateCategoryInput:
     is_active: bool | None = None
 
 
-class UpdateCategoryUseCase:
+class UpdateCategory:
 
     def __init__(self, repository: ICategoryRepository):
         self.repository = repository
