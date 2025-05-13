@@ -59,9 +59,6 @@ class UpdateGenre:
             genre_to_update.change_name(input.name)
             genre_to_update.categories = input.categories
 
-            if not isinstance(input.is_active, bool):
-                raise ValueError("is_active must be a boolean")
-
             if input.is_active:
                 genre_to_update.activate()
             else:

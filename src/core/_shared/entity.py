@@ -9,7 +9,8 @@ from src.core._shared.notification import Notification
 @dataclass(kw_only=True)
 class Entity(ABC):
     id: UUID = field(default_factory=uuid4)
-    notification: Notification = field(default_factory=Notification)
+    notification: Notification = field(default_factory=Notification, init=False)
+
     name: Name
 
     def __eq__(self, other) -> bool:
@@ -20,16 +21,24 @@ class Entity(ABC):
 
     def __post_init__(self):
         self.validate()
+        self._check_notification_has_errors()
+
+    def _check_notification_has_errors(self) -> None:
+        if self.notification.has_errors:
+            raise ValueError(self.notification.messages)
 
     @abstractmethod
     def validate(self):
         pass
 
     def _validate_name(self, value: str):
-        Name(value)
+        try:
+            Name(value)
+        except ValueError as e:
+            self.notification.add_error(str(e))
 
     def _validate_id(self, value: UUID):
         if not isinstance(value, UUID):
-            raise ValueError("id must be a UUID instance")
-        if value.version != 4:
-            raise ValueError("id must be a valid UUIDv4")
+            self.notification.add_error("id must be a UUID instance")
+        elif value.version != 4:
+            self.notification.add_error("id must be a valid UUIDv4")

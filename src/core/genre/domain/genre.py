@@ -11,6 +11,7 @@ class Genre(Entity):
 
     def validate(self):
         self._validate_name(self.name)
+        self._check_notification_has_errors()
 
     def change_name(self, name):
         self.name = name

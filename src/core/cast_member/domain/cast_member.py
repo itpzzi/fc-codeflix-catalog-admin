@@ -23,6 +23,7 @@ class CastMember(Entity):
         self._validate_id(self.id)
         self._validate_name(self.name)
         self._validate_type(self.type)
+        self._check_notification_has_errors()
 
     def update_cast_member(self, name: str, type: CastMemberType):
         self.name = name
@@ -31,7 +32,10 @@ class CastMember(Entity):
         self.validate()
 
     def _validate_type(self, value: CastMemberType):
-        CastMemberType(value)
+        try:
+            CastMemberType(value)
+        except ValueError as e:
+            self.notification.add_error(str(e))
 
     def __repr__(self):
         return f"<CastMember {self.name} ({self.type}) - {self.id}>"

@@ -10,6 +10,7 @@ class Category(Entity):
 
     def validate(self):
         self._validate_name(self.name)
+        self._check_notification_has_errors()
 
     def update_category(self, name, description):
         self.name = name
