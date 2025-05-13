@@ -1,5 +1,7 @@
 import unittest
+
 from src.core._shared.notification import Notification
+
 
 class TestNotification(unittest.TestCase):
     def test_init(self):

@@ -2,13 +2,10 @@ from uuid import UUID
 
 from django.db import transaction
 
+from django_project.genre_app.mapper import GenreModelMapper
 from src.core.genre.domain.genre import Genre
 from src.core.genre.domain.genre_repository import IGenreRepository
 from src.django_project.genre_app.models import Genre as GenreModel
-
-
-def get_category_ids(genre_model):
-    return set(genre_model.categories.values_list("id", flat=True))
 
 
 class DjangoORMGenreRepository(IGenreRepository):
@@ -17,25 +14,18 @@ class DjangoORMGenreRepository(IGenreRepository):
 
     def save(self, genre: Genre) -> None:
         with transaction.atomic():
-            genre_model = self.model.objects.create(
-                id=genre.id,
-                name=genre.name,
-                is_active=genre.is_active,
+            model = GenreModelMapper.to_model(genre)
+            model = self.model.objects.create(
+                id=model.id,
+                name=model.name,
+                is_active=model.is_active,
             )
-            genre_model.categories.set(genre.categories)
+            model.categories.set(genre.categories)
 
     def get_by_id(self, id: UUID) -> Genre | None:
         try:
-            genre_model = self.model.objects.get(pk=id)
-
-            only_categories_ids = get_category_ids(genre_model=genre_model)
-
-            return Genre(
-                id=genre_model.id,
-                name=genre_model.name,
-                is_active=genre_model.is_active,
-                categories=only_categories_ids,
-            )
+            model = self.model.objects.get(pk=id)
+            return GenreModelMapper.to_entity(model)
         except self.model.DoesNotExist:
             return None
 
@@ -44,7 +34,7 @@ class DjangoORMGenreRepository(IGenreRepository):
 
     def update(self, genre: Genre) -> None:
         try:
-            genre_model = self.model.objects.get(pk=genre.id)
+            model = self.model.objects.get(pk=genre.id)
         except self.model.DoesNotExist:
             return None
 
@@ -53,15 +43,7 @@ class DjangoORMGenreRepository(IGenreRepository):
                 name=genre.name,
                 is_active=genre.is_active,
             )
-            genre_model.categories.set(genre.categories)
+            model.categories.set(genre.categories)
 
     def list(self) -> list[Genre]:
-        return [
-            Genre(
-                id=genre_model.id,
-                name=genre_model.name,
-                categories=get_category_ids(genre_model),
-                is_active=genre_model.is_active,
-            )
-            for genre_model in self.model.objects.all()
-        ]
+        return [GenreModelMapper.to_entity(model) for model in self.model.objects.all()]

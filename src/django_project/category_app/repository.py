@@ -1,5 +1,6 @@
 from uuid import UUID
 
+from django_project.category_app.mapper import CategoryModelMapper
 from src.core.category.domain.category import Category
 from src.core.category.domain.category_repository import ICategoryRepository
 from src.django_project.category_app.models import Category as CategoryModel
@@ -19,13 +20,8 @@ class DjangoORMCategoryRepository(ICategoryRepository):
 
     def get_by_id(self, id: UUID) -> Category | None:
         try:
-            category = self.model.objects.get(id=id)
-            return Category(
-                id=category.id,
-                name=category.name,
-                description=category.description,
-                is_active=category.is_active,
-            )
+            model = self.model.objects.get(id=id)
+            return CategoryModelMapper.to_entity(model)
         except self.model.DoesNotExist:
             return None
 
@@ -40,13 +36,6 @@ class DjangoORMCategoryRepository(ICategoryRepository):
         )
 
     def list(self) -> list[Category]:
-        categories = self.model.objects.all()
         return [
-            Category(
-                id=category.id,
-                name=category.name,
-                description=category.description,
-                is_active=category.is_active,
-            )
-            for category in categories
+            CategoryModelMapper.to_entity(model) for model in self.model.objects.all()
         ]

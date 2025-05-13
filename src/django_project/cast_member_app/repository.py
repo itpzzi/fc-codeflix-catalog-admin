@@ -1,5 +1,6 @@
 from uuid import UUID
 
+from django_project.cast_member_app.mapper import CastMemberModelMapper
 from src.core.cast_member.domain.cast_member import CastMember
 from src.core.cast_member.domain.cast_member_repository import ICastMemberRepository
 from src.django_project.cast_member_app.models import CastMember as CastMemberModel
@@ -18,13 +19,9 @@ class DjangoORMCastMemberRepository(ICastMemberRepository):
 
     def get_by_id(self, id: UUID) -> CastMember | None:
         try:
-            cast_member_model = self.model.objects.get(pk=id)
+            model = self.model.objects.get(pk=id)
 
-            return CastMember(
-                id=cast_member_model.id,
-                name=cast_member_model.name,
-                type=cast_member_model.type,
-            )
+            return CastMemberModelMapper.to_entity(model)
         except self.model.DoesNotExist:
             return None
 
@@ -44,10 +41,5 @@ class DjangoORMCastMemberRepository(ICastMemberRepository):
 
     def list(self) -> list[CastMember]:
         return [
-            CastMember(
-                id=cast_member_model.id,
-                name=cast_member_model.name,
-                type=cast_member_model.type,
-            )
-            for cast_member_model in self.model.objects.all()
+            CastMemberModelMapper.to_entity(model) for model in self.model.objects.all()
         ]
