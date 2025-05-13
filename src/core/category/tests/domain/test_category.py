@@ -9,7 +9,8 @@ from src.core.category.domain.category import Category
 class TestCategory:
     def test_name_is_required(self):
         with pytest.raises(
-            TypeError, match="missing 1 required positional argument: 'name'"
+            TypeError,
+            match=r"missing 1 required (positional|keyword-only) argument: 'name'",
         ):
             Category()
 

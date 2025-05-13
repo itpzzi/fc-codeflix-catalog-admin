@@ -1,4 +1,3 @@
-
 import pytest
 
 from src.core.cast_member.application.usecases.update_cast_member import (

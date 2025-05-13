@@ -49,7 +49,5 @@ class TestGetCategory:
 
         use_case = GetCategory(repository=repository)
         input = GetCategory.Input(id=fake_id)
-        with pytest.raises(
-            CategoryNotFound, match=f"Category {fake_id} not found"
-        ):
+        with pytest.raises(CategoryNotFound, match=f"Category {fake_id} not found"):
             use_case.execute(input=input)

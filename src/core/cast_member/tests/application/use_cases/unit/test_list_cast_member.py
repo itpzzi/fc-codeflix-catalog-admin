@@ -2,12 +2,12 @@ from unittest.mock import create_autospec
 
 import pytest
 
-from core.cast_member.application.usecases.list_cast_member import (
+from src.core.cast_member.application.usecases.list_cast_member import (
     ListCastMember,
     ListCastMemberItem,
 )
-from core.cast_member.domain.cast_member import CastMember, CastMemberType
-from core.cast_member.domain.cast_member_repository import ICastMemberRepository
+from src.core.cast_member.domain.cast_member import CastMember, CastMemberType
+from src.core.cast_member.domain.cast_member_repository import ICastMemberRepository
 
 
 @pytest.fixture

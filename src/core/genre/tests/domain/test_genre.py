@@ -29,7 +29,8 @@ def category_uuids():
 class TestGenreCreation:
     def test_requires_name_argument(self):
         with pytest.raises(
-            TypeError, match="missing 1 required positional argument: 'name'"
+            TypeError,
+            match=r"missing 1 required (positional|keyword-only) argument: 'name'",
         ):
             Genre()
 

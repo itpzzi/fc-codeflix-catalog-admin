@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from core.cast_member.domain.cast_member import CastMemberType
+from src.core.cast_member.domain.cast_member import CastMemberType
 
 
 class CastMemberTypeField(serializers.ChoiceField):

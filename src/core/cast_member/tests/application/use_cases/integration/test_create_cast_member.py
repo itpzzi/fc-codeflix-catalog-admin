@@ -1,9 +1,9 @@
 import pytest
 
-from core.cast_member.domain.cast_member import CastMember, CastMemberType
 from src.core.cast_member.application.usecases.create_cast_member import (
     CreateCastMember,
 )
+from src.core.cast_member.domain.cast_member import CastMember, CastMemberType
 from src.core.cast_member.infra.in_memory_cast_member_repository import (
     InMemoryCastMemberRepository,
 )
