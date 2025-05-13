@@ -28,25 +28,25 @@ from src.django_project.genre_app.repository import DjangoORMGenreRepository
 
 from src.core.genre.application.usecases.list_genre import (
     ListGenreUseCase,
-    ListGenreRequest,
+    ListGenreInput,
 )
 from src.core.genre.application.usecases.create_genre import (
     CreateGenreUseCase,
-    CreateGenreRequest,
+    CreateGenreInput,
 )
 from src.core.genre.application.usecases.delete_genre import (
     DeleteGenreUseCase,
-    DeleteGenreRequest,
+    DeleteGenreInput,
 )
 from src.core.genre.application.usecases.update_genre import (
     UpdateGenreUseCase,
-    UpdateGenreRequest,
+    UpdateGenreInput,
 )
 
 
 class GenreViewSet(viewsets.ViewSet):
     def list(self, request: Request) -> Response:
-        input = ListGenreRequest()
+        input = ListGenreInput()
         use_case = ListGenreUseCase(repository=DjangoORMGenreRepository())
 
         output = use_case.execute(input)
@@ -58,7 +58,7 @@ class GenreViewSet(viewsets.ViewSet):
         deserializer = CreateGenreRequestSerializer(data=request.data)
         deserializer.is_valid(raise_exception=True)
 
-        input = CreateGenreRequest(**deserializer.validated_data)
+        input = CreateGenreInput(**deserializer.validated_data)
         use_case = CreateGenreUseCase(
             repository=DjangoORMGenreRepository(),
             category_repository=DjangoORMCategoryRepository(),
@@ -83,7 +83,7 @@ class GenreViewSet(viewsets.ViewSet):
         )
         deserializer.is_valid(raise_exception=True)
 
-        input = UpdateGenreRequest(**deserializer.validated_data)
+        input = UpdateGenreInput(**deserializer.validated_data)
         use_case = UpdateGenreUseCase(
             repository=DjangoORMGenreRepository(),
             category_repository=DjangoORMCategoryRepository(),
@@ -101,7 +101,7 @@ class GenreViewSet(viewsets.ViewSet):
         deserializer = DeleteGenreRequestSerializer(data={"id": pk})
         deserializer.is_valid(raise_exception=True)
 
-        input = DeleteGenreRequest(**deserializer.validated_data)
+        input = DeleteGenreInput(**deserializer.validated_data)
         use_case = DeleteGenreUseCase(repository=DjangoORMGenreRepository())
         try:
             use_case.execute(input)

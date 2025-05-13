@@ -7,8 +7,8 @@ from src.core.cast_member.infra.in_memory_cast_member_repository import (
 )
 
 from src.core.cast_member.application.usecases.create_cast_member import (
-    CreateCastMemberRequest,
-    CreateCastMemberResponse,
+    CreateCastMemberInput,
+    CreateCastMemberOutput,
     CreateCastMemberUseCase,
 )
 
@@ -31,13 +31,13 @@ class TestCreateCastMember:
         use_case = CreateCastMemberUseCase(repository=repository)
 
         output = use_case.execute(
-            CreateCastMemberRequest(
+            CreateCastMemberInput(
                 name=actor_cast_member.name, type=actor_cast_member.type
             )
         )
 
         created_cast_member = repository.get_by_id(output.id)
-        assert output == CreateCastMemberResponse(id=output.id)
+        assert output == CreateCastMemberOutput(id=output.id)
         assert created_cast_member is not None
         assert created_cast_member.name == "Steve"
         assert created_cast_member.type == CastMemberType.ACTOR

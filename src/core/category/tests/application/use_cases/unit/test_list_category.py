@@ -2,8 +2,8 @@ from unittest.mock import create_autospec
 import uuid
 
 from src.core.category.application.usecases.list_category import (
-    ListCategoryRequest,
-    ListCategoryResponse,
+    ListCategoryInput,
+    ListCategoryOutput,
     ListCategoryUseCase,
 )
 from src.core.category.domain.category_repository import (
@@ -28,10 +28,10 @@ class TestListCategory:
         )
         mock_repository = create_autospec(ICategoryRepository)
         mock_repository.list.return_value = [mock_category1, mock_category2]
-        request = ListCategoryRequest()
+        request = ListCategoryInput()
         use_case = ListCategoryUseCase(repository=mock_repository)
 
         response = use_case.execute(request)
 
-        assert response == ListCategoryResponse(data=response.data)
+        assert response == ListCategoryOutput(data=response.data)
         assert len(response.data) == 2

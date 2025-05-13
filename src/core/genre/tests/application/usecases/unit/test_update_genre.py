@@ -12,7 +12,7 @@ from src.core.genre.application.exceptions import (
     RelatedCategoriesNotFound,
 )
 from src.core.genre.application.usecases.update_genre import (
-    UpdateGenreRequest,
+    UpdateGenreInput,
     UpdateGenreUseCase,
 )
 from src.core.genre.domain.genre import Genre
@@ -55,7 +55,7 @@ class TestUpdateGenreUseCase:
         use_case: UpdateGenreUseCase,
     ) -> None:
         genre_id = uuid.uuid4()
-        request = UpdateGenreRequest(
+        request = UpdateGenreInput(
             id=genre_id, name="Terror", categories=set(), is_active=True
         )
         mock_genre_repository.get_by_id.return_value = None
@@ -81,7 +81,7 @@ class TestUpdateGenreUseCase:
         genre_id = uuid.uuid4()
         nonexistent_category_id = uuid.uuid4()
 
-        request = UpdateGenreRequest(
+        request = UpdateGenreInput(
             id=genre_id,
             name="Terror",
             categories={nonexistent_category_id},
@@ -108,12 +108,12 @@ class TestUpdateGenreUseCase:
             name="Initial", is_active=True, categories=set()
         )
 
-        invalid_requests: list[UpdateGenreRequest] = [
-            UpdateGenreRequest(id=genre_id, name="", categories=set(), is_active=True),
-            UpdateGenreRequest(
+        invalid_requests: list[UpdateGenreInput] = [
+            UpdateGenreInput(id=genre_id, name="", categories=set(), is_active=True),
+            UpdateGenreInput(
                 id=genre_id, name="a" * 256, categories=set(), is_active=True
             ),
-            UpdateGenreRequest(id=genre_id, name="", categories=set(), is_active="invalid"),  # type: ignore
+            UpdateGenreInput(id=genre_id, name="", categories=set(), is_active="invalid"),  # type: ignore
         ]
 
         for request in invalid_requests:
@@ -154,7 +154,7 @@ class TestUpdateGenreUseCase:
             category_repository=mock_category_repository,
         )
 
-        request = UpdateGenreRequest(
+        request = UpdateGenreInput(
             id=genre_id,
             name="New Genre Name",
             is_active=True,

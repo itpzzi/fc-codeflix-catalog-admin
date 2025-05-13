@@ -2,13 +2,13 @@ import uuid
 
 import pytest
 from core.cast_member.application.usecases.list_cast_member import (
-    ListCastMemberResponse,
+    ListCastMemberOutput,
 )
 from src.core.cast_member.application.usecases.list_cast_member import (
-    ListCastMemberResponse,
-    ListCastMemberRequest,
-    ListCastMemberUseCase,
     ListCastMemberOutput,
+    ListCastMemberInput,
+    ListCastMemberUseCase,
+    ListCastMemberItem,
 )
 from src.core.cast_member.domain.cast_member import CastMember, CastMemberType
 from src.core.cast_member.infra.in_memory_cast_member_repository import (
@@ -44,21 +44,21 @@ class TestListCastMember:
         repository.save(actor_cast_member)
         repository.save(director_cast_member)
 
-        request = ListCastMemberRequest()
+        request = ListCastMemberInput()
         use_case = ListCastMemberUseCase(repository=repository)
 
         response = use_case.execute(request)
 
-        assert response == ListCastMemberResponse(data=response.data)
+        assert response == ListCastMemberOutput(data=response.data)
         assert len(response.data) == 2
-        assert response == ListCastMemberResponse(
+        assert response == ListCastMemberOutput(
             data=[
-                ListCastMemberOutput(
+                ListCastMemberItem(
                     id=actor_cast_member.id,
                     name=actor_cast_member.name,
                     type=actor_cast_member.type,
                 ),
-                ListCastMemberOutput(
+                ListCastMemberItem(
                     id=director_cast_member.id,
                     name=director_cast_member.name,
                     type=director_cast_member.type,
@@ -69,9 +69,9 @@ class TestListCastMember:
     def test_when_no_cast_members_then_return_empty_list(self):
         repository = InMemoryCastMemberRepository(cast_members=[])
         use_case = ListCastMemberUseCase(repository=repository)
-        request = ListCastMemberRequest()
+        request = ListCastMemberInput()
 
         response = use_case.execute(request)
 
         assert len(response.data) == 0
-        assert response == ListCastMemberResponse(data=[])
+        assert response == ListCastMemberOutput(data=[])

@@ -5,20 +5,20 @@ from src.core.cast_member.domain.cast_member_repository import ICastMemberReposi
 
 
 @dataclass
-class ListCastMemberOutput:
+class ListCastMemberItem:
     id: UUID
     name: str
     type: CastMemberType
 
 
 @dataclass
-class ListCastMemberRequest:
+class ListCastMemberInput:
     pass
 
 
 @dataclass
-class ListCastMemberResponse:
-    data: list[ListCastMemberOutput]
+class ListCastMemberOutput:
+    data: list[ListCastMemberItem]
 
 
 class ListCastMemberUseCase:
@@ -26,12 +26,12 @@ class ListCastMemberUseCase:
     def __init__(self, repository: ICastMemberRepository) -> None:
         self.repository = repository
 
-    def execute(self, request: ListCastMemberRequest) -> ListCastMemberResponse:
+    def execute(self, request: ListCastMemberInput) -> ListCastMemberOutput:
         cast_members = self.repository.list()
 
-        return ListCastMemberResponse(
+        return ListCastMemberOutput(
             data=[
-                ListCastMemberOutput(
+                ListCastMemberItem(
                     id=cast_member.id, name=cast_member.name, type=cast_member.type
                 )
                 for cast_member in cast_members

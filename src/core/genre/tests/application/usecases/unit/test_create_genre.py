@@ -6,8 +6,8 @@ import pytest
 from src.core.category.domain.category import Category
 from src.core.category.domain.category_repository import ICategoryRepository
 from src.core.genre.application.usecases.create_genre import (
-    CreateGenreRequest,
-    CreateGenreResponse,
+    CreateGenreInput,
+    CreateGenreOutput,
     CreateGenreUseCase,
 )
 from src.core.genre.application.exceptions import (
@@ -65,7 +65,7 @@ class TestCreateGenre:
         ) as exc:
             category_id = uuid.uuid4()
             use_case.execute(
-                CreateGenreRequest(
+                CreateGenreInput(
                     name="Genre 1",
                     categories={category_id},
                 )
@@ -88,7 +88,7 @@ class TestCreateGenre:
         # InvalidGenre (application), not ValueError (domain)
         with pytest.raises(InvalidGenre, match="name cannot be empty"):
             use_case.execute(
-                CreateGenreRequest(
+                CreateGenreInput(
                     name="",
                     categories={documentary_category.id, movie_category.id},
                 )
@@ -107,13 +107,13 @@ class TestCreateGenre:
         )
 
         output = use_case.execute(
-            CreateGenreRequest(
+            CreateGenreInput(
                 name="Romance",
                 categories={documentary_category.id, movie_category.id},
             )
         )
 
-        assert output == CreateGenreResponse(id=output.id)
+        assert output == CreateGenreOutput(id=output.id)
         mock_genre_repository.save.assert_called_once_with(
             Genre(
                 id=output.id,
@@ -134,12 +134,12 @@ class TestCreateGenre:
         )
 
         output = use_case.execute(
-            CreateGenreRequest(
+            CreateGenreInput(
                 name="Romance",
             )
         )
 
-        assert output == CreateGenreResponse(id=output.id)
+        assert output == CreateGenreOutput(id=output.id)
         mock_genre_repository.save.assert_called_once_with(
             Genre(
                 id=output.id,

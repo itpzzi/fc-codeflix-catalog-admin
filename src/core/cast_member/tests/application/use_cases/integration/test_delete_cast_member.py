@@ -6,7 +6,7 @@ from src.core.cast_member.infra.in_memory_cast_member_repository import (
     InMemoryCastMemberRepository,
 )
 from src.core.cast_member.application.usecases.delete_cast_member import (
-    DeleteCastMemberRequest,
+    DeleteCastMemberInput,
     DeleteCastMemberUseCase,
 )
 from src.core.cast_member.domain.cast_member import CastMember, CastMemberType
@@ -51,7 +51,7 @@ class TestDeleteCastMember:
             initial_count == 2
         ), f"Expected 2 cast members before deletion, got {initial_count}"
 
-        use_case.execute(DeleteCastMemberRequest(id=cast_member_id))
+        use_case.execute(DeleteCastMemberInput(id=cast_member_id))
 
         assert (
             repository.get_by_id(cast_member_id) is None

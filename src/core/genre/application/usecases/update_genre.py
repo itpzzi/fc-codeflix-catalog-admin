@@ -14,7 +14,7 @@ from src.core.genre.domain.genre import Genre
 
 
 @dataclass
-class UpdateGenreRequest:
+class UpdateGenreInput:
     id: UUID
     name: str
     categories: set[UUID]
@@ -22,7 +22,7 @@ class UpdateGenreRequest:
 
 
 @dataclass
-class UpdateGenreResponse:
+class UpdateGenreOutput:
     pass
 
 
@@ -34,7 +34,7 @@ class UpdateGenreUseCase:
         self.repository = repository
         self.category_repository = category_repository
 
-    def _validate_genre_exists(self, request: UpdateGenreRequest) -> Genre:
+    def _validate_genre_exists(self, request: UpdateGenreInput) -> Genre:
         genre_from_repo = self.repository.get_by_id(request.id)
 
         if not genre_from_repo:
@@ -44,7 +44,7 @@ class UpdateGenreUseCase:
 
         return genre_from_repo
 
-    def _validate_categories_exists(self, request: UpdateGenreRequest):
+    def _validate_categories_exists(self, request: UpdateGenreInput):
         existent_categories_ids = {
             category.id for category in self.category_repository.list()
         }
@@ -55,7 +55,7 @@ class UpdateGenreUseCase:
             )
 
     def _update_genre_with_requested_data(
-        self, genre_to_update: Genre, request: UpdateGenreRequest
+        self, genre_to_update: Genre, request: UpdateGenreInput
     ) -> Genre:
         try:
             genre_to_update.change_name(request.name)
@@ -74,7 +74,7 @@ class UpdateGenreUseCase:
         except ValueError as error:
             raise InvalidGenre(error)
 
-    def execute(self, request: UpdateGenreRequest) -> None:
+    def execute(self, request: UpdateGenreInput) -> None:
         genre_from_repo = self._validate_genre_exists(request)
         self._validate_categories_exists(request)
         genre_updated = self._update_genre_with_requested_data(

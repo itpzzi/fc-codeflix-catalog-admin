@@ -4,7 +4,7 @@ from src.core.category.domain.category_repository import (
     ICategoryRepository,
 )
 from src.core.category.application.usecases.update_category import (
-    UpdateCategoryRequest,
+    UpdateCategoryInput,
     UpdateCategoryUseCase,
 )
 from src.core.category.domain.category import Category
@@ -22,7 +22,7 @@ class TestUpdateCategory:
         mock_repository.get_by_id.return_value = mock_category
 
         use_case = UpdateCategoryUseCase(repository=mock_repository)
-        request = UpdateCategoryRequest(id=mock_category.id, name="Série")
+        request = UpdateCategoryInput(id=mock_category.id, name="Série")
 
         use_case.execute(request)
 
@@ -41,7 +41,7 @@ class TestUpdateCategory:
         mock_repository.get_by_id.return_value = mock_category
 
         use_case = UpdateCategoryUseCase(repository=mock_repository)
-        request = UpdateCategoryRequest(
+        request = UpdateCategoryInput(
             id=mock_category.id, description="Categoria para séries"
         )
 
@@ -62,7 +62,7 @@ class TestUpdateCategory:
         mock_repository.get_by_id.return_value = mock_category
 
         use_case = UpdateCategoryUseCase(repository=mock_repository)
-        request = UpdateCategoryRequest(id=mock_category.id, is_active=False)
+        request = UpdateCategoryInput(id=mock_category.id, is_active=False)
 
         use_case.execute(request)
 
@@ -82,7 +82,7 @@ class TestUpdateCategory:
         mock_repository.get_by_id.return_value = mock_category
 
         use_case = UpdateCategoryUseCase(repository=mock_repository)
-        request = UpdateCategoryRequest(id=mock_category.id, is_active=True)
+        request = UpdateCategoryInput(id=mock_category.id, is_active=True)
 
         use_case.execute(request)
 

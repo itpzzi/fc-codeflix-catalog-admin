@@ -6,8 +6,8 @@ from src.core.cast_member.domain.cast_member_repository import ICastMemberReposi
 from src.core.cast_member.application.exceptions import InvalidCastMember
 from src.core.cast_member.application.usecases.create_cast_member import (
     CreateCastMemberUseCase,
-    CreateCastMemberRequest,
-    CreateCastMemberResponse,
+    CreateCastMemberInput,
+    CreateCastMemberOutput,
 )
 
 
@@ -24,9 +24,7 @@ def actor_cast_member():
 class TestCreateCastMember:
     def test_should_raise_exception_when_cast_member_is_invalid(self, mock_repository):
         use_case = CreateCastMemberUseCase(repository=mock_repository)
-        request = CreateCastMemberRequest(
-            name="", type=CastMemberType.ACTOR  # inválido
-        )
+        request = CreateCastMemberInput(name="", type=CastMemberType.ACTOR)  # inválido
 
         with pytest.raises(InvalidCastMember) as exc:
             use_case.execute(request)
@@ -36,10 +34,10 @@ class TestCreateCastMember:
 
     def test_should_create_cast_member_when_input_is_valid(self, mock_repository):
         use_case = CreateCastMemberUseCase(repository=mock_repository)
-        request = CreateCastMemberRequest(name="Steve", type=CastMemberType.ACTOR)
+        request = CreateCastMemberInput(name="Steve", type=CastMemberType.ACTOR)
 
         response = use_case.execute(request)
 
-        assert isinstance(response, CreateCastMemberResponse)
+        assert isinstance(response, CreateCastMemberOutput)
         assert isinstance(response.id, UUID)
         mock_repository.save.assert_called_once()

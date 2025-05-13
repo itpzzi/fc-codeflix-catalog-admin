@@ -10,8 +10,8 @@ from src.core.category.application.exceptions import CategoryNotFound
 from src.core.category.domain.category import Category
 
 from src.core.category.application.usecases.get_category import (
-    GetCategoryRequest,
-    GetCategoryResponse,
+    GetCategoryInput,
+    GetCategoryOutput,
     GetCategoryUseCase,
 )
 
@@ -28,11 +28,11 @@ class TestGetCategory:
         mock_repository.get_by_id.return_value = mock_category
 
         use_case = GetCategoryUseCase(repository=mock_repository)
-        request = GetCategoryRequest(id=mock_category.id)
+        request = GetCategoryInput(id=mock_category.id)
 
         response = use_case.execute(request)
 
-        assert response == GetCategoryResponse(
+        assert response == GetCategoryOutput(
             id=mock_category.id,
             name="Filme",
             description="Categoria para filmes",
@@ -44,7 +44,7 @@ class TestGetCategory:
         mock_repository.get_by_id.return_value = None
 
         use_case = GetCategoryUseCase(repository=mock_repository)
-        request = GetCategoryRequest(id=uuid.uuid4())
+        request = GetCategoryInput(id=uuid.uuid4())
 
         with pytest.raises(CategoryNotFound):
             use_case.execute(request)

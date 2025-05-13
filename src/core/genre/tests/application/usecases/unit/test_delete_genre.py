@@ -4,7 +4,7 @@ import uuid
 from src.core.genre.domain.genre_repository import IGenreRepository
 from src.core.genre.application.usecases.delete_genre import (
     DeleteGenreUseCase,
-    DeleteGenreRequest,
+    DeleteGenreInput,
 )
 from src.core.genre.application.exceptions import GenreNotFound
 from src.core.genre.infra.in_memory_genre_repository import InMemoryGenreRepository
@@ -25,7 +25,7 @@ def mock_genre_repository():
 class TestDeleteGenre:
     def test_delete_genre_from_repository(self, mock_genre_repository, adventure_genre):
         use_case = DeleteGenreUseCase(repository=mock_genre_repository)
-        request = DeleteGenreRequest(id=adventure_genre.id)
+        request = DeleteGenreInput(id=adventure_genre.id)
         mock_genre_repository.get_by_id.return_value = adventure_genre
 
         use_case.execute(request)
@@ -35,7 +35,7 @@ class TestDeleteGenre:
     def test_when_genre_not_found_then_raises_exception(self, mock_genre_repository):
         use_case = DeleteGenreUseCase(repository=mock_genre_repository)
         fake_id = uuid.uuid4()
-        request = DeleteGenreRequest(id=fake_id)
+        request = DeleteGenreInput(id=fake_id)
         mock_genre_repository.get_by_id.return_value = None
 
         with pytest.raises(

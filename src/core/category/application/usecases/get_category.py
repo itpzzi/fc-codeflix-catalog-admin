@@ -10,12 +10,12 @@ from src.core.category.domain.category import Category
 
 
 @dataclass
-class GetCategoryRequest:
+class GetCategoryInput:
     id: UUID
 
 
 @dataclass
-class GetCategoryResponse:
+class GetCategoryOutput:
     id: UUID
     name: str
     description: str
@@ -27,7 +27,7 @@ class GetCategoryUseCase:
     def __init__(self, repository: ICategoryRepository):
         self.repository = repository
 
-    def execute(self, request: GetCategoryRequest) -> GetCategoryResponse:
+    def execute(self, request: GetCategoryInput) -> GetCategoryOutput:
         category_from_repo = self.repository.get_by_id(request.id)
         if category_from_repo is None:
             raise CategoryNotFound(f"Category {request.id} not found")
@@ -42,7 +42,7 @@ class GetCategoryUseCase:
         except ValueError as error:
             raise InvalidCategory(error)
 
-        return GetCategoryResponse(
+        return GetCategoryOutput(
             id=category.id,
             name=category.name,
             description=category.description,

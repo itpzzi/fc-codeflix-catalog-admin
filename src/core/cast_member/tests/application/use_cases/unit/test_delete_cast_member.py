@@ -4,7 +4,7 @@ from src.core.cast_member.domain.cast_member import CastMember, CastMemberType
 from src.core.cast_member.domain.cast_member_repository import ICastMemberRepository
 from src.core.cast_member.application.usecases.delete_cast_member import (
     DeleteCastMemberUseCase,
-    DeleteCastMemberRequest,
+    DeleteCastMemberInput,
 )
 from src.core.cast_member.application.exceptions import CastMemberNotFound
 
@@ -24,7 +24,7 @@ class TestDeleteCastMember:
         self, mock_repository, actor_cast_member
     ):
         mock_repository.get_by_id.return_value = actor_cast_member
-        request = DeleteCastMemberRequest(id=actor_cast_member.id)
+        request = DeleteCastMemberInput(id=actor_cast_member.id)
         use_case = DeleteCastMemberUseCase(repository=mock_repository)
 
         use_case.execute(request)
@@ -35,7 +35,7 @@ class TestDeleteCastMember:
         self, mock_repository, actor_cast_member
     ):
         mock_repository.get_by_id.return_value = None
-        request = DeleteCastMemberRequest(id=actor_cast_member.id)
+        request = DeleteCastMemberInput(id=actor_cast_member.id)
         use_case = DeleteCastMemberUseCase(repository=mock_repository)
 
         with pytest.raises(CastMemberNotFound) as exc:

@@ -9,7 +9,7 @@ from src.core.category.domain.category import Category
 
 
 @dataclass
-class DeleteCategoryRequest:
+class DeleteCategoryInput:
     id: UUID
 
 
@@ -18,7 +18,7 @@ class DeleteCategoryUseCase:
     def __init__(self, repository: ICategoryRepository):
         self.repository = repository
 
-    def execute(self, request: DeleteCategoryRequest) -> None:
+    def execute(self, request: DeleteCategoryInput) -> None:
         category_from_repo = self.repository.get_by_id(request.id)
 
         if category_from_repo is None:

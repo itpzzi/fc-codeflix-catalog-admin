@@ -8,8 +8,8 @@ from src.core.category.infra.in_memory_category_repository import (
     InMemoryCategoryRepository,
 )
 from src.core.category.application.usecases.get_category import (
-    GetCategoryRequest,
-    GetCategoryResponse,
+    GetCategoryInput,
+    GetCategoryOutput,
     GetCategoryUseCase,
 )
 
@@ -27,10 +27,10 @@ class TestGetCategory:
         )
 
         use_case = GetCategoryUseCase(repository=repository)
-        request = GetCategoryRequest(id=category_movie.id)
+        request = GetCategoryInput(id=category_movie.id)
         response = use_case.execute(request=request)
 
-        assert response == GetCategoryResponse(
+        assert response == GetCategoryOutput(
             id=category_movie.id,
             name="Filme",
             description="Filmes em geral.",
@@ -50,7 +50,7 @@ class TestGetCategory:
         fake_id = uuid.uuid4()
 
         use_case = GetCategoryUseCase(repository=repository)
-        request = GetCategoryRequest(id=fake_id)
+        request = GetCategoryInput(id=fake_id)
         with pytest.raises(
             CategoryNotFound, match=f"Category {fake_id} not found"
         ) as exc:

@@ -10,8 +10,8 @@ from src.core.category.domain.category_repository import (
     ICategoryRepository,
 )
 from src.core.category.application.usecases.create_category import (
-    CreateCategoryRequest,
-    CreateCategoryResponse,
+    CreateCategoryInput,
+    CreateCategoryOutput,
     CreateCategoryUseCase,
 )
 
@@ -20,7 +20,7 @@ class TestCreateCategory:
     def test_create_category_with_valid_data(self):
         repository = InMemoryCategoryRepository()
         use_case = CreateCategoryUseCase(repository=repository)
-        request = CreateCategoryRequest(
+        request = CreateCategoryInput(
             name="Série", description="Muita ação", is_active=True
         )
 
@@ -39,7 +39,7 @@ class TestCreateCategory:
     def test_create_inactive_category_with_valid_data(self):
         repository = InMemoryCategoryRepository()
         use_case = CreateCategoryUseCase(repository=repository)
-        request = CreateCategoryRequest(
+        request = CreateCategoryInput(
             name="Filme",
             description="Categoria para filmes",
             is_active=False,

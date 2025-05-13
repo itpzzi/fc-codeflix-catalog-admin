@@ -6,13 +6,13 @@ from dataclasses import dataclass
 
 
 @dataclass
-class CreateCastMemberRequest:
+class CreateCastMemberInput:
     name: str
     type: CastMemberType
 
 
 @dataclass
-class CreateCastMemberResponse:
+class CreateCastMemberOutput:
     id: UUID
 
 
@@ -20,7 +20,7 @@ class CreateCastMemberUseCase:
     def __init__(self, repository: ICastMemberRepository):
         self.repository = repository
 
-    def execute(self, request: CreateCastMemberRequest) -> CreateCastMemberResponse:
+    def execute(self, request: CreateCastMemberInput) -> CreateCastMemberOutput:
         try:
             cast_member = CastMember(
                 name=request.name,
@@ -30,4 +30,4 @@ class CreateCastMemberUseCase:
             raise InvalidCastMember(error)
 
         self.repository.save(cast_member)
-        return CreateCastMemberResponse(id=cast_member.id)
+        return CreateCastMemberOutput(id=cast_member.id)

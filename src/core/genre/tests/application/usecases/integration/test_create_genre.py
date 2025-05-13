@@ -16,8 +16,8 @@ from src.core.genre.application.exceptions import (
     RelatedCategoriesNotFound,
 )
 from src.core.genre.application.usecases.create_genre import (
-    CreateGenreRequest,
-    CreateGenreResponse,
+    CreateGenreInput,
+    CreateGenreOutput,
     CreateGenreUseCase,
 )
 
@@ -72,7 +72,7 @@ class TestCreateGenre:
         ) as exc:
             category_id = uuid.uuid4()
             use_case.execute(
-                CreateGenreRequest(
+                CreateGenreInput(
                     name="Genre 1",
                     categories={category_id},
                 )
@@ -95,7 +95,7 @@ class TestCreateGenre:
         # InvalidGenre (application), not ValueError (domain)
         with pytest.raises(InvalidGenre, match="name cannot be empty"):
             use_case.execute(
-                CreateGenreRequest(
+                CreateGenreInput(
                     name="",
                     categories={documentary_category.id, movie_category.id},
                 )
@@ -114,14 +114,14 @@ class TestCreateGenre:
         )
 
         output = use_case.execute(
-            CreateGenreRequest(
+            CreateGenreInput(
                 name="Romance",
                 categories={documentary_category.id, movie_category.id},
             )
         )
 
         created_genre = genre_repository.get_by_id(output.id)
-        assert output == CreateGenreResponse(id=output.id)
+        assert output == CreateGenreOutput(id=output.id)
         assert created_genre is not None
         assert created_genre.name == "Romance"
         assert len(created_genre.categories) == 2
@@ -138,13 +138,13 @@ class TestCreateGenre:
         )
 
         output = use_case.execute(
-            CreateGenreRequest(
+            CreateGenreInput(
                 name="Romance",
             )
         )
 
         created_genre = genre_repository.get_by_id(output.id)
-        assert output == CreateGenreResponse(id=output.id)
+        assert output == CreateGenreOutput(id=output.id)
         assert created_genre is not None
         assert created_genre.name == "Romance"
         assert len(created_genre.categories) == 0

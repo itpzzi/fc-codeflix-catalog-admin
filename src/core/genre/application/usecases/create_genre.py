@@ -13,14 +13,14 @@ from src.core.genre.domain.genre import Genre
 
 
 @dataclass
-class CreateGenreRequest:
+class CreateGenreInput:
     name: str
     is_active: bool = True
     categories: set[UUID] = field(default_factory=set)
 
 
 @dataclass
-class CreateGenreResponse:
+class CreateGenreOutput:
     id: UUID
 
 
@@ -32,7 +32,7 @@ class CreateGenreUseCase:
         self.repository = repository
         self.category_repository = category_repository
 
-    def _validate_categories_exists(self, request: CreateGenreRequest):
+    def _validate_categories_exists(self, request: CreateGenreInput):
         existent_categories_ids = {
             category.id for category in self.category_repository.list()
         }
@@ -42,7 +42,7 @@ class CreateGenreUseCase:
                 f"Categories with provided IDs not found: {request.categories - existent_categories_ids}"
             )
 
-    def execute(self, request: CreateGenreRequest) -> CreateGenreResponse:
+    def execute(self, request: CreateGenreInput) -> CreateGenreOutput:
         self._validate_categories_exists(request)
 
         try:
@@ -55,4 +55,4 @@ class CreateGenreUseCase:
             raise InvalidGenre(error)
 
         self.repository.save(genre)
-        return CreateGenreResponse(id=genre.id)
+        return CreateGenreOutput(id=genre.id)

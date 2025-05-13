@@ -9,14 +9,14 @@ from src.core.cast_member.domain.cast_member_repository import ICastMemberReposi
 
 
 @dataclass
-class UpdateCastMemberRequest:
+class UpdateCastMemberInput:
     id: UUID
     name: str
     type: CastMemberType
 
 
 @dataclass
-class UpdateCastMemberResponse:
+class UpdateCastMemberOutput:
     pass
 
 
@@ -25,7 +25,7 @@ class UpdateCastMemberUseCase:
     def __init__(self, repository: ICastMemberRepository):
         self.repository = repository
 
-    def execute(self, request: UpdateCastMemberRequest) -> None:
+    def execute(self, request: UpdateCastMemberInput) -> None:
         cast_member_from_repo = self.repository.get_by_id(request.id)
 
         if cast_member_from_repo is None:

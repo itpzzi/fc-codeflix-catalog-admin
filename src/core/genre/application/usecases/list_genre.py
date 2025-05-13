@@ -13,12 +13,12 @@ class GenreOutput:
 
 
 @dataclass
-class ListGenreRequest:
+class ListGenreInput:
     pass
 
 
 @dataclass
-class ListGenreResponse:
+class ListGenreOutput:
     data: list[GenreOutput]
 
 
@@ -27,10 +27,10 @@ class ListGenreUseCase:
     def __init__(self, repository: IGenreRepository):
         self.repository = repository
 
-    def execute(self, request: ListGenreRequest) -> ListGenreResponse:
+    def execute(self, request: ListGenreInput) -> ListGenreOutput:
         genres = self.repository.list()
 
-        return ListGenreResponse(
+        return ListGenreOutput(
             data=[
                 GenreOutput(
                     id=genre.id,

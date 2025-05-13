@@ -1,9 +1,9 @@
 import pytest
 from unittest.mock import create_autospec
 from core.cast_member.application.usecases.list_cast_member import (
+    ListCastMemberItem,
+    ListCastMemberInput,
     ListCastMemberOutput,
-    ListCastMemberRequest,
-    ListCastMemberResponse,
     ListCastMemberUseCase,
 )
 from core.cast_member.domain.cast_member import CastMember, CastMemberType
@@ -40,10 +40,10 @@ class TestListCastMember:
         actor_cast_member,
         director_cast_member,
     ):
-        request = ListCastMemberRequest()
+        request = ListCastMemberInput()
         use_case = ListCastMemberUseCase(repository=repository_with_two_cast_members)
         expected_data = [
-            ListCastMemberOutput(
+            ListCastMemberItem(
                 id=cast_member.id,
                 name=cast_member.name,
                 type=cast_member.type,
@@ -53,15 +53,15 @@ class TestListCastMember:
 
         response = use_case.execute(request=request)
 
-        assert response == ListCastMemberResponse(data=expected_data)
+        assert response == ListCastMemberOutput(data=expected_data)
         assert len(response.data) == 2
 
     def test_return_empty_list_when_repository_is_empty(self, mock_repository):
         mock_repository.list.return_value = []
-        request = ListCastMemberRequest()
+        request = ListCastMemberInput()
         use_case = ListCastMemberUseCase(repository=mock_repository)
 
         response = use_case.execute(request=request)
 
-        assert response == ListCastMemberResponse(data=[])
+        assert response == ListCastMemberOutput(data=[])
         assert len(response.data) == 0

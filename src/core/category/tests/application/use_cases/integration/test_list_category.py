@@ -6,8 +6,8 @@ from src.core.category.infra.in_memory_category_repository import (
 )
 from src.core.category.application.usecases.list_category import (
     CategoryOutput,
-    ListCategoryRequest,
-    ListCategoryResponse,
+    ListCategoryInput,
+    ListCategoryOutput,
     ListCategoryUseCase,
 )
 from src.core.category.domain.category import Category
@@ -31,14 +31,14 @@ class TestListCategory:
         repository.save(mock_category1)
         repository.save(mock_category2)
 
-        request = ListCategoryRequest()
+        request = ListCategoryInput()
         use_case = ListCategoryUseCase(repository=repository)
 
         response = use_case.execute(request)
 
-        assert response == ListCategoryResponse(data=response.data)
+        assert response == ListCategoryOutput(data=response.data)
         assert len(response.data) == 2
-        assert response == ListCategoryResponse(
+        assert response == ListCategoryOutput(
             data=[
                 CategoryOutput(
                     id=mock_category1.id,
@@ -58,9 +58,9 @@ class TestListCategory:
     def test_when_no_categories_then_return_empty_list(self):
         repository = InMemoryCategoryRepository(categories=[])
         use_case = ListCategoryUseCase(repository=repository)
-        request = ListCategoryRequest()
+        request = ListCategoryInput()
 
         response = use_case.execute(request)
 
         assert len(response.data) == 0
-        assert response == ListCategoryResponse(data=[])
+        assert response == ListCategoryOutput(data=[])

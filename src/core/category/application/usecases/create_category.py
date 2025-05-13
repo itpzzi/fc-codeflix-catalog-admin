@@ -9,14 +9,14 @@ from src.core.category.domain.category import Category
 
 
 @dataclass
-class CreateCategoryRequest:
+class CreateCategoryInput:
     name: str
     is_active: bool = True
     description: str = ""
 
 
 @dataclass
-class CreateCategoryResponse:
+class CreateCategoryOutput:
     id: UUID
 
 
@@ -25,7 +25,7 @@ class CreateCategoryUseCase:
     def __init__(self, repository: ICategoryRepository):
         self.repository = repository
 
-    def execute(self, request: CreateCategoryRequest) -> CreateCategoryResponse:
+    def execute(self, request: CreateCategoryInput) -> CreateCategoryOutput:
         try:
             category = Category(
                 name=request.name,
@@ -36,4 +36,4 @@ class CreateCategoryUseCase:
             raise InvalidCategory(error)
 
         self.repository.save(category)
-        return CreateCategoryResponse(id=category.id)
+        return CreateCategoryOutput(id=category.id)

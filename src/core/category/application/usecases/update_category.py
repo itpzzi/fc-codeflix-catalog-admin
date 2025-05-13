@@ -9,7 +9,7 @@ from src.core.category.domain.category import Category
 
 
 @dataclass
-class UpdateCategoryRequest:
+class UpdateCategoryInput:
     id: UUID
     name: str | None = None
     description: str | None = None
@@ -21,7 +21,7 @@ class UpdateCategoryUseCase:
     def __init__(self, repository: ICategoryRepository):
         self.repository = repository
 
-    def execute(self, request: UpdateCategoryRequest) -> None:
+    def execute(self, request: UpdateCategoryInput) -> None:
         category_from_repo = self.repository.get_by_id(request.id)
 
         if category_from_repo is None:

@@ -4,7 +4,7 @@ import uuid
 import pytest
 from src.core.category.application.exceptions import CategoryNotFound
 from src.core.category.application.usecases.delete_category import (
-    DeleteCategoryRequest,
+    DeleteCategoryInput,
     DeleteCategoryUseCase,
 )
 from src.core.category.domain.category import Category
@@ -25,7 +25,7 @@ class TestDeleteCategory:
         mock_repository.get_by_id.return_value = mock_category
 
         use_case = DeleteCategoryUseCase(repository=mock_repository)
-        request = DeleteCategoryRequest(id=mock_category.id)
+        request = DeleteCategoryInput(id=mock_category.id)
 
         use_case.execute(request)
 
@@ -36,7 +36,7 @@ class TestDeleteCategory:
         mock_repository.get_by_id.return_value = None
 
         use_case = DeleteCategoryUseCase(repository=mock_repository)
-        request = DeleteCategoryRequest(id=uuid.uuid4())
+        request = DeleteCategoryInput(id=uuid.uuid4())
 
         with pytest.raises(
             CategoryNotFound,

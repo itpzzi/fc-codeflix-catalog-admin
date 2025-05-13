@@ -7,7 +7,7 @@ from src.core.category.infra.in_memory_category_repository import (
 )
 from src.core.category.application.exceptions import CategoryNotFound
 from src.core.category.application.usecases.delete_category import (
-    DeleteCategoryRequest,
+    DeleteCategoryInput,
     DeleteCategoryUseCase,
 )
 from src.core.category.domain.category import Category
@@ -23,7 +23,7 @@ class TestDeleteCategory:
         )
         repository = InMemoryCategoryRepository(categories=[category_movie])
         use_case = DeleteCategoryUseCase(repository=repository)
-        request = DeleteCategoryRequest(id=category_movie.id)
+        request = DeleteCategoryInput(id=category_movie.id)
 
         assert repository.get_by_id(id=category_movie.id) is not None
         response = use_case.execute(request=request)

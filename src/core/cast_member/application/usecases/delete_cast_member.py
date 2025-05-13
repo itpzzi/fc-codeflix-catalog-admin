@@ -5,12 +5,12 @@ from dataclasses import dataclass
 
 
 @dataclass
-class DeleteCastMemberRequest:
+class DeleteCastMemberInput:
     id: UUID
 
 
 @dataclass
-class DeleteCastMemberResponse:
+class DeleteCastMemberOutput:
     pass
 
 
@@ -18,7 +18,7 @@ class DeleteCastMemberUseCase:
     def __init__(self, repository: ICastMemberRepository):
         self.repository = repository
 
-    def execute(self, request: DeleteCastMemberRequest) -> None:
+    def execute(self, request: DeleteCastMemberInput) -> None:
         cast_member_from_repo = self.repository.get_by_id(request.id)
 
         if cast_member_from_repo is None:

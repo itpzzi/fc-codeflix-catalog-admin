@@ -9,8 +9,8 @@ from src.core.category.infra.in_memory_category_repository import (
 )
 from src.core.genre.application.usecases.list_genre import (
     GenreOutput,
-    ListGenreRequest,
-    ListGenreResponse,
+    ListGenreInput,
+    ListGenreOutput,
     ListGenreUseCase,
 )
 from src.core.genre.domain.genre import Genre
@@ -59,7 +59,7 @@ class TestListGenre:
         categories_ids = {
             category.id for category in category_repository_with_categories.list()
         }
-        request = ListGenreRequest()
+        request = ListGenreInput()
         use_case = ListGenreUseCase(
             repository=genre_repository,
         )
@@ -71,8 +71,8 @@ class TestListGenre:
         response = use_case.execute(request)
 
         assert len(response.data) == 2
-        assert response == ListGenreResponse(data=response.data)
-        assert response == ListGenreResponse(
+        assert response == ListGenreOutput(data=response.data)
+        assert response == ListGenreOutput(
             data=[
                 GenreOutput(
                     id=genre_fantasy.id,
@@ -93,7 +93,7 @@ class TestListGenre:
         self,
         genre_repository,
     ):
-        request = ListGenreRequest()
+        request = ListGenreInput()
         use_case = ListGenreUseCase(
             repository=genre_repository,
         )
@@ -101,5 +101,5 @@ class TestListGenre:
         response = use_case.execute(request)
 
         assert len(response.data) == 0
-        assert response == ListGenreResponse(data=response.data)
-        assert response == ListGenreResponse(data=[])
+        assert response == ListGenreOutput(data=response.data)
+        assert response == ListGenreOutput(data=[])

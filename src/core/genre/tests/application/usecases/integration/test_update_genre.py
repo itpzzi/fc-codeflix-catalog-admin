@@ -14,7 +14,7 @@ from src.core.genre.application.exceptions import (
     RelatedCategoriesNotFound,
 )
 from src.core.genre.application.usecases.update_genre import (
-    UpdateGenreRequest,
+    UpdateGenreInput,
     UpdateGenreUseCase,
 )
 
@@ -78,7 +78,7 @@ class TestUpdateGenreIntegration:
 
         with pytest.raises(RelatedCategoriesNotFound) as exc:
             use_case.execute(
-                UpdateGenreRequest(
+                UpdateGenreInput(
                     id=existing_genre.id,
                     name="Updated",
                     categories={fake_category_id},
@@ -103,7 +103,7 @@ class TestUpdateGenreIntegration:
 
         with pytest.raises(InvalidGenre, match="name cannot be empty"):
             use_case.execute(
-                UpdateGenreRequest(
+                UpdateGenreInput(
                     id=existing_genre.id,
                     name="",
                     categories=set(),
@@ -126,7 +126,7 @@ class TestUpdateGenreIntegration:
             category_repository=category_repository_with_categories,
         )
 
-        request = UpdateGenreRequest(
+        request = UpdateGenreInput(
             id=existing_genre.id,
             name="Updated Genre",
             categories={movie_category.id, documentary_category.id},
