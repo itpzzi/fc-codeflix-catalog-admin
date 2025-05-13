@@ -1,14 +1,12 @@
 from dataclasses import dataclass
 from uuid import UUID
+
 from src.core.cast_member.application.exceptions import (
     CastMemberNotFound,
     InvalidCastMember,
 )
 from src.core.cast_member.domain.cast_member import CastMemberType
 from src.core.cast_member.domain.cast_member_repository import ICastMemberRepository
-
-
-
 
 
 class UpdateCastMember:
@@ -18,7 +16,6 @@ class UpdateCastMember:
         id: UUID
         name: str
         type: CastMemberType
-
 
     @dataclass
     class Output:

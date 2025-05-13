@@ -1,7 +1,8 @@
+from dataclasses import dataclass
 from uuid import UUID
+
 from src.core.cast_member.application.exceptions import CastMemberNotFound
 from src.core.cast_member.domain.cast_member_repository import ICastMemberRepository
-from dataclasses import dataclass
 
 
 class DeleteCastMember:

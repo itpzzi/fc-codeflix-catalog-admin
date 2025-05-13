@@ -1,8 +1,10 @@
 from uuid import UUID
+
+from django.db import transaction
+
 from src.core.genre.domain.genre import Genre
 from src.core.genre.domain.genre_repository import IGenreRepository
 from src.django_project.genre_app.models import Genre as GenreModel
-from django.db import transaction
 
 
 def get_category_ids(genre_model):

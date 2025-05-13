@@ -1,14 +1,13 @@
-from unittest.mock import create_autospec
-import uuid
 
 import pytest
-from src.core.cast_member.infra.in_memory_cast_member_repository import (
-    InMemoryCastMemberRepository,
-)
+
 from src.core.cast_member.application.usecases.delete_cast_member import (
     DeleteCastMember,
 )
 from src.core.cast_member.domain.cast_member import CastMember, CastMemberType
+from src.core.cast_member.infra.in_memory_cast_member_repository import (
+    InMemoryCastMemberRepository,
+)
 
 
 @pytest.fixture

@@ -1,16 +1,16 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from uuid import UUID
 
 from src.core.category.domain.category_repository import ICategoryRepository
-from src.core.genre.domain.genre_repository import (
-    IGenreRepository,
-)
 from src.core.genre.application.exceptions import (
     GenreNotFound,
     InvalidGenre,
     RelatedCategoriesNotFound,
 )
 from src.core.genre.domain.genre import Genre
+from src.core.genre.domain.genre_repository import (
+    IGenreRepository,
+)
 
 
 class UpdateGenre:

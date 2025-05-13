@@ -1,8 +1,8 @@
 from uuid import UUID
+
 from src.core.cast_member.domain.cast_member import CastMember
 from src.core.cast_member.domain.cast_member_repository import ICastMemberRepository
 from src.django_project.cast_member_app.models import CastMember as CastMemberModel
-from django.db import transaction
 
 
 class DjangoORMCastMemberRepository(ICastMemberRepository):

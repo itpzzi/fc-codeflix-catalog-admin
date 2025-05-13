@@ -1,9 +1,12 @@
 from uuid import UUID
-from rest_framework import viewsets, status
+
+from rest_framework import status, viewsets
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-
+from core.cast_member.application.usecases.create_cast_member import (
+    CreateCastMember,
+)
 from core.cast_member.application.usecases.delete_cast_member import (
     DeleteCastMember,
 )
@@ -13,13 +16,6 @@ from core.cast_member.application.usecases.list_cast_member import (
 from core.cast_member.application.usecases.update_cast_member import (
     UpdateCastMember,
 )
-from src.core.cast_member.application.exceptions import (
-    CastMemberNotFound,
-    InvalidCastMember,
-)
-from core.cast_member.application.usecases.create_cast_member import (
-    CreateCastMember,
-)
 from django_project.cast_member_app.repository import DjangoORMCastMemberRepository
 from django_project.cast_member_app.serializers import (
     CreateCastMemberRequestSerializer,
@@ -27,6 +23,10 @@ from django_project.cast_member_app.serializers import (
     DeleteCastMemberRequestSerializer,
     ListCastMemberResponseSerializer,
     UpdateCastMemberRequestSerializer,
+)
+from src.core.cast_member.application.exceptions import (
+    CastMemberNotFound,
+    InvalidCastMember,
 )
 
 

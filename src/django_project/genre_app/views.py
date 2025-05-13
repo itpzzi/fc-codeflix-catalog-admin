@@ -1,8 +1,8 @@
 from uuid import UUID
-from rest_framework import viewsets
 
-from rest_framework.response import Response
+from rest_framework import viewsets
 from rest_framework.request import Request
+from rest_framework.response import Response
 from rest_framework.status import (
     HTTP_200_OK,
     HTTP_201_CREATED,
@@ -16,27 +16,26 @@ from src.core.genre.application.exceptions import (
     InvalidGenre,
     RelatedCategoriesNotFound,
 )
-from src.django_project.category_app.repository import DjangoORMCategoryRepository
-from src.django_project.genre_app.serializers import (
-    CreateGenreRequestSerializer,
-    CreateGenreResponseSerializer,
-    DeleteGenreRequestSerializer,
-    ListGenreResponseSerializer,
-    UpdateGenreRequestSerializer,
-)
-from src.django_project.genre_app.repository import DjangoORMGenreRepository
-
-from src.core.genre.application.usecases.list_genre import (
-    ListGenre,
-)
 from src.core.genre.application.usecases.create_genre import (
     CreateGenre,
 )
 from src.core.genre.application.usecases.delete_genre import (
     DeleteGenre,
 )
+from src.core.genre.application.usecases.list_genre import (
+    ListGenre,
+)
 from src.core.genre.application.usecases.update_genre import (
     UpdateGenre,
+)
+from src.django_project.category_app.repository import DjangoORMCategoryRepository
+from src.django_project.genre_app.repository import DjangoORMGenreRepository
+from src.django_project.genre_app.serializers import (
+    CreateGenreRequestSerializer,
+    CreateGenreResponseSerializer,
+    DeleteGenreRequestSerializer,
+    ListGenreResponseSerializer,
+    UpdateGenreRequestSerializer,
 )
 
 

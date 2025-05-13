@@ -3,12 +3,12 @@ import uuid
 import pytest
 
 from src.core.category.application.exceptions import CategoryNotFound
+from src.core.category.application.usecases.get_category import (
+    GetCategory,
+)
 from src.core.category.domain.category import Category
 from src.core.category.infra.in_memory_category_repository import (
     InMemoryCategoryRepository,
-)
-from src.core.category.application.usecases.get_category import (
-    GetCategory,
 )
 
 
@@ -51,5 +51,5 @@ class TestGetCategory:
         input = GetCategory.Input(id=fake_id)
         with pytest.raises(
             CategoryNotFound, match=f"Category {fake_id} not found"
-        ) as exc:
+        ):
             use_case.execute(input=input)

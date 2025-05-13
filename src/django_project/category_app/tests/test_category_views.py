@@ -1,10 +1,11 @@
 import uuid
-import pytest
-from rest_framework.test import APIClient
-from rest_framework import status
 
-from src.django_project.category_app.repository import DjangoORMCategoryRepository
+import pytest
+from rest_framework import status
+from rest_framework.test import APIClient
+
 from src.core.category.domain.category import Category
+from src.django_project.category_app.repository import DjangoORMCategoryRepository
 
 
 @pytest.fixture
@@ -62,7 +63,7 @@ class TestCategoryAPI:
 class TestRetrieveAPI:
 
     def test_when_id_is_invalid_return_400(self) -> None:
-        url = f"/api/categories/invalid_id/"
+        url = "/api/categories/invalid_id/"
         response = APIClient().get(url)
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
@@ -109,7 +110,7 @@ class TestCreateAPI:
         category_movie: Category,
         category_repository: DjangoORMCategoryRepository,
     ):
-        url = f"/api/categories/"
+        url = "/api/categories/"
         data = {
             "name": "",
             "description": category_movie.description,
@@ -124,7 +125,7 @@ class TestCreateAPI:
         category_movie: Category,
         category_repository: DjangoORMCategoryRepository,
     ):
-        url = f"/api/categories/"
+        url = "/api/categories/"
         data = {
             "name": category_movie.name,
             "description": category_movie.description,
@@ -153,7 +154,7 @@ class TestCreateAPI:
 @pytest.mark.django_db
 class TestUpdateAPI:
     def test_when_request_data_is_invalid_then_return_400(self):
-        url = f"/api/categories/123123123/"
+        url = "/api/categories/123123123/"
         data = {"name": ""}
         response = APIClient().put(url, data, format="json")
         assert response.status_code == status.HTTP_400_BAD_REQUEST
@@ -207,7 +208,7 @@ class TestUpdateAPI:
 @pytest.mark.django_db
 class TestDeleteAPI:
     def test_when_category_pk_is_invalid_then_return_400(self) -> None:
-        url = f"/api/categories/invalid_id/"
+        url = "/api/categories/invalid_id/"
         response = APIClient().delete(url)
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST

@@ -1,0 +1,6 @@
+[tool.ruff]
+target-version = "py312"
+
+[tool.ruff.lint]
+preview = true
+extend-select = ["I", "F401", "E301", "E303", "E304"]

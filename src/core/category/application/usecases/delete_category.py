@@ -1,13 +1,10 @@
 from dataclasses import dataclass
 from uuid import UUID
 
+from src.core.category.application.exceptions import CategoryNotFound
 from src.core.category.domain.category_repository import (
     ICategoryRepository,
 )
-from src.core.category.application.exceptions import CategoryNotFound, InvalidCategory
-from src.core.category.domain.category import Category
-
-
 
 
 class DeleteCategory:
@@ -15,7 +12,6 @@ class DeleteCategory:
     @dataclass
     class Input:
         id: UUID
-
 
     def __init__(self, repository: ICategoryRepository):
         self.repository = repository

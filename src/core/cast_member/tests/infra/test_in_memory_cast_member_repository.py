@@ -1,11 +1,12 @@
 import uuid
+
 import pytest
+
 from src.core.cast_member.domain.cast_member import CastMember, CastMemberType
 from src.core.cast_member.domain.cast_member_repository import ICastMemberRepository
 from src.core.cast_member.infra.in_memory_cast_member_repository import (
     InMemoryCastMemberRepository,
 )
-
 
 # -------------------- Fixtures -------------------- #
 

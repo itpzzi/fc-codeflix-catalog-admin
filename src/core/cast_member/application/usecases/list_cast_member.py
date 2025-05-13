@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from uuid import UUID
-from src.core.cast_member.domain.cast_member import CastMemberType, CastMemberType
+
+from src.core.cast_member.domain.cast_member import CastMemberType
 from src.core.cast_member.domain.cast_member_repository import ICastMemberRepository
 
 

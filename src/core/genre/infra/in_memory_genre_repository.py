@@ -1,5 +1,5 @@
-from typing import List
 from uuid import UUID
+
 from src.core.genre.domain.genre import Genre
 from src.core.genre.domain.genre_repository import (
     IGenreRepository,

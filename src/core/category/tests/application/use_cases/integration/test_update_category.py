@@ -1,4 +1,5 @@
 import uuid
+
 from src.core.category.application.usecases.update_category import (
     UpdateCategory,
 )

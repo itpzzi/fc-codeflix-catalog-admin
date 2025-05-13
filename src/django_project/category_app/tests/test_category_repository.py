@@ -1,7 +1,9 @@
 import uuid
+
 import pytest
-from src.django_project.category_app.repository import DjangoORMCategoryRepository
+
 from src.django_project.category_app.models import Category
+from src.django_project.category_app.repository import DjangoORMCategoryRepository
 
 
 @pytest.mark.django_db

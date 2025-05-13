@@ -1,13 +1,14 @@
 from unittest.mock import MagicMock
 from uuid import UUID
+
 import pytest
 
 from src.core.category.application.exceptions import InvalidCategory
-from src.core.category.domain.category_repository import (
-    ICategoryRepository,
-)
 from src.core.category.application.usecases.create_category import (
     CreateCategory,
+)
+from src.core.category.domain.category_repository import (
+    ICategoryRepository,
 )
 
 

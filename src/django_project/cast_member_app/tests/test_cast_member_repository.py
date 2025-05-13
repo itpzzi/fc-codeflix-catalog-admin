@@ -1,5 +1,7 @@
 import uuid
+
 import pytest
+
 from src.core.cast_member.domain.cast_member import CastMember, CastMemberType
 from src.django_project.cast_member_app.repository import DjangoORMCastMemberRepository
 

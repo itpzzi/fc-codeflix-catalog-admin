@@ -1,16 +1,32 @@
 from uuid import UUID
-from django.shortcuts import render
-from rest_framework import viewsets
 
-from rest_framework.response import Response
+from rest_framework import viewsets
 from rest_framework.request import Request
+from rest_framework.response import Response
 from rest_framework.status import (
     HTTP_200_OK,
-    HTTP_404_NOT_FOUND,
     HTTP_201_CREATED,
     HTTP_204_NO_CONTENT,
+    HTTP_404_NOT_FOUND,
 )
 
+from src.core.category.application.exceptions import CategoryNotFound
+from src.core.category.application.usecases.create_category import (
+    CreateCategory,
+)
+from src.core.category.application.usecases.delete_category import (
+    DeleteCategory,
+)
+from src.core.category.application.usecases.get_category import (
+    GetCategory,
+)
+from src.core.category.application.usecases.list_category import (
+    ListCategory,
+)
+from src.core.category.application.usecases.update_category import (
+    UpdateCategory,
+)
+from src.django_project.category_app.repository import DjangoORMCategoryRepository
 from src.django_project.category_app.serializers import (
     CreateCategoryRequestSerializer,
     CreateCategoryResponseSerializer,
@@ -19,26 +35,6 @@ from src.django_project.category_app.serializers import (
     RetrieveCategoryRequestSerializer,
     RetrieveCategoryResponseSerializer,
     UpdateCategoryRequestSerializer,
-)
-from src.core.category.application.exceptions import CategoryNotFound
-from src.django_project.category_app.repository import DjangoORMCategoryRepository
-
-from src.core.category.application.usecases.list_category import (
-    ListCategory,
-)
-
-from src.core.category.application.usecases.get_category import (
-    GetCategory,
-)
-
-from src.core.category.application.usecases.create_category import (
-    CreateCategory,
-)
-from src.core.category.application.usecases.update_category import (
-    UpdateCategory,
-)
-from src.core.category.application.usecases.delete_category import (
-    DeleteCategory,
 )
 
 

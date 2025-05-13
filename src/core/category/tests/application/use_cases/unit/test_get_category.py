@@ -1,16 +1,15 @@
-from unittest.mock import create_autospec
 import uuid
+from unittest.mock import create_autospec
 
 import pytest
 
-from src.core.category.domain.category_repository import (
-    ICategoryRepository,
-)
 from src.core.category.application.exceptions import CategoryNotFound
-from src.core.category.domain.category import Category
-
 from src.core.category.application.usecases.get_category import (
     GetCategory,
+)
+from src.core.category.domain.category import Category
+from src.core.category.domain.category_repository import (
+    ICategoryRepository,
 )
 
 

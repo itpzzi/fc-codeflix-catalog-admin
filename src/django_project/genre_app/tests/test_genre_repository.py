@@ -1,10 +1,11 @@
 import uuid
+
 import pytest
+
 from src.core.genre.domain.genre import Genre
-from src.django_project.genre_app.repository import DjangoORMGenreRepository
-from src.django_project.category_app.repository import DjangoORMCategoryRepository
 from src.django_project.category_app.models import Category
-from src.django_project.genre_app.models import Genre as GenreModel
+from src.django_project.category_app.repository import DjangoORMCategoryRepository
+from src.django_project.genre_app.repository import DjangoORMGenreRepository
 
 
 @pytest.fixture

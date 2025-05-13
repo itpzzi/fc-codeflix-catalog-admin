@@ -1,13 +1,13 @@
-from unittest.mock import create_autospec
 import uuid
+from unittest.mock import create_autospec
 
 from src.core.category.application.usecases.list_category import (
     ListCategory,
 )
+from src.core.category.domain.category import Category
 from src.core.category.domain.category_repository import (
     ICategoryRepository,
 )
-from src.core.category.domain.category import Category
 
 
 class TestListCategory:

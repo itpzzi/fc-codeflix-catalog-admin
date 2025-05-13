@@ -1,16 +1,10 @@
-from unittest.mock import MagicMock
 from uuid import UUID
-import pytest
 
-from src.core.category.infra.in_memory_category_repository import (
-    InMemoryCategoryRepository,
-)
-from src.core.category.application.exceptions import InvalidCategory
-from src.core.category.domain.category_repository import (
-    ICategoryRepository,
-)
 from src.core.category.application.usecases.create_category import (
     CreateCategory,
+)
+from src.core.category.infra.in_memory_category_repository import (
+    InMemoryCategoryRepository,
 )
 
 
@@ -49,4 +43,4 @@ class TestCreateCategory:
         assert persisted_category.id == output.id
         assert persisted_category.name == "Filme"
         assert persisted_category.description == "Categoria para filmes"
-        assert persisted_category.is_active == False
+        assert not persisted_category.is_active

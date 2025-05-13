@@ -1,13 +1,14 @@
-from unittest.mock import create_autospec
-import pytest
 import uuid
-from src.core.genre.domain.genre_repository import IGenreRepository
+from unittest.mock import create_autospec
+
+import pytest
+
+from src.core.genre.application.exceptions import GenreNotFound
 from src.core.genre.application.usecases.delete_genre import (
     DeleteGenre,
 )
-from src.core.genre.application.exceptions import GenreNotFound
-from src.core.genre.infra.in_memory_genre_repository import InMemoryGenreRepository
 from src.core.genre.domain.genre import Genre
+from src.core.genre.domain.genre_repository import IGenreRepository
 
 
 @pytest.fixture

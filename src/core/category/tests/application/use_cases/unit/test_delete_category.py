@@ -1,7 +1,8 @@
-from unittest.mock import create_autospec
 import uuid
+from unittest.mock import create_autospec
 
 import pytest
+
 from src.core.category.application.exceptions import CategoryNotFound
 from src.core.category.application.usecases.delete_category import (
     DeleteCategory,

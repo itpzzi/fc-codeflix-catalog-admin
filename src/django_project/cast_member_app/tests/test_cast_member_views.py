@@ -1,9 +1,8 @@
-from urllib.request import Request
-from uuid import UUID
 import uuid
-from rest_framework.test import APIClient
-from rest_framework import status
+
 import pytest
+from rest_framework import status
+from rest_framework.test import APIClient
 
 from src.core.cast_member.domain.cast_member import CastMember, CastMemberType
 from src.django_project.cast_member_app.repository import DjangoORMCastMemberRepository

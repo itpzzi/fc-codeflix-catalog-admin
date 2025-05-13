@@ -1,8 +1,9 @@
-import pytest
 import uuid
 from uuid import UUID
-from src.core.genre.domain.genre import Genre
 
+import pytest
+
+from src.core.genre.domain.genre import Genre
 
 # -------------------- Fixtures -------------------- #
 

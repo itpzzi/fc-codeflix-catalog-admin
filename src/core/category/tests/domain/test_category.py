@@ -1,6 +1,7 @@
-import pytest
-from uuid import UUID
 import uuid
+from uuid import UUID
+
+import pytest
 
 from src.core.category.domain.category import Category
 

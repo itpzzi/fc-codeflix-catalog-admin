@@ -5,19 +5,15 @@ from src.core.genre.application.exceptions import GenreNotFound
 from src.core.genre.domain.genre_repository import IGenreRepository
 
 
-
-
 class DeleteGenre:
 
     @dataclass
     class Input:
         id: UUID
 
-
     @dataclass
     class Output:
         pass
-
 
     def __init__(self, repository: IGenreRepository):
         self.repository = repository

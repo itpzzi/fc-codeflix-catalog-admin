@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
-from uuid import UUID, uuid4
 from enum import StrEnum
+from uuid import UUID, uuid4
 
 
 class CastMemberType(StrEnum):

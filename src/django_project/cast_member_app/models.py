@@ -1,4 +1,5 @@
 from uuid import uuid4
+
 from django.db import models
 
 from src.core.cast_member.domain.cast_member import CastMemberType

@@ -17,12 +17,11 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-
 from rest_framework.routers import DefaultRouter
 
+from src.django_project.cast_member_app.views import CastMemberViewSet
 from src.django_project.category_app.views import CategoryViewSet
 from src.django_project.genre_app.views import GenreViewSet
-from src.django_project.cast_member_app.views import CastMemberViewSet
 
 router = DefaultRouter()
 

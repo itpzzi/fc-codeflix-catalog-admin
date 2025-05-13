@@ -1,6 +1,6 @@
-import uuid
 
 import pytest
+
 from src.core.cast_member.application.usecases.list_cast_member import (
     ListCastMember,
     ListCastMemberItem,

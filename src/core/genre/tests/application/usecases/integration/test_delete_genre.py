@@ -1,11 +1,13 @@
-import pytest
 import uuid
+
+import pytest
+
+from src.core.genre.application.exceptions import GenreNotFound
 from src.core.genre.application.usecases.delete_genre import (
     DeleteGenre,
 )
-from src.core.genre.application.exceptions import GenreNotFound
-from src.core.genre.infra.in_memory_genre_repository import InMemoryGenreRepository
 from src.core.genre.domain.genre import Genre
+from src.core.genre.infra.in_memory_genre_repository import InMemoryGenreRepository
 
 
 @pytest.fixture

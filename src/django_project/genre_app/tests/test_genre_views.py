@@ -1,12 +1,13 @@
 import uuid
+
 import pytest
+from rest_framework import status
+from rest_framework.test import APIClient
+
 from src.core.category.domain.category import Category
 from src.core.genre.domain.genre import Genre
 from src.django_project.category_app.repository import DjangoORMCategoryRepository
 from src.django_project.genre_app.repository import DjangoORMGenreRepository
-
-from rest_framework.test import APIClient
-from rest_framework import status
 
 
 @pytest.fixture
@@ -147,7 +148,7 @@ class TestDeleteAPI:
 
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
-    def test_when_category_not_found_then_return_404(
+    def test_delete_genre_success_with_related_categories(
         self,
         category_movie,
         category_series,
@@ -178,7 +179,7 @@ class TestDeleteAPI:
 class TestUpdateAPI:
 
     def test_when_request_data_is_invalid_then_return_400(self):
-        url = f"/api/genres/123123123/"
+        url = "/api/genres/123123123/"
         data = {
             "name": "",
             "is_active": True,
@@ -222,7 +223,7 @@ class TestUpdateAPI:
         assert len(genre_items) == 2
         assert updated_genre is not None
         assert updated_genre.name == "Drama Deactivation"
-        assert updated_genre.is_active == False
+        assert not updated_genre.is_active
         assert updated_genre.categories == set()
 
     def test_when_genre_does_not_exist_then_return_404(

@@ -1,14 +1,12 @@
 import uuid
+
 import pytest
 
 from src.core.category.domain.category import Category
 from src.core.category.domain.category_repository import ICategoryRepository
-from src.core.genre.domain.genre import Genre
-from src.core.genre.domain.genre_repository import IGenreRepository
 from src.core.category.infra.in_memory_category_repository import (
     InMemoryCategoryRepository,
 )
-from src.core.genre.infra.in_memory_genre_repository import InMemoryGenreRepository
 from src.core.genre.application.exceptions import (
     InvalidGenre,
     RelatedCategoriesNotFound,
@@ -16,6 +14,9 @@ from src.core.genre.application.exceptions import (
 from src.core.genre.application.usecases.update_genre import (
     UpdateGenre,
 )
+from src.core.genre.domain.genre import Genre
+from src.core.genre.domain.genre_repository import IGenreRepository
+from src.core.genre.infra.in_memory_genre_repository import InMemoryGenreRepository
 
 # -------------------- Fixtures -------------------- #
 

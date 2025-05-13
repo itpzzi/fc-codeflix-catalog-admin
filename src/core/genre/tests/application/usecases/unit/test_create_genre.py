@@ -5,12 +5,12 @@ import pytest
 
 from src.core.category.domain.category import Category
 from src.core.category.domain.category_repository import ICategoryRepository
-from src.core.genre.application.usecases.create_genre import (
-    CreateGenre,
-)
 from src.core.genre.application.exceptions import (
     InvalidGenre,
     RelatedCategoriesNotFound,
+)
+from src.core.genre.application.usecases.create_genre import (
+    CreateGenre,
 )
 from src.core.genre.domain.genre import Genre
 from src.core.genre.domain.genre_repository import IGenreRepository

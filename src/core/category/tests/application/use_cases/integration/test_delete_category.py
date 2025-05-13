@@ -1,10 +1,10 @@
-from src.core.category.infra.in_memory_category_repository import (
-    InMemoryCategoryRepository,
-)
 from src.core.category.application.usecases.delete_category import (
     DeleteCategory,
 )
 from src.core.category.domain.category import Category
+from src.core.category.infra.in_memory_category_repository import (
+    InMemoryCategoryRepository,
+)
 
 
 class TestDeleteCategory:

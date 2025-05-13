@@ -1,4 +1,5 @@
 from uuid import UUID
+
 from core.cast_member.domain.cast_member import CastMember
 from core.cast_member.domain.cast_member_repository import ICastMemberRepository
 
