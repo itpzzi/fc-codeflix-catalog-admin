@@ -18,11 +18,11 @@ from core.cast_member.application.usecases.update_cast_member import (
 )
 from django_project.cast_member_app.repository import DjangoORMCastMemberRepository
 from django_project.cast_member_app.serializers import (
-    CreateCastMemberRequestSerializer,
-    CreateCastMemberResponseSerializer,
-    DeleteCastMemberRequestSerializer,
-    ListCastMemberResponseSerializer,
-    UpdateCastMemberRequestSerializer,
+    CreateCastMemberDeserializer,
+    CreateCastMemberSerializer,
+    DeleteCastMemberDeserializer,
+    ListCastMemberSerializer,
+    UpdateCastMemberDeserializer,
 )
 from src.core.cast_member.application.exceptions import (
     CastMemberNotFound,
@@ -33,7 +33,7 @@ from src.core.cast_member.application.exceptions import (
 class CastMemberViewSet(viewsets.ViewSet):
 
     def create(self, request: Request) -> Response:
-        deserializer = CreateCastMemberRequestSerializer(data=request.data)
+        deserializer = CreateCastMemberDeserializer(data=request.data)
         deserializer.is_valid(raise_exception=True)
 
         input = CreateCastMember.Input(**deserializer.validated_data)
@@ -48,7 +48,7 @@ class CastMemberViewSet(viewsets.ViewSet):
 
         return Response(
             status=status.HTTP_201_CREATED,
-            data=CreateCastMemberResponseSerializer(instance=output).data,
+            data=CreateCastMemberSerializer(instance=output).data,
         )
 
     def list(self, request: Request) -> Response:
@@ -57,12 +57,12 @@ class CastMemberViewSet(viewsets.ViewSet):
 
         output = use_case.execute(input=input)
 
-        serializer = ListCastMemberResponseSerializer(instance=output)
+        serializer = ListCastMemberSerializer(instance=output)
 
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     def destroy(self, request: Request, pk: UUID = None):
-        deserializer = DeleteCastMemberRequestSerializer(data={"id": pk})
+        deserializer = DeleteCastMemberDeserializer(data={"id": pk})
         deserializer.is_valid(raise_exception=True)
 
         input = DeleteCastMember.Input(**deserializer.validated_data)
@@ -76,7 +76,7 @@ class CastMemberViewSet(viewsets.ViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def update(self, request: Request, pk: UUID = None):
-        deserializer = UpdateCastMemberRequestSerializer(
+        deserializer = UpdateCastMemberDeserializer(
             data={
                 **request.data,
                 "id": pk,

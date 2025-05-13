@@ -1,26 +1,26 @@
 from rest_framework import serializers
 
 
-class CategoryResponseSerializer(serializers.Serializer):
+class CategorySerializer(serializers.Serializer):
     id = serializers.UUIDField()
     name = serializers.CharField(max_length=255)
     description = serializers.CharField()
     is_active = serializers.BooleanField()
 
 
-class ListCategoryResponseSerializer(serializers.Serializer):
-    data = CategoryResponseSerializer(many=True)
+class ListCategorySerializer(serializers.Serializer):
+    data = CategorySerializer(many=True)
 
 
-class RetrieveCategoryRequestSerializer(serializers.Serializer):
+class RetrieveCategoryDeserializer(serializers.Serializer):
     id = serializers.UUIDField()
 
 
-class RetrieveCategoryResponseSerializer(serializers.Serializer):
-    data = CategoryResponseSerializer(source="*")
+class RetrieveCategorySerializer(serializers.Serializer):
+    data = CategorySerializer(source="*")
 
 
-class CreateCategoryRequestSerializer(serializers.Serializer):
+class CreateCategoryDeserializer(serializers.Serializer):
     name = serializers.CharField(max_length=255)
     description = serializers.CharField(
         max_length=255, required=False, allow_blank=True, allow_null=False
@@ -28,11 +28,11 @@ class CreateCategoryRequestSerializer(serializers.Serializer):
     is_active = serializers.BooleanField(default=True)
 
 
-class CreateCategoryResponseSerializer(serializers.Serializer):
+class CreateCategorySerializer(serializers.Serializer):
     id = serializers.UUIDField()
 
 
-class UpdateCategoryRequestSerializer(serializers.Serializer):
+class UpdateCategoryDeserializer(serializers.Serializer):
     id = serializers.UUIDField(required=True)
     name = serializers.CharField(required=True, max_length=255)
     description = serializers.CharField(
@@ -50,5 +50,5 @@ class UpdateCategoryRequestSerializer(serializers.Serializer):
         return attrs
 
 
-class DeleteCategoryRequestSerializer(serializers.Serializer):
+class DeleteCategoryDeserializer(serializers.Serializer):
     id = serializers.UUIDField(required=True)

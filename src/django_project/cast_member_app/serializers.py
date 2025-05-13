@@ -15,30 +15,30 @@ class CastMemberTypeField(serializers.ChoiceField):
         return str(super().to_representation(value))
 
 
-class CreateCastMemberRequestSerializer(serializers.Serializer):
+class CreateCastMemberDeserializer(serializers.Serializer):
     name = serializers.CharField(max_length=255)
     type = CastMemberTypeField()
 
 
-class CreateCastMemberResponseSerializer(serializers.Serializer):
+class CreateCastMemberSerializer(serializers.Serializer):
     id = serializers.UUIDField()
 
 
-class CastMemberResponseSerializer(serializers.Serializer):
+class CastMemberSerializer(serializers.Serializer):
     id = serializers.UUIDField()
     name = serializers.CharField(max_length=255)
     type = CastMemberTypeField()
 
 
-class ListCastMemberResponseSerializer(serializers.Serializer):
-    data = CastMemberResponseSerializer(many=True)
+class ListCastMemberSerializer(serializers.Serializer):
+    data = CastMemberSerializer(many=True)
 
 
-class DeleteCastMemberRequestSerializer(serializers.Serializer):
+class DeleteCastMemberDeserializer(serializers.Serializer):
     id = serializers.UUIDField()
 
 
-class UpdateCastMemberRequestSerializer(serializers.Serializer):
+class UpdateCastMemberDeserializer(serializers.Serializer):
     id = serializers.UUIDField(required=True)
     name = serializers.CharField(required=True, max_length=255)
     type = CastMemberTypeField(required=True)

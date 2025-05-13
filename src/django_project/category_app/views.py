@@ -28,13 +28,13 @@ from src.core.category.application.usecases.update_category import (
 )
 from src.django_project.category_app.repository import DjangoORMCategoryRepository
 from src.django_project.category_app.serializers import (
-    CreateCategoryRequestSerializer,
-    CreateCategoryResponseSerializer,
-    DeleteCategoryRequestSerializer,
-    ListCategoryResponseSerializer,
-    RetrieveCategoryRequestSerializer,
-    RetrieveCategoryResponseSerializer,
-    UpdateCategoryRequestSerializer,
+    CreateCategoryDeserializer,
+    CreateCategorySerializer,
+    DeleteCategoryDeserializer,
+    ListCategorySerializer,
+    RetrieveCategoryDeserializer,
+    RetrieveCategorySerializer,
+    UpdateCategoryDeserializer,
 )
 
 
@@ -45,11 +45,11 @@ class CategoryViewSet(viewsets.ViewSet):
 
         output = use_case.execute(input)
 
-        serializer = ListCategoryResponseSerializer(instance=output)
+        serializer = ListCategorySerializer(instance=output)
         return Response(status=HTTP_200_OK, data=serializer.data)
 
     def retrieve(self, request: Request, pk: None) -> Response:
-        deserializer = RetrieveCategoryRequestSerializer(data={"id": pk})
+        deserializer = RetrieveCategoryDeserializer(data={"id": pk})
         deserializer.is_valid(raise_exception=True)
 
         input = GetCategory.Input(id=deserializer.data.get("id"))
@@ -60,14 +60,14 @@ class CategoryViewSet(viewsets.ViewSet):
         except CategoryNotFound:
             return Response(status=HTTP_404_NOT_FOUND)
 
-        serializer = RetrieveCategoryResponseSerializer(instance=output)
+        serializer = RetrieveCategorySerializer(instance=output)
         return Response(
             status=HTTP_200_OK,
             data=serializer.data,
         )
 
     def create(self, request: Request) -> Response:
-        deserializer = CreateCategoryRequestSerializer(data=request.data)
+        deserializer = CreateCategoryDeserializer(data=request.data)
         deserializer.is_valid(raise_exception=True)
 
         input = CreateCategory.Input(**deserializer.validated_data)
@@ -77,11 +77,11 @@ class CategoryViewSet(viewsets.ViewSet):
 
         return Response(
             status=HTTP_201_CREATED,
-            data=CreateCategoryResponseSerializer(instance=output).data,
+            data=CreateCategorySerializer(instance=output).data,
         )
 
     def update(self, request: Request, pk: UUID = None):
-        deserializer = UpdateCategoryRequestSerializer(
+        deserializer = UpdateCategoryDeserializer(
             data={
                 **request.data,
                 "id": pk,
@@ -99,7 +99,7 @@ class CategoryViewSet(viewsets.ViewSet):
         return Response(status=HTTP_204_NO_CONTENT)
 
     def destroy(self, request: Request, pk: UUID = None):
-        deserializer = DeleteCategoryRequestSerializer(data={"id": pk})
+        deserializer = DeleteCategoryDeserializer(data={"id": pk})
         deserializer.is_valid(raise_exception=True)
 
         input = DeleteCategory.Input(**deserializer.validated_data)
@@ -112,7 +112,7 @@ class CategoryViewSet(viewsets.ViewSet):
         return Response(status=HTTP_204_NO_CONTENT)
 
     def partial_update(self, request, pk: UUID = None):
-        deserializer = UpdateCategoryRequestSerializer(
+        deserializer = UpdateCategoryDeserializer(
             data={
                 **request.data,
                 "id": pk,

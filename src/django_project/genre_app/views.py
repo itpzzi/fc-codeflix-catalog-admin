@@ -31,11 +31,11 @@ from src.core.genre.application.usecases.update_genre import (
 from src.django_project.category_app.repository import DjangoORMCategoryRepository
 from src.django_project.genre_app.repository import DjangoORMGenreRepository
 from src.django_project.genre_app.serializers import (
-    CreateGenreRequestSerializer,
-    CreateGenreResponseSerializer,
-    DeleteGenreRequestSerializer,
-    ListGenreResponseSerializer,
-    UpdateGenreRequestSerializer,
+    CreateGenreDeserializer,
+    CreateGenreSerializer,
+    DeleteGenreDeserializer,
+    ListGenreSerializer,
+    UpdateGenreDeserializer,
 )
 
 
@@ -46,11 +46,11 @@ class GenreViewSet(viewsets.ViewSet):
 
         output = use_case.execute(input)
 
-        serializer = ListGenreResponseSerializer(instance=output)
+        serializer = ListGenreSerializer(instance=output)
         return Response(status=HTTP_200_OK, data=serializer.data)
 
     def create(self, request: Request) -> Response:
-        deserializer = CreateGenreRequestSerializer(data=request.data)
+        deserializer = CreateGenreDeserializer(data=request.data)
         deserializer.is_valid(raise_exception=True)
 
         input = CreateGenre.Input(**deserializer.validated_data)
@@ -66,11 +66,11 @@ class GenreViewSet(viewsets.ViewSet):
 
         return Response(
             status=HTTP_201_CREATED,
-            data=CreateGenreResponseSerializer(instance=output).data,
+            data=CreateGenreSerializer(instance=output).data,
         )
 
     def update(self, request: Request, pk: UUID = None):
-        deserializer = UpdateGenreRequestSerializer(
+        deserializer = UpdateGenreDeserializer(
             data={
                 **request.data,
                 "id": pk,
@@ -93,7 +93,7 @@ class GenreViewSet(viewsets.ViewSet):
         return Response(status=HTTP_204_NO_CONTENT)
 
     def destroy(self, request: Request, pk: UUID = None):
-        deserializer = DeleteGenreRequestSerializer(data={"id": pk})
+        deserializer = DeleteGenreDeserializer(data={"id": pk})
         deserializer.is_valid(raise_exception=True)
 
         input = DeleteGenre.Input(**deserializer.validated_data)
