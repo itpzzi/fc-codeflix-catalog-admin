@@ -32,24 +32,24 @@ class CreateGenreUseCase:
         self.repository = repository
         self.category_repository = category_repository
 
-    def _validate_categories_exists(self, request: CreateGenreInput):
+    def _validate_categories_exists(self, input: CreateGenreInput):
         existent_categories_ids = {
             category.id for category in self.category_repository.list()
         }
 
-        if not request.categories.issubset(existent_categories_ids):
+        if not input.categories.issubset(existent_categories_ids):
             raise RelatedCategoriesNotFound(
-                f"Categories with provided IDs not found: {request.categories - existent_categories_ids}"
+                f"Categories with provided IDs not found: {input.categories - existent_categories_ids}"
             )
 
-    def execute(self, request: CreateGenreInput) -> CreateGenreOutput:
-        self._validate_categories_exists(request)
+    def execute(self, input: CreateGenreInput) -> CreateGenreOutput:
+        self._validate_categories_exists(input)
 
         try:
             genre = Genre(
-                name=request.name,
-                categories=request.categories,
-                is_active=request.is_active,
+                name=input.name,
+                categories=input.categories,
+                is_active=input.is_active,
             )
         except ValueError as error:
             raise InvalidGenre(error)

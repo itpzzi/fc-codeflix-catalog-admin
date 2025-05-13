@@ -25,16 +25,16 @@ class UpdateCastMemberUseCase:
     def __init__(self, repository: ICastMemberRepository):
         self.repository = repository
 
-    def execute(self, request: UpdateCastMemberInput) -> None:
-        cast_member_from_repo = self.repository.get_by_id(request.id)
+    def execute(self, input: UpdateCastMemberInput) -> None:
+        cast_member_from_repo = self.repository.get_by_id(input.id)
 
         if cast_member_from_repo is None:
             raise CastMemberNotFound(
-                f"Cannot update non-existent cast member. {request.id} not found"
+                f"Cannot update non-existent cast member. {input.id} not found"
             )
 
         try:
-            cast_member_from_repo.update_cast_member(request.name, request.type)
+            cast_member_from_repo.update_cast_member(input.name, input.type)
         except ValueError as error:
             raise InvalidCastMember(error)
 

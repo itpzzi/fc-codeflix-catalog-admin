@@ -20,12 +20,12 @@ class DeleteGenreUseCase:
     def __init__(self, repository: IGenreRepository):
         self.repository = repository
 
-    def execute(self, request: DeleteGenreInput) -> None:
-        genre_from_repo = self.repository.get_by_id(request.id)
+    def execute(self, input: DeleteGenreInput) -> None:
+        genre_from_repo = self.repository.get_by_id(input.id)
 
         if not genre_from_repo:
             raise GenreNotFound(
-                f"Cannot delete non-existent genre. {request.id} not found"
+                f"Cannot delete non-existent genre. {input.id} not found"
             )
 
         self.repository.delete(genre_from_repo.id)

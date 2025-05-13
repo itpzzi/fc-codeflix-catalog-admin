@@ -25,9 +25,9 @@ class TestDeleteCategory:
         mock_repository.get_by_id.return_value = mock_category
 
         use_case = DeleteCategoryUseCase(repository=mock_repository)
-        request = DeleteCategoryInput(id=mock_category.id)
+        input = DeleteCategoryInput(id=mock_category.id)
 
-        use_case.execute(request)
+        use_case.execute(input=input)
 
         mock_repository.delete.assert_called_once_with = mock_category.id
 
@@ -36,13 +36,13 @@ class TestDeleteCategory:
         mock_repository.get_by_id.return_value = None
 
         use_case = DeleteCategoryUseCase(repository=mock_repository)
-        request = DeleteCategoryInput(id=uuid.uuid4())
+        input = DeleteCategoryInput(id=uuid.uuid4())
 
         with pytest.raises(
             CategoryNotFound,
-            match=f"Cannot delete non-existent category. {request.id} not found",
+            match=f"Cannot delete non-existent category. {input.id} not found",
         ):
-            use_case.execute(request)
+            use_case.execute(input=input)
 
         mock_repository.delete.assert_not_called()
         assert mock_repository.delete.called is False

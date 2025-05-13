@@ -24,10 +24,10 @@ class TestDeleteCastMember:
         self, mock_repository, actor_cast_member
     ):
         mock_repository.get_by_id.return_value = actor_cast_member
-        request = DeleteCastMemberInput(id=actor_cast_member.id)
+        input = DeleteCastMemberInput(id=actor_cast_member.id)
         use_case = DeleteCastMemberUseCase(repository=mock_repository)
 
-        use_case.execute(request)
+        use_case.execute(input=input)
 
         mock_repository.delete.assert_called_once_with(actor_cast_member.id)
 
@@ -35,11 +35,11 @@ class TestDeleteCastMember:
         self, mock_repository, actor_cast_member
     ):
         mock_repository.get_by_id.return_value = None
-        request = DeleteCastMemberInput(id=actor_cast_member.id)
+        input = DeleteCastMemberInput(id=actor_cast_member.id)
         use_case = DeleteCastMemberUseCase(repository=mock_repository)
 
         with pytest.raises(CastMemberNotFound) as exc:
-            use_case.execute(request=request)
+            use_case.execute(input=input)
 
         mock_repository.delete.assert_not_called()
         assert str(actor_cast_member.id) in str(exc.value)

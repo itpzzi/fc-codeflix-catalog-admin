@@ -21,26 +21,26 @@ class UpdateCategoryUseCase:
     def __init__(self, repository: ICategoryRepository):
         self.repository = repository
 
-    def execute(self, request: UpdateCategoryInput) -> None:
-        category_from_repo = self.repository.get_by_id(request.id)
+    def execute(self, input: UpdateCategoryInput) -> None:
+        category_from_repo = self.repository.get_by_id(input.id)
 
         if category_from_repo is None:
             raise CategoryNotFound(
-                f"Cannot update non-existent category. {request.id} not found"
+                f"Cannot update non-existent category. {input.id} not found"
             )
 
         current_name = category_from_repo.name
         current_description = category_from_repo.description
         current_is_active = category_from_repo.is_active
 
-        if request.name is not None:
-            current_name = request.name
+        if input.name is not None:
+            current_name = input.name
 
-        if request.description is not None:
-            current_description = request.description
+        if input.description is not None:
+            current_description = input.description
 
-        if request.is_active is not None:
-            current_is_active = request.is_active
+        if input.is_active is not None:
+            current_is_active = input.is_active
 
         category_from_repo.update_category(
             name=current_name, description=current_description

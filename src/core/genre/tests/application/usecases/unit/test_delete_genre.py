@@ -25,24 +25,24 @@ def mock_genre_repository():
 class TestDeleteGenre:
     def test_delete_genre_from_repository(self, mock_genre_repository, adventure_genre):
         use_case = DeleteGenreUseCase(repository=mock_genre_repository)
-        request = DeleteGenreInput(id=adventure_genre.id)
+        input = DeleteGenreInput(id=adventure_genre.id)
         mock_genre_repository.get_by_id.return_value = adventure_genre
 
-        use_case.execute(request)
+        use_case.execute(input=input)
 
         mock_genre_repository.delete.assert_called_once_with(adventure_genre.id)
 
     def test_when_genre_not_found_then_raises_exception(self, mock_genre_repository):
         use_case = DeleteGenreUseCase(repository=mock_genre_repository)
         fake_id = uuid.uuid4()
-        request = DeleteGenreInput(id=fake_id)
+        input = DeleteGenreInput(id=fake_id)
         mock_genre_repository.get_by_id.return_value = None
 
         with pytest.raises(
             GenreNotFound,
-            match=f"Cannot delete non-existent genre. {request.id} not found",
+            match=f"Cannot delete non-existent genre. {input.id} not found",
         ):
-            use_case.execute(request)
+            use_case.execute(input=input)
 
         mock_genre_repository.delete.assert_not_called()
         assert mock_genre_repository.delete.called is False

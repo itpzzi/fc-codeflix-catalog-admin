@@ -27,10 +27,10 @@ class GetCategoryUseCase:
     def __init__(self, repository: ICategoryRepository):
         self.repository = repository
 
-    def execute(self, request: GetCategoryInput) -> GetCategoryOutput:
-        category_from_repo = self.repository.get_by_id(request.id)
+    def execute(self, input: GetCategoryInput) -> GetCategoryOutput:
+        category_from_repo = self.repository.get_by_id(input.id)
         if category_from_repo is None:
-            raise CategoryNotFound(f"Category {request.id} not found")
+            raise CategoryNotFound(f"Category {input.id} not found")
 
         try:
             category = Category(

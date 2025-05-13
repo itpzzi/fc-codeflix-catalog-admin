@@ -27,10 +27,10 @@ class TestGetCategory:
         )
 
         use_case = GetCategoryUseCase(repository=repository)
-        request = GetCategoryInput(id=category_movie.id)
-        response = use_case.execute(request=request)
+        input = GetCategoryInput(id=category_movie.id)
+        output = use_case.execute(input=input)
 
-        assert response == GetCategoryOutput(
+        assert output == GetCategoryOutput(
             id=category_movie.id,
             name="Filme",
             description="Filmes em geral.",
@@ -50,8 +50,8 @@ class TestGetCategory:
         fake_id = uuid.uuid4()
 
         use_case = GetCategoryUseCase(repository=repository)
-        request = GetCategoryInput(id=fake_id)
+        input = GetCategoryInput(id=fake_id)
         with pytest.raises(
             CategoryNotFound, match=f"Category {fake_id} not found"
         ) as exc:
-            use_case.execute(request=request)
+            use_case.execute(input=input)

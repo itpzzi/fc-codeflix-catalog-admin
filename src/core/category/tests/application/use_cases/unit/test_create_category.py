@@ -17,15 +17,13 @@ class TestCreateCategory:
     def test_create_category_with_valid_data(self):
         repository = MagicMock(ICategoryRepository)
         use_case = CreateCategoryUseCase(repository=repository)
-        request = CreateCategoryInput(
-            name="Filme", description="Filme", is_active=False
-        )
+        input = CreateCategoryInput(name="Filme", description="Filme", is_active=False)
 
-        response = use_case.execute(request=request)
+        output = use_case.execute(input=input)
 
-        assert response.id is not None
-        assert isinstance(response, CreateCategoryOutput)
-        assert isinstance(response.id, UUID)
+        assert output.id is not None
+        assert isinstance(output, CreateCategoryOutput)
+        assert isinstance(output.id, UUID)
         assert repository.save.called is True
 
     def test_create_category_with_invalid_data(self):

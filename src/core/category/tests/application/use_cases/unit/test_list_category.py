@@ -28,10 +28,10 @@ class TestListCategory:
         )
         mock_repository = create_autospec(ICategoryRepository)
         mock_repository.list.return_value = [mock_category1, mock_category2]
-        request = ListCategoryInput()
+        input = ListCategoryInput()
         use_case = ListCategoryUseCase(repository=mock_repository)
 
-        response = use_case.execute(request)
+        output = use_case.execute(input=input)
 
-        assert response == ListCategoryOutput(data=response.data)
-        assert len(response.data) == 2
+        assert output == ListCategoryOutput(data=output.data)
+        assert len(output.data) == 2

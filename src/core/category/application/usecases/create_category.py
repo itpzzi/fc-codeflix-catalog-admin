@@ -25,12 +25,12 @@ class CreateCategoryUseCase:
     def __init__(self, repository: ICategoryRepository):
         self.repository = repository
 
-    def execute(self, request: CreateCategoryInput) -> CreateCategoryOutput:
+    def execute(self, input: CreateCategoryInput) -> CreateCategoryOutput:
         try:
             category = Category(
-                name=request.name,
-                description=request.description,
-                is_active=request.is_active,
+                name=input.name,
+                description=input.description,
+                is_active=input.is_active,
             )
         except ValueError as error:
             raise InvalidCategory(error)

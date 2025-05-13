@@ -24,20 +24,20 @@ def actor_cast_member():
 class TestCreateCastMember:
     def test_should_raise_exception_when_cast_member_is_invalid(self, mock_repository):
         use_case = CreateCastMemberUseCase(repository=mock_repository)
-        request = CreateCastMemberInput(name="", type=CastMemberType.ACTOR)  # inválido
+        input = CreateCastMemberInput(name="", type=CastMemberType.ACTOR)  # inválido
 
         with pytest.raises(InvalidCastMember) as exc:
-            use_case.execute(request)
+            use_case.execute(input=input)
 
         mock_repository.save.assert_not_called()
         assert "name cannot be empty" in str(exc.value)
 
     def test_should_create_cast_member_when_input_is_valid(self, mock_repository):
         use_case = CreateCastMemberUseCase(repository=mock_repository)
-        request = CreateCastMemberInput(name="Steve", type=CastMemberType.ACTOR)
+        input = CreateCastMemberInput(name="Steve", type=CastMemberType.ACTOR)
 
-        response = use_case.execute(request)
+        output = use_case.execute(input=input)
 
-        assert isinstance(response, CreateCastMemberOutput)
-        assert isinstance(response.id, UUID)
+        assert isinstance(output, CreateCastMemberOutput)
+        assert isinstance(output.id, UUID)
         mock_repository.save.assert_called_once()

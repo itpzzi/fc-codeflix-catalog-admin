@@ -33,10 +33,10 @@ class TestUpdateCastMember:
         use_case = UpdateCastMemberUseCase(repository=mock_repository)
         fake_id = "non-existent-id"
 
-        request = UpdateCastMemberInput(id=fake_id, name="Any Name", type="actor")
+        input = UpdateCastMemberInput(id=fake_id, name="Any Name", type="actor")
 
         with pytest.raises(CastMemberNotFound) as exc:
-            use_case.execute(request)
+            use_case.execute(input=input)
 
         mock_repository.update.assert_not_called()
         assert fake_id in str(exc.value)
@@ -47,12 +47,12 @@ class TestUpdateCastMember:
         mock_repository.get_by_id.return_value = mock_cast_member
         use_case = UpdateCastMemberUseCase(repository=mock_repository)
 
-        request = UpdateCastMemberInput(
+        input = UpdateCastMemberInput(
             id=mock_cast_member.id, name="", type="invalid-type"
         )
 
         with pytest.raises(InvalidCastMember):
-            use_case.execute(request)
+            use_case.execute(input=input)
 
         mock_repository.update.assert_not_called()
 
@@ -62,11 +62,11 @@ class TestUpdateCastMember:
         mock_repository.get_by_id.return_value = mock_cast_member
         use_case = UpdateCastMemberUseCase(repository=mock_repository)
 
-        request = UpdateCastMemberInput(
+        input = UpdateCastMemberInput(
             id=mock_cast_member.id, name="Zombie", type=CastMemberType.DIRECTOR
         )
 
-        use_case.execute(request)
+        use_case.execute(input=input)
 
         assert mock_cast_member.name == "Zombie"
         assert mock_cast_member.type == CastMemberType.DIRECTOR

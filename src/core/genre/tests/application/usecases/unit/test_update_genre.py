@@ -55,13 +55,13 @@ class TestUpdateGenreUseCase:
         use_case: UpdateGenreUseCase,
     ) -> None:
         genre_id = uuid.uuid4()
-        request = UpdateGenreInput(
+        input = UpdateGenreInput(
             id=genre_id, name="Terror", categories=set(), is_active=True
         )
         mock_genre_repository.get_by_id.return_value = None
 
         with pytest.raises(GenreNotFound) as exc:
-            use_case.execute(request)
+            use_case.execute(input=input)
 
         mock_genre_repository.update.assert_not_called()
         assert (
@@ -81,7 +81,7 @@ class TestUpdateGenreUseCase:
         genre_id = uuid.uuid4()
         nonexistent_category_id = uuid.uuid4()
 
-        request = UpdateGenreInput(
+        input = UpdateGenreInput(
             id=genre_id,
             name="Terror",
             categories={nonexistent_category_id},
@@ -89,7 +89,7 @@ class TestUpdateGenreUseCase:
         )
 
         with pytest.raises(RelatedCategoriesNotFound) as exc:
-            use_case.execute(request)
+            use_case.execute(input=input)
 
         assert str(nonexistent_category_id) in str(exc.value)
 
@@ -116,9 +116,9 @@ class TestUpdateGenreUseCase:
             UpdateGenreInput(id=genre_id, name="", categories=set(), is_active="invalid"),  # type: ignore
         ]
 
-        for request in invalid_requests:
+        for input in invalid_requests:
             with pytest.raises(InvalidGenre):
-                use_case.execute(request)
+                use_case.execute(input=input)
 
         mock_genre_repository.update.assert_not_called()
 
@@ -154,14 +154,14 @@ class TestUpdateGenreUseCase:
             category_repository=mock_category_repository,
         )
 
-        request = UpdateGenreInput(
+        input = UpdateGenreInput(
             id=genre_id,
             name="New Genre Name",
             is_active=True,
             categories=selected_categories,
         )
 
-        use_case.execute(request)
+        use_case.execute(input=input)
 
         assert existing_genre.name == "New Genre Name"
         assert existing_genre.is_active is True

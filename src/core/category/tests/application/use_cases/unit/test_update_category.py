@@ -22,9 +22,9 @@ class TestUpdateCategory:
         mock_repository.get_by_id.return_value = mock_category
 
         use_case = UpdateCategoryUseCase(repository=mock_repository)
-        request = UpdateCategoryInput(id=mock_category.id, name="Série")
+        input = UpdateCategoryInput(id=mock_category.id, name="Série")
 
-        use_case.execute(request)
+        use_case.execute(input=input)
 
         assert mock_category.name == "Série"
         assert mock_category.description == "Categoria para filmes"
@@ -41,11 +41,11 @@ class TestUpdateCategory:
         mock_repository.get_by_id.return_value = mock_category
 
         use_case = UpdateCategoryUseCase(repository=mock_repository)
-        request = UpdateCategoryInput(
+        input = UpdateCategoryInput(
             id=mock_category.id, description="Categoria para séries"
         )
 
-        use_case.execute(request)
+        use_case.execute(input=input)
 
         assert mock_category.name == "Filme"
         assert mock_category.description == "Categoria para séries"
@@ -62,9 +62,9 @@ class TestUpdateCategory:
         mock_repository.get_by_id.return_value = mock_category
 
         use_case = UpdateCategoryUseCase(repository=mock_repository)
-        request = UpdateCategoryInput(id=mock_category.id, is_active=False)
+        input = UpdateCategoryInput(id=mock_category.id, is_active=False)
 
-        use_case.execute(request)
+        use_case.execute(input=input)
 
         assert mock_category.name == "Filme"
         assert mock_category.is_active is False
@@ -82,9 +82,9 @@ class TestUpdateCategory:
         mock_repository.get_by_id.return_value = mock_category
 
         use_case = UpdateCategoryUseCase(repository=mock_repository)
-        request = UpdateCategoryInput(id=mock_category.id, is_active=True)
+        input = UpdateCategoryInput(id=mock_category.id, is_active=True)
 
-        use_case.execute(request)
+        use_case.execute(input=input)
 
         assert mock_category.name == "Filme"
         assert mock_category.is_active is True

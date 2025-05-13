@@ -28,7 +28,7 @@ class ListCategoryUseCase:
     def __init__(self, repository: ICategoryRepository):
         self.repository = repository
 
-    def execute(self, request: ListCategoryInput) -> ListCategoryOutput:
+    def execute(self, input: ListCategoryInput) -> ListCategoryOutput:
         categories = self.repository.list()
 
         return ListCategoryOutput(

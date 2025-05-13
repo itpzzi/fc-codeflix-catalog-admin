@@ -28,11 +28,11 @@ class TestUpdateCastMember:
     def test_can_update_cast_member_name_and_type(self, repository, actor_cast_member):
         repository.save(actor_cast_member)
         use_case = UpdateCastMemberUseCase(repository=repository)
-        request = UpdateCastMemberInput(
+        input = UpdateCastMemberInput(
             id=actor_cast_member.id, name="Zombie", type=CastMemberType.DIRECTOR
         )
 
-        use_case.execute(request)
+        use_case.execute(input=input)
 
         updated_cast_member = repository.get_by_id(actor_cast_member.id)
         assert updated_cast_member is not None

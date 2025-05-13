@@ -43,7 +43,7 @@ class TestListCastMember:
         mock_cast_member_zombie,
         mock_repository_with_cast_members,
     ):
-        request = ListCastMemberInput()
+        input = ListCastMemberInput()
         use_case = ListCastMemberUseCase(repository=mock_repository_with_cast_members)
         expected_data = [
             ListCastMemberItem(
@@ -54,17 +54,17 @@ class TestListCastMember:
             for cast_member in [mock_cast_member_steve, mock_cast_member_zombie]
         ]
 
-        response = use_case.execute(request=request)
+        output = use_case.execute(input=input)
 
-        assert response == ListCastMemberOutput(data=expected_data)
-        assert len(response.data) == 2
+        assert output == ListCastMemberOutput(data=expected_data)
+        assert len(output.data) == 2
 
     def test_list_empty_list_for_an_empty_repository(self, mock_repository):
         empty_repository = mock_repository
-        request = ListCastMemberInput()
+        input = ListCastMemberInput()
         use_case = ListCastMemberUseCase(repository=empty_repository)
         expected_data = []
 
-        response = use_case.execute(request=request)
+        output = use_case.execute(input=input)
 
-        assert response == ListCastMemberOutput(data=expected_data)
+        assert output == ListCastMemberOutput(data=expected_data)

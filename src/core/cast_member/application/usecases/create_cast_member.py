@@ -20,11 +20,11 @@ class CreateCastMemberUseCase:
     def __init__(self, repository: ICastMemberRepository):
         self.repository = repository
 
-    def execute(self, request: CreateCastMemberInput) -> CreateCastMemberOutput:
+    def execute(self, input: CreateCastMemberInput) -> CreateCastMemberOutput:
         try:
             cast_member = CastMember(
-                name=request.name,
-                type=request.type,
+                name=input.name,
+                type=input.type,
             )
         except ValueError as error:
             raise InvalidCastMember(error)

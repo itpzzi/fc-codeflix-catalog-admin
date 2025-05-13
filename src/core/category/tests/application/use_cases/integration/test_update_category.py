@@ -20,14 +20,14 @@ class TestUpdateCategory:
         repository = InMemoryCategoryRepository(categories=[])
         repository.save(mock_category)
         use_case = UpdateCategoryUseCase(repository=repository)
-        request = UpdateCategoryInput(
+        input = UpdateCategoryInput(
             id=mock_category.id,
             name="Animações",
             description="Animações para público geral.",
             is_active=False,
         )
 
-        use_case.execute(request)
+        use_case.execute(input=input)
 
         updated_category = repository.get_by_id(mock_category.id)
         assert updated_category is not None

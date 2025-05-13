@@ -34,37 +34,37 @@ class UpdateGenreUseCase:
         self.repository = repository
         self.category_repository = category_repository
 
-    def _validate_genre_exists(self, request: UpdateGenreInput) -> Genre:
-        genre_from_repo = self.repository.get_by_id(request.id)
+    def _validate_genre_exists(self, input: UpdateGenreInput) -> Genre:
+        genre_from_repo = self.repository.get_by_id(input.id)
 
         if not genre_from_repo:
             raise GenreNotFound(
-                f"Cannot update non-existent genre. {request.id} not found"
+                f"Cannot update non-existent genre. {input.id} not found"
             )
 
         return genre_from_repo
 
-    def _validate_categories_exists(self, request: UpdateGenreInput):
+    def _validate_categories_exists(self, input: UpdateGenreInput):
         existent_categories_ids = {
             category.id for category in self.category_repository.list()
         }
 
-        if not request.categories.issubset(existent_categories_ids):
+        if not input.categories.issubset(existent_categories_ids):
             raise RelatedCategoriesNotFound(
-                f"Categories with provided IDs not found: {request.categories - existent_categories_ids}"
+                f"Categories with provided IDs not found: {input.categories - existent_categories_ids}"
             )
 
-    def _update_genre_with_requested_data(
-        self, genre_to_update: Genre, request: UpdateGenreInput
+    def _update_genre_with_inputed_data(
+        self, genre_to_update: Genre, input: UpdateGenreInput
     ) -> Genre:
         try:
-            genre_to_update.change_name(request.name)
-            genre_to_update.categories = request.categories
+            genre_to_update.change_name(input.name)
+            genre_to_update.categories = input.categories
 
-            if not isinstance(request.is_active, bool):
+            if not isinstance(input.is_active, bool):
                 raise ValueError("is_active must be a boolean")
 
-            if request.is_active:
+            if input.is_active:
                 genre_to_update.activate()
             else:
                 genre_to_update.deactivate()
@@ -74,11 +74,11 @@ class UpdateGenreUseCase:
         except ValueError as error:
             raise InvalidGenre(error)
 
-    def execute(self, request: UpdateGenreInput) -> None:
-        genre_from_repo = self._validate_genre_exists(request)
-        self._validate_categories_exists(request)
-        genre_updated = self._update_genre_with_requested_data(
-            genre_to_update=genre_from_repo, request=request
+    def execute(self, input: UpdateGenreInput) -> None:
+        genre_from_repo = self._validate_genre_exists(input)
+        self._validate_categories_exists(input)
+        genre_updated = self._update_genre_with_inputed_data(
+            genre_to_update=genre_from_repo, input=input
         )
 
         self.repository.update(genre_updated)

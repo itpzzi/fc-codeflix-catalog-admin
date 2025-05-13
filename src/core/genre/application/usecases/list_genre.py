@@ -27,7 +27,7 @@ class ListGenreUseCase:
     def __init__(self, repository: IGenreRepository):
         self.repository = repository
 
-    def execute(self, request: ListGenreInput) -> ListGenreOutput:
+    def execute(self, input: ListGenreInput) -> ListGenreOutput:
         genres = self.repository.list()
 
         return ListGenreOutput(

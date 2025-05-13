@@ -18,12 +18,12 @@ class DeleteCastMemberUseCase:
     def __init__(self, repository: ICastMemberRepository):
         self.repository = repository
 
-    def execute(self, request: DeleteCastMemberInput) -> None:
-        cast_member_from_repo = self.repository.get_by_id(request.id)
+    def execute(self, input: DeleteCastMemberInput) -> None:
+        cast_member_from_repo = self.repository.get_by_id(input.id)
 
         if cast_member_from_repo is None:
             raise CastMemberNotFound(
-                f"Cannot delete non-existent cast member. {request.id} not found"
+                f"Cannot delete non-existent cast member. {input.id} not found"
             )
 
         self.repository.delete(cast_member_from_repo.id)

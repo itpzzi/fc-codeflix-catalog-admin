@@ -65,7 +65,7 @@ class CategoryViewSet(viewsets.ViewSet):
         use_case = GetCategoryUseCase(repository=DjangoORMCategoryRepository())
 
         try:
-            output = use_case.execute(request=input)
+            output = use_case.execute(input=input)
         except CategoryNotFound:
             return Response(status=HTTP_404_NOT_FOUND)
 
@@ -82,7 +82,7 @@ class CategoryViewSet(viewsets.ViewSet):
         input = CreateCategoryInput(**deserializer.validated_data)
         use_case = CreateCategoryUseCase(repository=DjangoORMCategoryRepository())
 
-        output = use_case.execute(request=input)
+        output = use_case.execute(input=input)
 
         return Response(
             status=HTTP_201_CREATED,
@@ -101,7 +101,7 @@ class CategoryViewSet(viewsets.ViewSet):
         input = UpdateCategoryInput(**deserializer.validated_data)
         use_case = UpdateCategoryUseCase(repository=DjangoORMCategoryRepository())
         try:
-            use_case.execute(request=input)
+            use_case.execute(input=input)
         except CategoryNotFound:
             return Response(status=HTTP_404_NOT_FOUND)
 
@@ -133,7 +133,7 @@ class CategoryViewSet(viewsets.ViewSet):
         input = UpdateCategoryInput(**deserializer.validated_data)
         use_case = UpdateCategoryUseCase(repository=DjangoORMCategoryRepository())
         try:
-            use_case.execute(request=input)
+            use_case.execute(input=input)
         except CategoryNotFound:
             return Response(status=HTTP_404_NOT_FOUND)
 

@@ -126,14 +126,14 @@ class TestUpdateGenreIntegration:
             category_repository=category_repository_with_categories,
         )
 
-        request = UpdateGenreInput(
+        input = UpdateGenreInput(
             id=existing_genre.id,
             name="Updated Genre",
             categories={movie_category.id, documentary_category.id},
             is_active=True,
         )
 
-        use_case.execute(request)
+        use_case.execute(input=input)
 
         updated_genre = genre_repository.get_by_id(existing_genre.id)
         assert updated_genre is not None

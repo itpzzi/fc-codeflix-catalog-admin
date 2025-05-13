@@ -17,7 +17,7 @@ from src.core.category.application.usecases.get_category import (
 
 
 class TestGetCategory:
-    def test_when_category_exists_then_return_response_dto(self):
+    def test_when_category_exists_then_return_output_dto(self):
         mock_category = Category(
             id=uuid.uuid4(),
             name="Filme",
@@ -28,11 +28,11 @@ class TestGetCategory:
         mock_repository.get_by_id.return_value = mock_category
 
         use_case = GetCategoryUseCase(repository=mock_repository)
-        request = GetCategoryInput(id=mock_category.id)
+        input = GetCategoryInput(id=mock_category.id)
 
-        response = use_case.execute(request)
+        output = use_case.execute(input=input)
 
-        assert response == GetCategoryOutput(
+        assert output == GetCategoryOutput(
             id=mock_category.id,
             name="Filme",
             description="Categoria para filmes",
@@ -44,7 +44,7 @@ class TestGetCategory:
         mock_repository.get_by_id.return_value = None
 
         use_case = GetCategoryUseCase(repository=mock_repository)
-        request = GetCategoryInput(id=uuid.uuid4())
+        input = GetCategoryInput(id=uuid.uuid4())
 
         with pytest.raises(CategoryNotFound):
-            use_case.execute(request)
+            use_case.execute(input=input)

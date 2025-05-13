@@ -23,10 +23,10 @@ class TestDeleteCategory:
         )
         repository = InMemoryCategoryRepository(categories=[category_movie])
         use_case = DeleteCategoryUseCase(repository=repository)
-        request = DeleteCategoryInput(id=category_movie.id)
+        input = DeleteCategoryInput(id=category_movie.id)
 
         assert repository.get_by_id(id=category_movie.id) is not None
-        response = use_case.execute(request=request)
+        output = use_case.execute(input=input)
 
         assert repository.get_by_id(id=category_movie.id) is None
-        assert response is None
+        assert output is None

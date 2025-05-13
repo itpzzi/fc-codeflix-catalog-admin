@@ -20,35 +20,35 @@ class TestCreateCategory:
     def test_create_category_with_valid_data(self):
         repository = InMemoryCategoryRepository()
         use_case = CreateCategoryUseCase(repository=repository)
-        request = CreateCategoryInput(
+        input = CreateCategoryInput(
             name="Série", description="Muita ação", is_active=True
         )
 
-        response = use_case.execute(request=request)
+        output = use_case.execute(input=input)
 
-        assert response.id is not None
-        assert isinstance(response.id, UUID)
+        assert output.id is not None
+        assert isinstance(output.id, UUID)
         assert len(repository.categories) == 1
 
         persisted_category = repository.categories[0]
         assert persisted_category.name == "Série"
         assert persisted_category.description == "Muita ação"
         assert persisted_category.is_active is True
-        assert persisted_category.id == response.id
+        assert persisted_category.id == output.id
 
     def test_create_inactive_category_with_valid_data(self):
         repository = InMemoryCategoryRepository()
         use_case = CreateCategoryUseCase(repository=repository)
-        request = CreateCategoryInput(
+        input = CreateCategoryInput(
             name="Filme",
             description="Categoria para filmes",
             is_active=False,
         )
 
-        response = use_case.execute(request)
+        output = use_case.execute(input=input)
         persisted_category = repository.categories[0]
 
-        assert persisted_category.id == response.id
+        assert persisted_category.id == output.id
         assert persisted_category.name == "Filme"
         assert persisted_category.description == "Categoria para filmes"
         assert persisted_category.is_active == False

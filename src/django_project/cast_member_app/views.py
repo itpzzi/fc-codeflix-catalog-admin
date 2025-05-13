@@ -44,7 +44,7 @@ class CastMemberViewSet(viewsets.ViewSet):
         use_case = CreateCastMemberUseCase(repository=DjangoORMCastMemberRepository())
 
         try:
-            output = use_case.execute(request=input)
+            output = use_case.execute(input=input)
         except InvalidCastMember as error:
             return Response(
                 status=status.HTTP_400_BAD_REQUEST, data={"error": str(error)}
@@ -59,7 +59,7 @@ class CastMemberViewSet(viewsets.ViewSet):
         input = ListCastMemberInput()
         use_case = ListCastMemberUseCase(repository=DjangoORMCastMemberRepository())
 
-        output = use_case.execute(request=input)
+        output = use_case.execute(input=input)
 
         serializer = ListCastMemberResponseSerializer(instance=output)
 
@@ -73,7 +73,7 @@ class CastMemberViewSet(viewsets.ViewSet):
         use_case = DeleteCastMemberUseCase(repository=DjangoORMCastMemberRepository())
 
         try:
-            use_case.execute(request=input)
+            use_case.execute(input=input)
         except CastMemberNotFound:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -92,7 +92,7 @@ class CastMemberViewSet(viewsets.ViewSet):
         use_case = UpdateCastMemberUseCase(repository=DjangoORMCastMemberRepository())
 
         try:
-            use_case.execute(request=input)
+            use_case.execute(input=input)
         except CastMemberNotFound:
             return Response(status=status.HTTP_404_NOT_FOUND)
 

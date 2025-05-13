@@ -31,14 +31,14 @@ class TestListCategory:
         repository.save(mock_category1)
         repository.save(mock_category2)
 
-        request = ListCategoryInput()
+        input = ListCategoryInput()
         use_case = ListCategoryUseCase(repository=repository)
 
-        response = use_case.execute(request)
+        output = use_case.execute(input=input)
 
-        assert response == ListCategoryOutput(data=response.data)
-        assert len(response.data) == 2
-        assert response == ListCategoryOutput(
+        assert output == ListCategoryOutput(data=output.data)
+        assert len(output.data) == 2
+        assert output == ListCategoryOutput(
             data=[
                 CategoryOutput(
                     id=mock_category1.id,
@@ -58,9 +58,9 @@ class TestListCategory:
     def test_when_no_categories_then_return_empty_list(self):
         repository = InMemoryCategoryRepository(categories=[])
         use_case = ListCategoryUseCase(repository=repository)
-        request = ListCategoryInput()
+        input = ListCategoryInput()
 
-        response = use_case.execute(request)
+        output = use_case.execute(input=input)
 
-        assert len(response.data) == 0
-        assert response == ListCategoryOutput(data=[])
+        assert len(output.data) == 0
+        assert output == ListCategoryOutput(data=[])

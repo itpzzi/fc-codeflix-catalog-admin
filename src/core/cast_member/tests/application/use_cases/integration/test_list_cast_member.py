@@ -44,14 +44,14 @@ class TestListCastMember:
         repository.save(actor_cast_member)
         repository.save(director_cast_member)
 
-        request = ListCastMemberInput()
+        input = ListCastMemberInput()
         use_case = ListCastMemberUseCase(repository=repository)
 
-        response = use_case.execute(request)
+        output = use_case.execute(input=input)
 
-        assert response == ListCastMemberOutput(data=response.data)
-        assert len(response.data) == 2
-        assert response == ListCastMemberOutput(
+        assert output == ListCastMemberOutput(data=output.data)
+        assert len(output.data) == 2
+        assert output == ListCastMemberOutput(
             data=[
                 ListCastMemberItem(
                     id=actor_cast_member.id,
@@ -69,9 +69,9 @@ class TestListCastMember:
     def test_when_no_cast_members_then_return_empty_list(self):
         repository = InMemoryCastMemberRepository(cast_members=[])
         use_case = ListCastMemberUseCase(repository=repository)
-        request = ListCastMemberInput()
+        input = ListCastMemberInput()
 
-        response = use_case.execute(request)
+        output = use_case.execute(input=input)
 
-        assert len(response.data) == 0
-        assert response == ListCastMemberOutput(data=[])
+        assert len(output.data) == 0
+        assert output == ListCastMemberOutput(data=[])

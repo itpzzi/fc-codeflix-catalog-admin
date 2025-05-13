@@ -65,7 +65,7 @@ class GenreViewSet(viewsets.ViewSet):
         )
 
         try:
-            output = use_case.execute(request=input)
+            output = use_case.execute(input=input)
         except (RelatedCategoriesNotFound, InvalidGenre) as error:
             return Response(status=HTTP_400_BAD_REQUEST, data={"error": str(error)})
 
@@ -89,7 +89,7 @@ class GenreViewSet(viewsets.ViewSet):
             category_repository=DjangoORMCategoryRepository(),
         )
         try:
-            use_case.execute(request=input)
+            use_case.execute(input=input)
         except GenreNotFound:
             return Response(status=HTTP_404_NOT_FOUND)
         except (RelatedCategoriesNotFound, InvalidGenre):

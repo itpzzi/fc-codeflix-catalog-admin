@@ -59,7 +59,7 @@ class TestListGenre:
         categories_ids = {
             category.id for category in category_repository_with_categories.list()
         }
-        request = ListGenreInput()
+        input = ListGenreInput()
         use_case = ListGenreUseCase(
             repository=genre_repository,
         )
@@ -68,11 +68,11 @@ class TestListGenre:
         genre_repository.save(genre_fantasy)
         genre_repository.save(genre_drama)
 
-        response = use_case.execute(request)
+        output = use_case.execute(input=input)
 
-        assert len(response.data) == 2
-        assert response == ListGenreOutput(data=response.data)
-        assert response == ListGenreOutput(
+        assert len(output.data) == 2
+        assert output == ListGenreOutput(data=output.data)
+        assert output == ListGenreOutput(
             data=[
                 GenreOutput(
                     id=genre_fantasy.id,
@@ -93,13 +93,13 @@ class TestListGenre:
         self,
         genre_repository,
     ):
-        request = ListGenreInput()
+        input = ListGenreInput()
         use_case = ListGenreUseCase(
             repository=genre_repository,
         )
 
-        response = use_case.execute(request)
+        output = use_case.execute(input=input)
 
-        assert len(response.data) == 0
-        assert response == ListGenreOutput(data=response.data)
-        assert response == ListGenreOutput(data=[])
+        assert len(output.data) == 0
+        assert output == ListGenreOutput(data=output.data)
+        assert output == ListGenreOutput(data=[])
