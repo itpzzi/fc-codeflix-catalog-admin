@@ -32,12 +32,6 @@ class Genre(Entity):
         self.categories.remove(category_id)
         self.validate()
 
-    def _validate_name(self, value: str):
-        if not value:
-            raise ValueError("name cannot be empty")
-        if len(value) > 255:
-            raise ValueError("name cannot be longer than 255 characters")
-
     def __repr__(self):
         return f"<Genre {self.name} {self.id}>"
 

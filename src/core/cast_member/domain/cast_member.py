@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from enum import StrEnum
-from uuid import UUID
 
 from src.core._shared.entity import Entity
 
@@ -8,6 +7,12 @@ from src.core._shared.entity import Entity
 class CastMemberType(StrEnum):
     DIRECTOR = "director"
     ACTOR = "actor"
+
+    @classmethod
+    def _missing_(cls, value: object):
+        if value not in cls._value2member_map_:
+            raise ValueError("type must be a valid CastMemberType")
+        return cls._value2member_map_[value]
 
 
 @dataclass(eq=False)
@@ -25,21 +30,8 @@ class CastMember(Entity):
 
         self.validate()
 
-    def _validate_id(self, value: UUID):
-        if not isinstance(value, UUID):
-            raise ValueError("id must be a UUID instance")
-        if value.version != 4:
-            raise ValueError("id must be a valid UUIDv4")
-
-    def _validate_name(self, value: str):
-        if not value:
-            raise ValueError("name cannot be empty")
-        if len(value) > 255:
-            raise ValueError("name cannot be longer than 255 characters")
-
     def _validate_type(self, value: CastMemberType):
-        if value not in CastMemberType:
-            raise ValueError("type must be a valid CastMemberType")
+        CastMemberType(value)
 
     def __repr__(self):
         return f"<CastMember {self.name} ({self.type}) - {self.id}>"
