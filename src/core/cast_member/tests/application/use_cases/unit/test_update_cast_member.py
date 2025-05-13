@@ -6,7 +6,6 @@ from src.core.cast_member.application.exceptions import (
     InvalidCastMember,
 )
 from src.core.cast_member.application.usecases.update_cast_member import (
-    UpdateCastMemberInput,
     UpdateCastMember,
 )
 from src.core.cast_member.domain.cast_member import CastMember, CastMemberType
@@ -33,7 +32,7 @@ class TestUpdateCastMember:
         use_case = UpdateCastMember(repository=mock_repository)
         fake_id = "non-existent-id"
 
-        input = UpdateCastMemberInput(id=fake_id, name="Any Name", type="actor")
+        input = UpdateCastMember.Input(id=fake_id, name="Any Name", type="actor")
 
         with pytest.raises(CastMemberNotFound) as exc:
             use_case.execute(input=input)
@@ -47,7 +46,7 @@ class TestUpdateCastMember:
         mock_repository.get_by_id.return_value = mock_cast_member
         use_case = UpdateCastMember(repository=mock_repository)
 
-        input = UpdateCastMemberInput(
+        input = UpdateCastMember.Input(
             id=mock_cast_member.id, name="", type="invalid-type"
         )
 
@@ -62,7 +61,7 @@ class TestUpdateCastMember:
         mock_repository.get_by_id.return_value = mock_cast_member
         use_case = UpdateCastMember(repository=mock_repository)
 
-        input = UpdateCastMemberInput(
+        input = UpdateCastMember.Input(
             id=mock_cast_member.id, name="Zombie", type=CastMemberType.DIRECTOR
         )
 

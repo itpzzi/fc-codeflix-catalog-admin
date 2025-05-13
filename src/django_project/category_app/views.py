@@ -25,31 +25,26 @@ from src.django_project.category_app.repository import DjangoORMCategoryReposito
 
 from src.core.category.application.usecases.list_category import (
     ListCategory,
-    ListCategoryInput,
 )
 
 from src.core.category.application.usecases.get_category import (
     GetCategory,
-    GetCategoryInput,
 )
 
 from src.core.category.application.usecases.create_category import (
     CreateCategory,
-    CreateCategoryInput,
 )
 from src.core.category.application.usecases.update_category import (
     UpdateCategory,
-    UpdateCategoryInput,
 )
 from src.core.category.application.usecases.delete_category import (
     DeleteCategory,
-    DeleteCategoryInput,
 )
 
 
 class CategoryViewSet(viewsets.ViewSet):
     def list(self, request: Request) -> Response:
-        input = ListCategoryInput()
+        input = ListCategory.Input()
         use_case = ListCategory(repository=DjangoORMCategoryRepository())
 
         output = use_case.execute(input)
@@ -61,7 +56,7 @@ class CategoryViewSet(viewsets.ViewSet):
         deserializer = RetrieveCategoryRequestSerializer(data={"id": pk})
         deserializer.is_valid(raise_exception=True)
 
-        input = GetCategoryInput(id=deserializer.data.get("id"))
+        input = GetCategory.Input(id=deserializer.data.get("id"))
         use_case = GetCategory(repository=DjangoORMCategoryRepository())
 
         try:
@@ -79,7 +74,7 @@ class CategoryViewSet(viewsets.ViewSet):
         deserializer = CreateCategoryRequestSerializer(data=request.data)
         deserializer.is_valid(raise_exception=True)
 
-        input = CreateCategoryInput(**deserializer.validated_data)
+        input = CreateCategory.Input(**deserializer.validated_data)
         use_case = CreateCategory(repository=DjangoORMCategoryRepository())
 
         output = use_case.execute(input=input)
@@ -98,7 +93,7 @@ class CategoryViewSet(viewsets.ViewSet):
         )
         deserializer.is_valid(raise_exception=True)
 
-        input = UpdateCategoryInput(**deserializer.validated_data)
+        input = UpdateCategory.Input(**deserializer.validated_data)
         use_case = UpdateCategory(repository=DjangoORMCategoryRepository())
         try:
             use_case.execute(input=input)
@@ -111,7 +106,7 @@ class CategoryViewSet(viewsets.ViewSet):
         deserializer = DeleteCategoryRequestSerializer(data={"id": pk})
         deserializer.is_valid(raise_exception=True)
 
-        input = DeleteCategoryInput(**deserializer.validated_data)
+        input = DeleteCategory.Input(**deserializer.validated_data)
         use_case = DeleteCategory(repository=DjangoORMCategoryRepository())
         try:
             use_case.execute(input)
@@ -130,7 +125,7 @@ class CategoryViewSet(viewsets.ViewSet):
         )
         deserializer.is_valid(raise_exception=True)
 
-        input = UpdateCategoryInput(**deserializer.validated_data)
+        input = UpdateCategory.Input(**deserializer.validated_data)
         use_case = UpdateCategory(repository=DjangoORMCategoryRepository())
         try:
             use_case.execute(input=input)

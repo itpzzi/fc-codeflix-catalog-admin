@@ -11,25 +11,23 @@ class ListCastMemberItem:
     type: CastMemberType
 
 
-@dataclass
-class ListCastMemberInput:
-    pass
-
-
-@dataclass
-class ListCastMemberOutput:
-    data: list[ListCastMemberItem]
-
-
 class ListCastMember:
+
+    @dataclass
+    class Input:
+        pass
+
+    @dataclass
+    class Output:
+        data: list[ListCastMemberItem]
 
     def __init__(self, repository: ICastMemberRepository) -> None:
         self.repository = repository
 
-    def execute(self, input: ListCastMemberInput) -> ListCastMemberOutput:
+    def execute(self, input: Input) -> Output:
         cast_members = self.repository.list()
 
-        return ListCastMemberOutput(
+        return ListCastMember.Output(
             data=[
                 ListCastMemberItem(
                     id=cast_member.id, name=cast_member.name, type=cast_member.type

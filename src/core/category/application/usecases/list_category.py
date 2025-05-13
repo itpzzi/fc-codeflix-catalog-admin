@@ -6,34 +6,32 @@ from src.core.category.domain.category_repository import (
 
 
 @dataclass
-class CategoryOutput:
+class ListCategoryItem:
     name: str
     description: str
     is_active: bool
     id: UUID
 
 
-@dataclass
-class ListCategoryInput:
-    pass
-
-
-@dataclass
-class ListCategoryOutput:
-    data: list[CategoryOutput]
-
-
 class ListCategory:
+
+    @dataclass
+    class Input:
+        pass
+
+    @dataclass
+    class Output:
+        data: list[ListCategoryItem]
 
     def __init__(self, repository: ICategoryRepository):
         self.repository = repository
 
-    def execute(self, input: ListCategoryInput) -> ListCategoryOutput:
+    def execute(self, input: Input) -> Output:
         categories = self.repository.list()
 
-        return ListCategoryOutput(
+        return ListCategory.Output(
             data=[
-                CategoryOutput(
+                ListCategoryItem(
                     name=category.name,
                     description=category.description,
                     is_active=category.is_active,

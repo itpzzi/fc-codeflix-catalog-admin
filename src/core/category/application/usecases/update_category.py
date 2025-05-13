@@ -8,20 +8,19 @@ from src.core.category.application.exceptions import CategoryNotFound, InvalidCa
 from src.core.category.domain.category import Category
 
 
-@dataclass
-class UpdateCategoryInput:
-    id: UUID
-    name: str | None = None
-    description: str | None = None
-    is_active: bool | None = None
-
-
 class UpdateCategory:
+
+    @dataclass
+    class Input:
+        id: UUID
+        name: str | None = None
+        description: str | None = None
+        is_active: bool | None = None
 
     def __init__(self, repository: ICategoryRepository):
         self.repository = repository
 
-    def execute(self, input: UpdateCategoryInput) -> None:
+    def execute(self, input: Input) -> None:
         category_from_repo = self.repository.get_by_id(input.id)
 
         if category_from_repo is None:

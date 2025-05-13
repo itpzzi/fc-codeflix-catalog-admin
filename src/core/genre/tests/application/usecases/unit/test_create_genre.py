@@ -6,8 +6,6 @@ import pytest
 from src.core.category.domain.category import Category
 from src.core.category.domain.category_repository import ICategoryRepository
 from src.core.genre.application.usecases.create_genre import (
-    CreateGenreInput,
-    CreateGenreOutput,
     CreateGenre,
 )
 from src.core.genre.application.exceptions import (
@@ -65,7 +63,7 @@ class TestCreateGenre:
         ) as exc:
             category_id = uuid.uuid4()
             use_case.execute(
-                CreateGenreInput(
+                CreateGenre.Input(
                     name="Genre 1",
                     categories={category_id},
                 )
@@ -88,7 +86,7 @@ class TestCreateGenre:
         # InvalidGenre (application), not ValueError (domain)
         with pytest.raises(InvalidGenre, match="name cannot be empty"):
             use_case.execute(
-                CreateGenreInput(
+                CreateGenre.Input(
                     name="",
                     categories={documentary_category.id, movie_category.id},
                 )
@@ -107,13 +105,13 @@ class TestCreateGenre:
         )
 
         output = use_case.execute(
-            CreateGenreInput(
+            CreateGenre.Input(
                 name="Romance",
                 categories={documentary_category.id, movie_category.id},
             )
         )
 
-        assert output == CreateGenreOutput(id=output.id)
+        assert output == CreateGenre.Output(id=output.id)
         mock_genre_repository.save.assert_called_once_with(
             Genre(
                 id=output.id,
@@ -134,12 +132,12 @@ class TestCreateGenre:
         )
 
         output = use_case.execute(
-            CreateGenreInput(
+            CreateGenre.Input(
                 name="Romance",
             )
         )
 
-        assert output == CreateGenreOutput(id=output.id)
+        assert output == CreateGenre.Output(id=output.id)
         mock_genre_repository.save.assert_called_once_with(
             Genre(
                 id=output.id,

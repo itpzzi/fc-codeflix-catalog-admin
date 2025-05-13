@@ -12,19 +12,17 @@ from src.core.genre.application.exceptions import (
 from src.core.genre.domain.genre import Genre
 
 
-@dataclass
-class CreateGenreInput:
-    name: str
-    is_active: bool = True
-    categories: set[UUID] = field(default_factory=set)
-
-
-@dataclass
-class CreateGenreOutput:
-    id: UUID
-
-
 class CreateGenre:
+
+    @dataclass
+    class Input:
+        name: str
+        is_active: bool = True
+        categories: set[UUID] = field(default_factory=set)
+
+    @dataclass
+    class Output:
+        id: UUID
 
     def __init__(
         self, repository: IGenreRepository, category_repository: ICategoryRepository
@@ -32,7 +30,7 @@ class CreateGenre:
         self.repository = repository
         self.category_repository = category_repository
 
-    def _validate_categories_exists(self, input: CreateGenreInput):
+    def _validate_categories_exists(self, input: Input):
         existent_categories_ids = {
             category.id for category in self.category_repository.list()
         }
@@ -42,7 +40,7 @@ class CreateGenre:
                 f"Categories with provided IDs not found: {input.categories - existent_categories_ids}"
             )
 
-    def execute(self, input: CreateGenreInput) -> CreateGenreOutput:
+    def execute(self, input: Input) -> Output:
         self._validate_categories_exists(input)
 
         try:
@@ -55,4 +53,4 @@ class CreateGenre:
             raise InvalidGenre(error)
 
         self.repository.save(genre)
-        return CreateGenreOutput(id=genre.id)
+        return self.Output(id=genre.id)

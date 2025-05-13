@@ -2,8 +2,6 @@ import pytest
 from unittest.mock import create_autospec
 from core.cast_member.application.usecases.list_cast_member import (
     ListCastMemberItem,
-    ListCastMemberInput,
-    ListCastMemberOutput,
     ListCastMember,
 )
 from core.cast_member.domain.cast_member import CastMember, CastMemberType
@@ -43,7 +41,7 @@ class TestListCastMember:
         mock_cast_member_zombie,
         mock_repository_with_cast_members,
     ):
-        input = ListCastMemberInput()
+        input = ListCastMember.Input()
         use_case = ListCastMember(repository=mock_repository_with_cast_members)
         expected_data = [
             ListCastMemberItem(
@@ -56,15 +54,15 @@ class TestListCastMember:
 
         output = use_case.execute(input=input)
 
-        assert output == ListCastMemberOutput(data=expected_data)
+        assert output == ListCastMember.Output(data=expected_data)
         assert len(output.data) == 2
 
     def test_list_empty_list_for_an_empty_repository(self, mock_repository):
         empty_repository = mock_repository
-        input = ListCastMemberInput()
+        input = ListCastMember.Input()
         use_case = ListCastMember(repository=empty_repository)
         expected_data = []
 
         output = use_case.execute(input=input)
 
-        assert output == ListCastMemberOutput(data=expected_data)
+        assert output == ListCastMember.Output(data=expected_data)

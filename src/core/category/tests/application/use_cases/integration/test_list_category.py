@@ -5,9 +5,7 @@ from src.core.category.infra.in_memory_category_repository import (
     InMemoryCategoryRepository,
 )
 from src.core.category.application.usecases.list_category import (
-    CategoryOutput,
-    ListCategoryInput,
-    ListCategoryOutput,
+    ListCategoryItem,
     ListCategory,
 )
 from src.core.category.domain.category import Category
@@ -31,22 +29,22 @@ class TestListCategory:
         repository.save(mock_category1)
         repository.save(mock_category2)
 
-        input = ListCategoryInput()
+        input = ListCategory.Input()
         use_case = ListCategory(repository=repository)
 
         output = use_case.execute(input=input)
 
-        assert output == ListCategoryOutput(data=output.data)
+        assert output == ListCategory.Output(data=output.data)
         assert len(output.data) == 2
-        assert output == ListCategoryOutput(
+        assert output == ListCategory.Output(
             data=[
-                CategoryOutput(
+                ListCategoryItem(
                     id=mock_category1.id,
                     name=mock_category1.name,
                     description=mock_category1.description,
                     is_active=mock_category1.is_active,
                 ),
-                CategoryOutput(
+                ListCategoryItem(
                     id=mock_category2.id,
                     name=mock_category2.name,
                     description=mock_category2.description,
@@ -58,9 +56,9 @@ class TestListCategory:
     def test_when_no_categories_then_return_empty_list(self):
         repository = InMemoryCategoryRepository(categories=[])
         use_case = ListCategory(repository=repository)
-        input = ListCategoryInput()
+        input = ListCategory.Input()
 
         output = use_case.execute(input=input)
 
         assert len(output.data) == 0
-        assert output == ListCategoryOutput(data=[])
+        assert output == ListCategory.Output(data=[])

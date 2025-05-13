@@ -8,9 +8,7 @@ from src.core.category.infra.in_memory_category_repository import (
     InMemoryCategoryRepository,
 )
 from src.core.genre.application.usecases.list_genre import (
-    GenreOutput,
-    ListGenreInput,
-    ListGenreOutput,
+    ListGenreItem,
     ListGenre,
 )
 from src.core.genre.domain.genre import Genre
@@ -59,7 +57,7 @@ class TestListGenre:
         categories_ids = {
             category.id for category in category_repository_with_categories.list()
         }
-        input = ListGenreInput()
+        input = ListGenre.Input()
         use_case = ListGenre(
             repository=genre_repository,
         )
@@ -71,16 +69,16 @@ class TestListGenre:
         output = use_case.execute(input=input)
 
         assert len(output.data) == 2
-        assert output == ListGenreOutput(data=output.data)
-        assert output == ListGenreOutput(
+        assert output == ListGenre.Output(data=output.data)
+        assert output == ListGenre.Output(
             data=[
-                GenreOutput(
+                ListGenreItem(
                     id=genre_fantasy.id,
                     name=genre_fantasy.name,
                     categories=genre_fantasy.categories,
                     is_active=genre_fantasy.is_active,
                 ),
-                GenreOutput(
+                ListGenreItem(
                     id=genre_drama.id,
                     name=genre_drama.name,
                     categories={},
@@ -93,7 +91,7 @@ class TestListGenre:
         self,
         genre_repository,
     ):
-        input = ListGenreInput()
+        input = ListGenre.Input()
         use_case = ListGenre(
             repository=genre_repository,
         )
@@ -101,5 +99,5 @@ class TestListGenre:
         output = use_case.execute(input=input)
 
         assert len(output.data) == 0
-        assert output == ListGenreOutput(data=output.data)
-        assert output == ListGenreOutput(data=[])
+        assert output == ListGenre.Output(data=output.data)
+        assert output == ListGenre.Output(data=[])

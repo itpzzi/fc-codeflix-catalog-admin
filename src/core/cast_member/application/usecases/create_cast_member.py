@@ -5,22 +5,21 @@ from src.core.cast_member.domain.cast_member_repository import ICastMemberReposi
 from dataclasses import dataclass
 
 
-@dataclass
-class CreateCastMemberInput:
-    name: str
-    type: CastMemberType
-
-
-@dataclass
-class CreateCastMemberOutput:
-    id: UUID
-
-
 class CreateCastMember:
+
+    @dataclass
+    class Input:
+        name: str
+        type: CastMemberType
+
+    @dataclass
+    class Output:
+        id: UUID
+
     def __init__(self, repository: ICastMemberRepository):
         self.repository = repository
 
-    def execute(self, input: CreateCastMemberInput) -> CreateCastMemberOutput:
+    def execute(self, input: Input) -> Output:
         try:
             cast_member = CastMember(
                 name=input.name,
@@ -30,4 +29,4 @@ class CreateCastMember:
             raise InvalidCastMember(error)
 
         self.repository.save(cast_member)
-        return CreateCastMemberOutput(id=cast_member.id)
+        return CreateCastMember.Output(id=cast_member.id)

@@ -5,34 +5,32 @@ from src.core.genre.domain.genre_repository import IGenreRepository
 
 
 @dataclass
-class GenreOutput:
+class ListGenreItem:
     name: str
     id: UUID
     categories: set[UUID]
     is_active: bool
 
 
-@dataclass
-class ListGenreInput:
-    pass
-
-
-@dataclass
-class ListGenreOutput:
-    data: list[GenreOutput]
-
-
 class ListGenre:
+
+    @dataclass
+    class Input:
+        pass
+
+    @dataclass
+    class Output:
+        data: list[ListGenreItem]
 
     def __init__(self, repository: IGenreRepository):
         self.repository = repository
 
-    def execute(self, input: ListGenreInput) -> ListGenreOutput:
+    def execute(self, input: Input) -> Output:
         genres = self.repository.list()
 
-        return ListGenreOutput(
+        return self.Output(
             data=[
-                GenreOutput(
+                ListGenreItem(
                     id=genre.id,
                     name=genre.name,
                     categories=genre.categories,

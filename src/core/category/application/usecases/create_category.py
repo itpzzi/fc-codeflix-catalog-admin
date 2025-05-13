@@ -8,24 +8,22 @@ from src.core.category.application.exceptions import InvalidCategory
 from src.core.category.domain.category import Category
 
 
-@dataclass
-class CreateCategoryInput:
-    name: str
-    is_active: bool = True
-    description: str = ""
-
-
-@dataclass
-class CreateCategoryOutput:
-    id: UUID
-
-
 class CreateCategory:
+
+    @dataclass
+    class Input:
+        name: str
+        is_active: bool = True
+        description: str = ""
+
+    @dataclass
+    class Output:
+        id: UUID
 
     def __init__(self, repository: ICategoryRepository):
         self.repository = repository
 
-    def execute(self, input: CreateCategoryInput) -> CreateCategoryOutput:
+    def execute(self, input: Input) -> Output:
         try:
             category = Category(
                 name=input.name,
@@ -36,4 +34,4 @@ class CreateCategory:
             raise InvalidCategory(error)
 
         self.repository.save(category)
-        return CreateCategoryOutput(id=category.id)
+        return CreateCategory.Output(id=category.id)

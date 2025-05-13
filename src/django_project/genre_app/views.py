@@ -28,25 +28,21 @@ from src.django_project.genre_app.repository import DjangoORMGenreRepository
 
 from src.core.genre.application.usecases.list_genre import (
     ListGenre,
-    ListGenreInput,
 )
 from src.core.genre.application.usecases.create_genre import (
     CreateGenre,
-    CreateGenreInput,
 )
 from src.core.genre.application.usecases.delete_genre import (
     DeleteGenre,
-    DeleteGenreInput,
 )
 from src.core.genre.application.usecases.update_genre import (
     UpdateGenre,
-    UpdateGenreInput,
 )
 
 
 class GenreViewSet(viewsets.ViewSet):
     def list(self, request: Request) -> Response:
-        input = ListGenreInput()
+        input = ListGenre.Input()
         use_case = ListGenre(repository=DjangoORMGenreRepository())
 
         output = use_case.execute(input)
@@ -58,7 +54,7 @@ class GenreViewSet(viewsets.ViewSet):
         deserializer = CreateGenreRequestSerializer(data=request.data)
         deserializer.is_valid(raise_exception=True)
 
-        input = CreateGenreInput(**deserializer.validated_data)
+        input = CreateGenre.Input(**deserializer.validated_data)
         use_case = CreateGenre(
             repository=DjangoORMGenreRepository(),
             category_repository=DjangoORMCategoryRepository(),
@@ -83,7 +79,7 @@ class GenreViewSet(viewsets.ViewSet):
         )
         deserializer.is_valid(raise_exception=True)
 
-        input = UpdateGenreInput(**deserializer.validated_data)
+        input = UpdateGenre.Input(**deserializer.validated_data)
         use_case = UpdateGenre(
             repository=DjangoORMGenreRepository(),
             category_repository=DjangoORMCategoryRepository(),
@@ -101,7 +97,7 @@ class GenreViewSet(viewsets.ViewSet):
         deserializer = DeleteGenreRequestSerializer(data={"id": pk})
         deserializer.is_valid(raise_exception=True)
 
-        input = DeleteGenreInput(**deserializer.validated_data)
+        input = DeleteGenre.Input(**deserializer.validated_data)
         use_case = DeleteGenre(repository=DjangoORMGenreRepository())
         try:
             use_case.execute(input)

@@ -12,7 +12,6 @@ from src.core.genre.application.exceptions import (
     RelatedCategoriesNotFound,
 )
 from src.core.genre.application.usecases.update_genre import (
-    UpdateGenreInput,
     UpdateGenre,
 )
 from src.core.genre.domain.genre import Genre
@@ -55,7 +54,7 @@ class TestUpdateGenre:
         use_case: UpdateGenre,
     ) -> None:
         genre_id = uuid.uuid4()
-        input = UpdateGenreInput(
+        input = UpdateGenre.Input(
             id=genre_id, name="Terror", categories=set(), is_active=True
         )
         mock_genre_repository.get_by_id.return_value = None
@@ -81,7 +80,7 @@ class TestUpdateGenre:
         genre_id = uuid.uuid4()
         nonexistent_category_id = uuid.uuid4()
 
-        input = UpdateGenreInput(
+        input = UpdateGenre.Input(
             id=genre_id,
             name="Terror",
             categories={nonexistent_category_id},
@@ -108,12 +107,12 @@ class TestUpdateGenre:
             name="Initial", is_active=True, categories=set()
         )
 
-        invalid_requests: list[UpdateGenreInput] = [
-            UpdateGenreInput(id=genre_id, name="", categories=set(), is_active=True),
-            UpdateGenreInput(
+        invalid_requests: list[UpdateGenre.Input] = [
+            UpdateGenre.Input(id=genre_id, name="", categories=set(), is_active=True),
+            UpdateGenre.Input(
                 id=genre_id, name="a" * 256, categories=set(), is_active=True
             ),
-            UpdateGenreInput(id=genre_id, name="", categories=set(), is_active="invalid"),  # type: ignore
+            UpdateGenre.Input(id=genre_id, name="", categories=set(), is_active="invalid"),  # type: ignore
         ]
 
         for input in invalid_requests:
@@ -154,7 +153,7 @@ class TestUpdateGenre:
             category_repository=mock_category_repository,
         )
 
-        input = UpdateGenreInput(
+        input = UpdateGenre.Input(
             id=genre_id,
             name="New Genre Name",
             is_active=True,

@@ -2,7 +2,6 @@ import uuid
 
 import pytest
 from src.core.cast_member.application.usecases.update_cast_member import (
-    UpdateCastMemberInput,
     UpdateCastMember,
 )
 from src.core.cast_member.domain.cast_member import CastMember, CastMemberType
@@ -28,7 +27,7 @@ class TestUpdateCastMember:
     def test_can_update_cast_member_name_and_type(self, repository, actor_cast_member):
         repository.save(actor_cast_member)
         use_case = UpdateCastMember(repository=repository)
-        input = UpdateCastMemberInput(
+        input = UpdateCastMember.Input(
             id=actor_cast_member.id, name="Zombie", type=CastMemberType.DIRECTOR
         )
 

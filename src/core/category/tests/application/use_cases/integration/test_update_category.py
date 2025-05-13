@@ -1,6 +1,5 @@
 import uuid
 from src.core.category.application.usecases.update_category import (
-    UpdateCategoryInput,
     UpdateCategory,
 )
 from src.core.category.domain.category import Category
@@ -20,7 +19,7 @@ class TestUpdateCategory:
         repository = InMemoryCategoryRepository(categories=[])
         repository.save(mock_category)
         use_case = UpdateCategory(repository=repository)
-        input = UpdateCategoryInput(
+        input = UpdateCategory.Input(
             id=mock_category.id,
             name="Animações",
             description="Animações para público geral.",

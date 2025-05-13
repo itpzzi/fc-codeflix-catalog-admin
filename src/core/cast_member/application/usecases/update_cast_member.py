@@ -8,24 +8,26 @@ from src.core.cast_member.domain.cast_member import CastMemberType
 from src.core.cast_member.domain.cast_member_repository import ICastMemberRepository
 
 
-@dataclass
-class UpdateCastMemberInput:
-    id: UUID
-    name: str
-    type: CastMemberType
 
-
-@dataclass
-class UpdateCastMemberOutput:
-    pass
 
 
 class UpdateCastMember:
 
+    @dataclass
+    class Input:
+        id: UUID
+        name: str
+        type: CastMemberType
+
+
+    @dataclass
+    class Output:
+        pass
+
     def __init__(self, repository: ICastMemberRepository):
         self.repository = repository
 
-    def execute(self, input: UpdateCastMemberInput) -> None:
+    def execute(self, input: Input) -> None:
         cast_member_from_repo = self.repository.get_by_id(input.id)
 
         if cast_member_from_repo is None:

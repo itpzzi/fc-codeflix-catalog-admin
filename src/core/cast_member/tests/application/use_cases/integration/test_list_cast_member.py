@@ -1,12 +1,7 @@
 import uuid
 
 import pytest
-from core.cast_member.application.usecases.list_cast_member import (
-    ListCastMemberOutput,
-)
 from src.core.cast_member.application.usecases.list_cast_member import (
-    ListCastMemberOutput,
-    ListCastMemberInput,
     ListCastMember,
     ListCastMemberItem,
 )
@@ -44,14 +39,14 @@ class TestListCastMember:
         repository.save(actor_cast_member)
         repository.save(director_cast_member)
 
-        input = ListCastMemberInput()
+        input = ListCastMember.Input()
         use_case = ListCastMember(repository=repository)
 
         output = use_case.execute(input=input)
 
-        assert output == ListCastMemberOutput(data=output.data)
+        assert output == ListCastMember.Output(data=output.data)
         assert len(output.data) == 2
-        assert output == ListCastMemberOutput(
+        assert output == ListCastMember.Output(
             data=[
                 ListCastMemberItem(
                     id=actor_cast_member.id,
@@ -69,9 +64,9 @@ class TestListCastMember:
     def test_when_no_cast_members_then_return_empty_list(self):
         repository = InMemoryCastMemberRepository(cast_members=[])
         use_case = ListCastMember(repository=repository)
-        input = ListCastMemberInput()
+        input = ListCastMember.Input()
 
         output = use_case.execute(input=input)
 
         assert len(output.data) == 0
-        assert output == ListCastMemberOutput(data=[])
+        assert output == ListCastMember.Output(data=[])

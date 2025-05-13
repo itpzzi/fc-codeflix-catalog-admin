@@ -13,20 +13,18 @@ from src.core.genre.application.exceptions import (
 from src.core.genre.domain.genre import Genre
 
 
-@dataclass
-class UpdateGenreInput:
-    id: UUID
-    name: str
-    categories: set[UUID]
-    is_active: bool
-
-
-@dataclass
-class UpdateGenreOutput:
-    pass
-
-
 class UpdateGenre:
+
+    @dataclass
+    class Input:
+        id: UUID
+        name: str
+        categories: set[UUID]
+        is_active: bool
+
+    @dataclass
+    class Output:
+        pass
 
     def __init__(
         self, repository: IGenreRepository, category_repository: ICategoryRepository
@@ -34,7 +32,7 @@ class UpdateGenre:
         self.repository = repository
         self.category_repository = category_repository
 
-    def _validate_genre_exists(self, input: UpdateGenreInput) -> Genre:
+    def _validate_genre_exists(self, input: Input) -> Genre:
         genre_from_repo = self.repository.get_by_id(input.id)
 
         if not genre_from_repo:
@@ -44,7 +42,7 @@ class UpdateGenre:
 
         return genre_from_repo
 
-    def _validate_categories_exists(self, input: UpdateGenreInput):
+    def _validate_categories_exists(self, input: Input):
         existent_categories_ids = {
             category.id for category in self.category_repository.list()
         }
@@ -55,7 +53,7 @@ class UpdateGenre:
             )
 
     def _update_genre_with_inputed_data(
-        self, genre_to_update: Genre, input: UpdateGenreInput
+        self, genre_to_update: Genre, input: Input
     ) -> Genre:
         try:
             genre_to_update.change_name(input.name)
@@ -74,7 +72,7 @@ class UpdateGenre:
         except ValueError as error:
             raise InvalidGenre(error)
 
-    def execute(self, input: UpdateGenreInput) -> None:
+    def execute(self, input: Input) -> None:
         genre_from_repo = self._validate_genre_exists(input)
         self._validate_categories_exists(input)
         genre_updated = self._update_genre_with_inputed_data(
