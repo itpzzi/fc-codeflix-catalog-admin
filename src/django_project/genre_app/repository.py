@@ -2,9 +2,9 @@ from uuid import UUID
 
 from django.db import transaction
 
-from django_project.genre_app.mapper import GenreModelMapper
 from src.core.genre.domain.genre import Genre
 from src.core.genre.domain.genre_repository import IGenreRepository
+from src.django_project.genre_app.mapper import GenreModelMapper
 from src.django_project.genre_app.models import Genre as GenreModel
 
 

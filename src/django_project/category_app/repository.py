@@ -1,8 +1,8 @@
 from uuid import UUID
 
-from django_project.category_app.mapper import CategoryModelMapper
 from src.core.category.domain.category import Category
 from src.core.category.domain.category_repository import ICategoryRepository
+from src.django_project.category_app.mapper import CategoryModelMapper
 from src.django_project.category_app.models import Category as CategoryModel
 
 

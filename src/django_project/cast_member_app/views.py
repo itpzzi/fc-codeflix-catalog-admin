@@ -4,14 +4,6 @@ from rest_framework import status, viewsets
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from django_project.cast_member_app.repository import DjangoORMCastMemberRepository
-from django_project.cast_member_app.serializers import (
-    CreateCastMemberDeserializer,
-    CreateCastMemberSerializer,
-    DeleteCastMemberDeserializer,
-    ListCastMemberSerializer,
-    UpdateCastMemberDeserializer,
-)
 from src.core.cast_member.application.exceptions import (
     CastMemberNotFound,
     InvalidCastMember,
@@ -28,6 +20,15 @@ from src.core.cast_member.application.usecases.list_cast_member import (
 from src.core.cast_member.application.usecases.update_cast_member import (
     UpdateCastMember,
 )
+from src.django_project.cast_member_app.repository import DjangoORMCastMemberRepository
+from src.django_project.cast_member_app.serializers import (
+    CreateCastMemberDeserializer,
+    CreateCastMemberSerializer,
+    DeleteCastMemberDeserializer,
+    ListCastMemberSerializer,
+    UpdateCastMemberDeserializer,
+)
+from src.django_project.genre_app.serializers import ListEntityInputDeserializer
 
 
 class CastMemberViewSet(viewsets.ViewSet):
@@ -52,7 +53,10 @@ class CastMemberViewSet(viewsets.ViewSet):
         )
 
     def list(self, request: Request) -> Response:
-        input = ListCastMember.Input()
+        deserializer = ListEntityInputDeserializer(data=request.query_params)
+        deserializer.is_valid(raise_exception=True)
+
+        input = ListCastMember.Input(**deserializer.validated_data)
         use_case = ListCastMember(repository=DjangoORMCastMemberRepository())
 
         output = use_case.execute(input=input)

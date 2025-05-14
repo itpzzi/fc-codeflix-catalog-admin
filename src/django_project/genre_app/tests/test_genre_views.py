@@ -4,6 +4,7 @@ import pytest
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from src.core._shared.config import DEFAULT_PAGE_SIZE
 from src.core.category.domain.category import Category
 from src.core.genre.domain.genre import Genre
 from src.django_project.category_app.repository import DjangoORMCategoryRepository
@@ -11,28 +12,38 @@ from src.django_project.genre_app.repository import DjangoORMGenreRepository
 
 
 @pytest.fixture
-def category_movie() -> Category:
-    return Category(name="Filme", description="Longas divertidos")
+def categories():
+    return {
+        "movie": Category(name="Filme", description="Longas divertidos"),
+        "series": Category(name="Séries", description="Curtas divertidas"),
+        "shows": Category(
+            name="Shows", description="As melhores apresentações ao vivo"
+        ),
+        "documentary": Category(
+            name="Documentários", description="Para o despertar da curiosidade"
+        ),
+    }
 
 
 @pytest.fixture
-def category_series() -> Category:
-    return Category(name="Séries", description="Curtas divertidas")
-
-
-@pytest.fixture
-def category_repository() -> DjangoORMCategoryRepository:
+def category_repository():
     return DjangoORMCategoryRepository()
 
 
 @pytest.fixture
-def genre_drama(category_movie, category_series) -> Genre:
-    return Genre(name="Drama", categories={category_movie.id, category_series.id})
-
-
-@pytest.fixture
-def genre_romance() -> Genre:
-    return Genre(name="Romance", categories=set())
+def genres(categories):
+    return {
+        "drama": Genre(
+            name="Drama", categories={categories["movie"].id, categories["series"].id}
+        ),
+        "romance": Genre(name="Romance", categories=set()),
+        "action": Genre(
+            name="Ação", categories={categories["movie"].id, categories["series"].id}
+        ),
+        "thriller": Genre(
+            name="Terror", categories={categories["movie"].id, categories["series"].id}
+        ),
+    }
 
 
 @pytest.fixture
@@ -41,50 +52,96 @@ def genre_repository():
 
 
 @pytest.mark.django_db
-class TestListAPI:
-    def test_list_genres_and_categories(
+class TestGenreAPI:
+    def setup_test_data(
         self,
-        category_movie,
-        category_series,
         category_repository,
-        genre_drama,
-        genre_romance,
+        categories,
         genre_repository,
+        genres,
+        selected_genres=None,
     ):
-        category_repository.save(category_movie)
-        category_repository.save(category_series)
+        """Helper to setup test data"""
+        for category in categories.values():
+            category_repository.save(category)
 
-        genre_repository.save(genre_drama)
-        genre_repository.save(genre_romance)
+        for genre_name, genre in genres.items():
+            if selected_genres is None or genre_name in selected_genres:
+                genre_repository.save(genre)
+
+    def test_list_genres_and_categories(
+        self, categories, category_repository, genres, genre_repository
+    ):
+        self.setup_test_data(
+            category_repository,
+            {"movie": categories["movie"], "series": categories["series"]},
+            genre_repository,
+            {"drama": genres["drama"], "romance": genres["romance"]},
+        )
 
         url = "/api/genres/"
         response = APIClient().get(url)
-        categories_ids = [str(category_id) for category_id in genre_drama.categories]
+        categories_ids = [
+            str(category_id) for category_id in genres["drama"].categories
+        ]
 
         expected_data = {
             "data": [
                 {
-                    "id": str(genre_drama.id),
-                    "name": genre_drama.name,
+                    "id": str(genres["drama"].id),
+                    "name": genres["drama"].name,
                     "categories": categories_ids,
-                    "is_active": genre_drama.is_active,
+                    "is_active": genres["drama"].is_active,
                 },
                 {
-                    "id": str(genre_romance.id),
-                    "name": genre_romance.name,
-                    "categories": list(genre_romance.categories),  # []
-                    "is_active": genre_romance.is_active,
+                    "id": str(genres["romance"].id),
+                    "name": genres["romance"].name,
+                    "categories": list(genres["romance"].categories),  # []
+                    "is_active": genres["romance"].is_active,
                 },
-            ]
+            ],
+            "meta": {
+                "total": 2,
+                "current_page": 1,
+                "per_page": DEFAULT_PAGE_SIZE,
+            },
         }
 
         assert response.status_code == status.HTTP_200_OK
         assert response.data == expected_data
 
+    @pytest.mark.parametrize(
+        "order_by,reverse,current_page,per_page,expected_genres",
+        [
+            ("name", False, 1, 2, ["Ação", "Drama"]),
+            ("name", False, 2, 2, ["Romance", "Terror"]),
+            ("name", True, 1, 2, ["Terror", "Romance"]),
+            ("name", True, 2, 2, ["Drama", "Ação"]),
+        ],
+    )
+    def test_list_genres_ordered_and_paginated_variations(
+        self,
+        order_by,
+        reverse,
+        current_page,
+        per_page,
+        expected_genres,
+        categories,
+        category_repository,
+        genres,
+        genre_repository,
+    ):
+        self.setup_test_data(category_repository, categories, genre_repository, genres)
 
-@pytest.mark.django_db
-class TestCreateAPI:
-    def test_when_name_is_blank_return_400(self):
+        url = f"/api/genres/?order_by={order_by}&reverse={reverse}&current_page={current_page}&per_page={per_page}"
+        response = APIClient().get(url)
+
+        returned_genre_names = [genre["name"] for genre in response.data["data"]]
+
+        assert response.status_code == status.HTTP_200_OK
+        assert returned_genre_names == expected_genres
+
+    def test_create_genre_with_invalid_name(self):
         url = "/api/genres/"
         data = {
             "name": "",  # inválido para serializer
@@ -96,22 +153,25 @@ class TestCreateAPI:
         assert "name" in response.data
         assert "This field may not be blank." in response.data["name"]
 
-    def test_when_payload_is_valid_then_create_category_and_return_201(
+    def test_create_genre_with_valid_payload(
         self,
+        categories,
         category_repository,
-        category_movie,
-        category_series,
-        genre_drama,
+        genres,
         genre_repository,
     ):
-        category_repository.save(category_movie)
-        category_repository.save(category_series)
+        self.setup_test_data(
+            category_repository,
+            {"movie": categories["movie"], "series": categories["series"]},
+            genre_repository,
+            {},
+        )
 
         url = "/api/genres/"
         data = {
-            "name": genre_drama.name,
-            "is_active": genre_drama.is_active,
-            "categories": list(genre_drama.categories),
+            "name": genres["drama"].name,
+            "is_active": genres["drama"].is_active,
+            "categories": list(genres["drama"].categories),
         }
 
         response = APIClient().post(url, data, format="json")
@@ -128,57 +188,49 @@ class TestCreateAPI:
 
         created_item = genre_repository.get_by_id(created_id)
         assert created_item is not None
-        assert created_item.name == genre_drama.name
-        assert created_item.categories == genre_drama.categories
-        assert created_item.is_active == genre_drama.is_active
+        assert created_item.name == genres["drama"].name
+        assert created_item.categories == genres["drama"].categories
+        assert created_item.is_active == genres["drama"].is_active
 
-
-@pytest.mark.django_db
-class TestDeleteAPI:
-    def test_when_category_pk_is_invalid_then_return_400(self) -> None:
+    def test_delete_genre_with_invalid_id(self):
         url = "/api/genres/invalid_id/"
         response = APIClient().delete(url)
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert response.data == {"id": ["Must be a valid UUID."]}
 
-    def test_when_category_not_found_then_return_404(self) -> None:
+    def test_delete_nonexistent_genre(self):
         url = f"/api/categories/{uuid.uuid4()}/"
         response = APIClient().delete(url)
 
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
-    def test_delete_genre_success_with_related_categories(
+    def test_delete_genre_success(
         self,
-        category_movie,
-        category_series,
+        categories,
         category_repository,
-        genre_drama,
-        genre_romance,
+        genres,
         genre_repository,
-    ) -> None:
-        category_repository.save(category_movie)
-        category_repository.save(category_series)
+    ):
+        self.setup_test_data(
+            category_repository,
+            {"movie": categories["movie"], "series": categories["series"]},
+            genre_repository,
+            {"drama": genres["drama"], "romance": genres["romance"]},
+        )
 
-        genre_repository.save(genre_drama)
-        genre_repository.save(genre_romance)
-
-        url = f"/api/genres/{genre_drama.id}/"
+        url = f"/api/genres/{genres['drama'].id}/"
         response = APIClient().delete(url)
 
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
-        deleted_genre = genre_repository.get_by_id(genre_drama.id)
+        deleted_genre = genre_repository.get_by_id(genres["drama"].id)
         assert deleted_genre is None
 
-        persisted_genre = genre_repository.get_by_id(genre_romance.id)
+        persisted_genre = genre_repository.get_by_id(genres["romance"].id)
         assert persisted_genre is not None
 
-
-@pytest.mark.django_db
-class TestUpdateAPI:
-
-    def test_when_request_data_is_invalid_then_return_400(self):
+    def test_update_genre_with_invalid_data(self):
         url = "/api/genres/123123123/"
         data = {
             "name": "",
@@ -190,22 +242,21 @@ class TestUpdateAPI:
         assert "name" in response.data
         assert "This field may not be blank." in response.data["name"]
 
-    def test_when_request_data_is_valid_then_update_genre(
+    def test_update_genre_with_valid_data(
         self,
-        category_movie,
-        category_series,
+        categories,
         category_repository,
-        genre_drama,
-        genre_romance,
+        genres,
         genre_repository,
     ):
-        category_repository.save(category_movie)
-        category_repository.save(category_series)
+        self.setup_test_data(
+            category_repository,
+            {"movie": categories["movie"], "series": categories["series"]},
+            genre_repository,
+            {"drama": genres["drama"], "romance": genres["romance"]},
+        )
 
-        genre_repository.save(genre_drama)
-        genre_repository.save(genre_romance)
-
-        url = f"/api/genres/{genre_drama.id}/"
+        url = f"/api/genres/{genres['drama'].id}/"
         data = {
             "name": "Drama Deactivation",
             "is_active": False,
@@ -217,7 +268,7 @@ class TestUpdateAPI:
         assert response is not None
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
-        updated_genre = genre_repository.get_by_id(genre_drama.id)
+        updated_genre = genre_repository.get_by_id(genres["drama"].id)
         genre_items = genre_repository.list()
 
         assert len(genre_items) == 2
@@ -226,12 +277,14 @@ class TestUpdateAPI:
         assert not updated_genre.is_active
         assert updated_genre.categories == set()
 
-    def test_when_genre_does_not_exist_then_return_404(
-        self, genre_drama, genre_romance, genre_repository
+    def test_update_nonexistent_genre(
+        self,
+        genres,
+        genre_repository,
     ):
-        genre_repository.save(genre_romance)
+        genre_repository.save(genres["romance"])
 
-        url = f"/api/genres/{genre_drama.id}/"
+        url = f"/api/genres/{genres['drama'].id}/"
         data = {
             "name": "Drama Deactivation",
             "is_active": False,
@@ -245,13 +298,15 @@ class TestUpdateAPI:
         assert response.status_code == status.HTTP_404_NOT_FOUND
         assert len(genre_items) == 1
 
-    def test_when_related_categories_do_not_exist_then_return_400(
-        self, genre_romance, genre_repository
+    def test_update_genre_with_nonexistent_categories(
+        self,
+        genres,
+        genre_repository,
     ):
         categories_fake = [str(uuid.uuid4()), str(uuid.uuid4())]
-        genre_repository.save(genre_romance)
+        genre_repository.save(genres["romance"])
 
-        url = f"/api/genres/{genre_romance.id}/"
+        url = f"/api/genres/{genres['romance'].id}/"
         data = {
             "name": "Drama Deactivation",
             "is_active": False,

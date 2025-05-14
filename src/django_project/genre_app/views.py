@@ -34,6 +34,7 @@ from src.django_project.genre_app.serializers import (
     CreateGenreDeserializer,
     CreateGenreSerializer,
     DeleteGenreDeserializer,
+    ListEntityInputDeserializer,
     ListGenreSerializer,
     UpdateGenreDeserializer,
 )
@@ -41,7 +42,10 @@ from src.django_project.genre_app.serializers import (
 
 class GenreViewSet(viewsets.ViewSet):
     def list(self, request: Request) -> Response:
-        input = ListGenre.Input()
+        deserializer = ListEntityInputDeserializer(data=request.query_params)
+        deserializer.is_valid(raise_exception=True)
+
+        input = ListGenre.Input(**deserializer.validated_data)
         use_case = ListGenre(repository=DjangoORMGenreRepository())
 
         output = use_case.execute(input)

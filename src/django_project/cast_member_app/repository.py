@@ -1,8 +1,8 @@
 from uuid import UUID
 
-from django_project.cast_member_app.mapper import CastMemberModelMapper
 from src.core.cast_member.domain.cast_member import CastMember
 from src.core.cast_member.domain.cast_member_repository import ICastMemberRepository
+from src.django_project.cast_member_app.mapper import CastMemberModelMapper
 from src.django_project.cast_member_app.models import CastMember as CastMemberModel
 
 

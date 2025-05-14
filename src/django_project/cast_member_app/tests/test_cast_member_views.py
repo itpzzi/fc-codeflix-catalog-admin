@@ -9,27 +9,33 @@ from src.django_project.cast_member_app.repository import DjangoORMCastMemberRep
 
 
 @pytest.fixture
+def cast_members():
+    return {
+        "actor": CastMember(name="Steve", type=CastMemberType.ACTOR),
+        "director": CastMember(name="Zombie", type=CastMemberType.DIRECTOR),
+        "actor2": CastMember(name="Spider", type=CastMemberType.ACTOR),
+        "director2": CastMember(name="Skeleton", type=CastMemberType.DIRECTOR),
+    }
+
+
+@pytest.fixture
 def repository():
     return DjangoORMCastMemberRepository()
 
 
-@pytest.fixture
-def actor_member():
-    return CastMember(name="Steve", type=CastMemberType.ACTOR)
-
-
-@pytest.fixture
-def director_member():
-    return CastMember(name="Zombie", type=CastMemberType.DIRECTOR)
-
-
 @pytest.mark.django_db
-class TestCreateAPI:
-    def test_create_cast_member(self, actor_member, repository):
+class TestCastMemberAPI:
+    def setup_test_data(self, repository, cast_members, selected_members=None):
+        """Helper to setup test data"""
+        for member_name, member in cast_members.items():
+            if selected_members is None or member_name in selected_members:
+                repository.save(member)
+
+    def test_create_cast_member(self, cast_members, repository):
         url = "/api/cast_members/"
         data = {
-            "name": actor_member.name,
-            "type": actor_member.type,
+            "name": cast_members["actor"].name,
+            "type": cast_members["actor"].type,
         }
 
         response = APIClient().post(url, data=data, format="json")
@@ -47,12 +53,12 @@ class TestCreateAPI:
 
         created_item = repository.get_by_id(id=created_id)
         assert created_item is not None
-        assert created_item.name == actor_member.name
-        assert created_item.type == actor_member.type
+        assert created_item.name == cast_members["actor"].name
+        assert created_item.type == cast_members["actor"].type
 
-    def test_raises_400_for_invalid_payload(self, actor_member):
+    def test_create_with_invalid_payload(self, cast_members):
         url = "/api/cast_members/"
-        data = {"name": actor_member.name, "type": "producer"}
+        data = {"name": cast_members["actor"].name, "type": "producer"}
 
         response = APIClient().post(url, data=data, format="json")
 
@@ -60,24 +66,23 @@ class TestCreateAPI:
         assert "type" in response.data
         assert '"producer" is not a valid choice.' in response.data.get("type")
 
-
-@pytest.mark.django_db
-class TestListAPI:
-    def test_list_all_repository(self, actor_member, director_member, repository):
-        repository.save(director_member)
-        repository.save(actor_member)
+    def test_list_cast_members(self, cast_members, repository):
+        self.setup_test_data(
+            repository,
+            {"actor": cast_members["actor"], "director": cast_members["director"]},
+        )
 
         expected_data = {
             "data": [
                 {
-                    "name": actor_member.name,
-                    "type": actor_member.type,
-                    "id": str(actor_member.id),
+                    "name": cast_members["actor"].name,
+                    "type": cast_members["actor"].type,
+                    "id": str(cast_members["actor"].id),
                 },
                 {
-                    "name": director_member.name,
-                    "type": director_member.type,
-                    "id": str(director_member.id),
+                    "name": cast_members["director"].name,
+                    "type": cast_members["director"].type,
+                    "id": str(cast_members["director"].id),
                 },
             ]
         }
@@ -88,37 +93,57 @@ class TestListAPI:
         assert response.data == expected_data
         assert response.status_code == status.HTTP_200_OK
 
+    @pytest.mark.parametrize(
+        "order_by,reverse,current_page,per_page,expected_names",
+        [
+            ("name", False, 1, 2, ["Skeleton", "Spider"]),
+            ("name", False, 2, 2, ["Steve", "Zombie"]),
+            ("name", True, 1, 2, ["Zombie", "Steve"]),
+            ("name", True, 2, 2, ["Spider", "Skeleton"]),
+        ],
+    )
+    def test_list_cast_members_ordered_and_paginated(
+        self,
+        order_by,
+        reverse,
+        current_page,
+        per_page,
+        expected_names,
+        cast_members,
+        repository,
+    ):
+        self.setup_test_data(repository, cast_members)
 
-@pytest.mark.django_db
-class TestDeleteAPI:
-    def test_raise_400_for_invalid_pk(self):
+        url = f"/api/cast_members/?order_by={order_by}&reverse={reverse}&current_page={current_page}&per_page={per_page}"
+        response = APIClient().get(url)
+
+        returned_names = [member["name"] for member in response.data["data"]]
+
+        assert response.status_code == status.HTTP_200_OK
+        assert returned_names == expected_names
+
+    def test_delete_with_invalid_id(self):
         url = "/api/cast_members/invalid_id/"
-
         response = APIClient().delete(url)
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert response.data == {"id": ["Must be a valid UUID."]}
 
-    def test_raise_404_for_nonexistent_cast_member(self):
-        fake_id = uuid.uuid4()
-        url = f"/api/cast_members/{fake_id}/"
-
+    def test_delete_nonexistent_cast_member(self):
+        url = f"/api/cast_members/{uuid.uuid4()}/"
         response = APIClient().delete(url)
 
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
-    def test_delete_an_existent_cast_member(self, actor_member, repository):
-        repository.save(actor_member)
-        url = f"/api/cast_members/{actor_member.id}/"
+    def test_delete_existing_cast_member(self, cast_members, repository):
+        self.setup_test_data(repository, {"actor": cast_members["actor"]})
 
+        url = f"/api/cast_members/{cast_members['actor'].id}/"
         response = APIClient().delete(url)
 
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
-
-@pytest.mark.django_db
-class TestUpdateAPI:
-    def test_when_request_data_is_invalid_then_return_400(self):
+    def test_update_with_invalid_data(self):
         url = "/api/cast_members/invalid_id/"
         data = {"name": "", "type": "producer"}
 
@@ -133,31 +158,27 @@ class TestUpdateAPI:
         assert "This field may not be blank." in response.data.get("name")
         assert '"producer" is not a valid choice.' in response.data.get("type")
 
-    def test_when_member_does_not_exist_then_return_404(self, actor_member, repository):
-        repository.save(actor_member)
+    def test_update_nonexistent_cast_member(self, cast_members, repository):
+        self.setup_test_data(repository, {"actor": cast_members["actor"]})
 
         url = f"/api/cast_members/{uuid.uuid4()}/"
-        data = {"name": actor_member.name, "type": actor_member.type}
+        data = {"name": cast_members["actor"].name, "type": cast_members["actor"].type}
 
         response = APIClient().put(url, data=data, format="json")
 
-        assert response is not None
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
-    def test_when_request_data_is_valid_then_update_member(
-        self, actor_member, repository
-    ):
-        repository.save(actor_member)
+    def test_update_with_valid_data(self, cast_members, repository):
+        self.setup_test_data(repository, {"actor": cast_members["actor"]})
 
-        url = f"/api/cast_members/{actor_member.id}/"
+        url = f"/api/cast_members/{cast_members['actor'].id}/"
         data = {"name": "Skeleton", "type": CastMemberType.DIRECTOR}
 
         response = APIClient().put(url, data=data, format="json")
 
-        assert response is not None
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
-        updated_item = repository.get_by_id(actor_member.id)
+        updated_item = repository.get_by_id(cast_members["actor"].id)
         assert updated_item is not None
         assert updated_item.name == "Skeleton"
         assert updated_item.type == CastMemberType.DIRECTOR

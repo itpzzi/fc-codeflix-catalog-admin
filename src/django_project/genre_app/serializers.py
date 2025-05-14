@@ -1,5 +1,20 @@
 from rest_framework import serializers
 
+from src.core._shared.config import DEFAULT_PAGE_SIZE
+
+
+class ListEntityInputDeserializer(serializers.Serializer):
+    order_by = serializers.CharField(default="name")
+    reverse = serializers.BooleanField(default=False)
+    current_page = serializers.IntegerField(default=1)
+    per_page = serializers.IntegerField(default=DEFAULT_PAGE_SIZE)
+
+
+class MetaSerializer(serializers.Serializer):
+    total = serializers.IntegerField()
+    current_page = serializers.IntegerField()
+    per_page = serializers.IntegerField()
+
 
 class SetField(serializers.ListField):
     def to_internal_value(self, data):
@@ -18,6 +33,7 @@ class GenreSerializer(serializers.Serializer):
 
 class ListGenreSerializer(serializers.Serializer):
     data = GenreSerializer(many=True)
+    meta = MetaSerializer()
 
 
 class CreateGenreDeserializer(serializers.Serializer):

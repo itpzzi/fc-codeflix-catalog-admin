@@ -36,11 +36,15 @@ from src.django_project.category_app.serializers import (
     RetrieveCategorySerializer,
     UpdateCategoryDeserializer,
 )
+from src.django_project.genre_app.serializers import ListEntityInputDeserializer
 
 
 class CategoryViewSet(viewsets.ViewSet):
     def list(self, request: Request) -> Response:
-        input = ListCategory.Input()
+        deserializer = ListEntityInputDeserializer(data=request.query_params)
+        deserializer.is_valid(raise_exception=True)
+
+        input = ListCategory.Input(**deserializer.validated_data)
         use_case = ListCategory(repository=DjangoORMCategoryRepository())
 
         output = use_case.execute(input)
