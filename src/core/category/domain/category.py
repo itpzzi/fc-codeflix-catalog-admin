@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 
-from src.core._shared.entity import Entity
+from src.core._shared.entity import EntityNamed
 
 
 @dataclass(eq=False)
-class Category(Entity):
+class Category(EntityNamed):
     description: str = ""
     is_active: bool = True
 

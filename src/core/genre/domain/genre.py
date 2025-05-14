@@ -1,11 +1,11 @@
 from dataclasses import dataclass, field
 from uuid import UUID
 
-from src.core._shared.entity import Entity
+from src.core._shared.entity import EntityNamed
 
 
 @dataclass(eq=False)
-class Genre(Entity):
+class Genre(EntityNamed):
     is_active: bool = True
     categories: set[UUID] = field(default_factory=set)
 

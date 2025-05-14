@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from enum import StrEnum
 
-from src.core._shared.entity import Entity
+from src.core._shared.entity import EntityNamed
 
 
 class CastMemberType(StrEnum):
@@ -16,7 +16,7 @@ class CastMemberType(StrEnum):
 
 
 @dataclass(eq=False)
-class CastMember(Entity):
+class CastMember(EntityNamed):
     type: CastMemberType
 
     def validate(self):

@@ -11,8 +11,6 @@ class Entity(ABC):
     id: UUID = field(default_factory=uuid4)
     notification: Notification = field(default_factory=Notification, init=False)
 
-    name: Name
-
     def __eq__(self, other) -> bool:
         if not isinstance(other, self.__class__):
             return False
@@ -31,14 +29,23 @@ class Entity(ABC):
     def validate(self):
         pass
 
-    def _validate_name(self, value: str):
-        try:
-            Name(value)
-        except ValueError as e:
-            self.notification.add_error(str(e))
-
     def _validate_id(self, value: UUID):
         if not isinstance(value, UUID):
             self.notification.add_error("id must be a UUID instance")
         elif value.version != 4:
             self.notification.add_error("id must be a valid UUIDv4")
+
+
+@dataclass(kw_only=True, eq=False)
+class EntityNamed(Entity):
+    name: Name
+
+    def validate(self):
+        self._validate_name(self.name)
+        super().validate()
+
+    def _validate_name(self, value: str):
+        try:
+            Name(value)
+        except ValueError as e:
+            self.notification.add_error(str(e))
