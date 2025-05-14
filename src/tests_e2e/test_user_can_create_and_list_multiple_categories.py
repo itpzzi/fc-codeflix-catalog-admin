@@ -21,9 +21,8 @@ class TestCreateAndListMultipleCategories:
         # Criação de múltiplas categorias
         create_url = "/api/categories/"
         categories_to_create = [
-            {"name": "Terror", "description": "Filmes assustadores", "is_active": True},
-            {"name": "Comédia", "description": "Filmes engraçados", "is_active": True},
             {"name": "Drama", "description": "Filmes emocionantes", "is_active": False},
+            {"name": "Comédia", "description": "Filmes engraçados", "is_active": True},
         ]
 
         created_categories = []

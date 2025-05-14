@@ -33,24 +33,30 @@ class TestListCategory:
 
         output = use_case.execute(input=input)
 
-        assert output == ListCategory.Output(data=output.data)
         assert len(output.data) == 2
-        assert output == ListCategory.Output(
-            data=[
-                ListCategoryItem(
-                    id=mock_category1.id,
-                    name=mock_category1.name,
-                    description=mock_category1.description,
-                    is_active=mock_category1.is_active,
-                ),
-                ListCategoryItem(
-                    id=mock_category2.id,
-                    name=mock_category2.name,
-                    description=mock_category2.description,
-                    is_active=mock_category2.is_active,
-                ),
-            ]
+        assert (
+            output.data
+            == ListCategory.Output(
+                input,
+                data=[
+                    ListCategoryItem(
+                        id=mock_category1.id,
+                        name=mock_category1.name,
+                        description=mock_category1.description,
+                        is_active=mock_category1.is_active,
+                    ),
+                    ListCategoryItem(
+                        id=mock_category2.id,
+                        name=mock_category2.name,
+                        description=mock_category2.description,
+                        is_active=mock_category2.is_active,
+                    ),
+                ],
+            ).data
         )
+        assert output.meta.total == 2
+        assert output.meta.current_page == 1
+        assert output.meta.per_page == 2
 
     def test_when_no_categories_then_return_empty_list(self):
         repository = InMemoryCategoryRepository(categories=[])
@@ -60,4 +66,7 @@ class TestListCategory:
         output = use_case.execute(input=input)
 
         assert len(output.data) == 0
-        assert output == ListCategory.Output(data=[])
+        assert output.data == ListCategory.Output(input, data=[]).data
+        assert output.meta.total == 0
+        assert output.meta.current_page == 1
+        assert output.meta.per_page == 2

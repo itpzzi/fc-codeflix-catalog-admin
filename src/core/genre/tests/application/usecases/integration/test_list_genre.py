@@ -70,23 +70,24 @@ class TestListGenre:
         output = use_case.execute(input=input)
 
         assert len(output.data) == 2
-        assert output == ListGenre.Output(data=output.data)
-        assert output == ListGenre.Output(
-            data=[
-                ListGenreItem(
-                    id=genre_fantasy.id,
-                    name=genre_fantasy.name,
-                    categories=genre_fantasy.categories,
-                    is_active=genre_fantasy.is_active,
-                ),
-                ListGenreItem(
-                    id=genre_drama.id,
-                    name=genre_drama.name,
-                    categories={},
-                    is_active=genre_drama.is_active,
-                ),
-            ]
-        )
+        assert output.data == ListGenre.Output(input, data=output.data).data
+        assert output.data == [
+            ListGenreItem(
+                id=genre_drama.id,
+                name=genre_drama.name,
+                categories={},
+                is_active=genre_drama.is_active,
+            ),
+            ListGenreItem(
+                id=genre_fantasy.id,
+                name=genre_fantasy.name,
+                categories=genre_fantasy.categories,
+                is_active=genre_fantasy.is_active,
+            ),
+        ]
+        assert output.meta.total == 2
+        assert output.meta.current_page == 1
+        assert output.meta.per_page == 2
 
     def test_return_empty_list_when_no_genre_exists(
         self,
@@ -100,5 +101,7 @@ class TestListGenre:
         output = use_case.execute(input=input)
 
         assert len(output.data) == 0
-        assert output == ListGenre.Output(data=output.data)
-        assert output == ListGenre.Output(data=[])
+        assert output.data == ListGenre.Output(input, data=output.data).data
+        assert output.meta.total == 0
+        assert output.meta.current_page == 1
+        assert output.meta.per_page == 2
