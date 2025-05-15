@@ -4,7 +4,7 @@ from uuid import UUID
 from src.core.video.domain.video import Video
 
 
-class VideoRepository(ABC):
+class IVideoRepository(ABC):
     @abstractmethod
     def save(self, video: Video):
         raise NotImplementedError

@@ -3,6 +3,8 @@ class Notification:
         self._errors: list[str] = []
 
     def add_error(self, message: str):
+        if not isinstance(message, str):
+            raise TypeError("message must be a string")
         self._errors.append(message)
 
     @property

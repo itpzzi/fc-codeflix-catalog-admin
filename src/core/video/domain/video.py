@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
 from uuid import UUID
 
-from core._shared.entity import Entity
-from core.video.domain.value_objects import (
+from src.core._shared.entity import Entity
+from src.core.video.domain.value_objects import (
     AudioVideoMedia,
     CastMembers,
     Categories,

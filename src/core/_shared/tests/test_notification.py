@@ -8,6 +8,11 @@ class TestNotification(unittest.TestCase):
         notification = Notification()
         self.assertEqual(notification._errors, [])
 
+    def test_should_raise_when_adding_non_string_message(self):
+        notification = Notification()
+        with self.assertRaises(TypeError):
+            notification.add_error(42)
+
     def test_add_error(self):
         notification = Notification()
         notification.add_error("Error 1")
