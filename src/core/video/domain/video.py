@@ -1,0 +1,131 @@
+from dataclasses import dataclass, field
+from uuid import UUID
+
+from core._shared.entity import Entity
+from core.video.domain.value_objects import (
+    AudioVideoMedia,
+    CastMembers,
+    Categories,
+    Description,
+    Duration,
+    Genres,
+    ImageMedia,
+    LaunchedAt,
+    MediaStatus,
+    Rating,
+    Title,
+)
+
+
+@dataclass(kw_only=True, slots=True)
+class Video(Entity):
+    title: Title
+    description: Description
+    duration: Duration
+    launched_at: LaunchedAt
+    rating: Rating
+    opened: bool
+    published: bool = field(default=False, init=False)
+
+    categories: Categories
+    genres: Genres
+    cast_members: CastMembers
+
+    banner: ImageMedia | None = None
+    thumbnail: ImageMedia | None = None
+    thumbnail_half: ImageMedia | None = None
+    trailer: AudioVideoMedia | None = None
+    video: AudioVideoMedia | None = None
+
+    def publish(self):
+        if not isinstance(self.video, AudioVideoMedia):
+            self.notification.add_error("video should be set before publishing")
+        elif self.video.status != MediaStatus.COMPLETED:
+            self.notification.add_error("video should be completed before publishing")
+
+        if not self.notification.has_errors:
+            self._update_field("published", True)
+
+    def validate(self):
+        self._validate_value_object("title", Title, ValueError)
+        self._validate_value_object("description", Description, ValueError)
+        self._validate_value_object("duration", Duration, (ValueError, TypeError))
+        self._validate_value_object("launched_at", LaunchedAt, (ValueError, TypeError))
+        self._validate_value_object("rating", Rating, ValueError)
+
+        self._validate_primitive_type("opened", bool)
+        self._validate_primitive_type("published", bool)
+
+        self._validate_value_object("categories", Categories, TypeError)
+        self._validate_value_object("genres", Genres, TypeError)
+        self._validate_value_object("cast_members", CastMembers, TypeError)
+        self._check_notification_has_errors()
+
+    def _validate_value_object(self, field_name: str, constructor, expected_exception):
+        value = getattr(self, field_name)
+        try:
+            constructor(value)
+        except expected_exception as error:
+            self.notification.add_error(str(error))
+
+    def _validate_primitive_type(self, field_name: str, expected_type: type):
+        value = getattr(self, field_name)
+        if not isinstance(value, expected_type):
+            self.notification.add_error(
+                f"{field_name} must be a {expected_type.__name__}"
+            )
+
+    def _update_field(self, field_name: str, value):
+        setattr(self, field_name, value)
+        self.validate()
+
+    def update_title(self, value: Title):
+        self._update_field("title", value)
+
+    def update_description(self, value: Description):
+        self._update_field("description", value)
+
+    def update_duration(self, value: Duration):
+        self._update_field("duration", value)
+
+    def update_launched_at(self, value: LaunchedAt):
+        self._update_field("launched_at", value)
+
+    def update_rating(self, value: Rating):
+        self._update_field("rating", value)
+
+    def update_opened(self, value: bool):
+        self._update_field("opened", value)
+
+    def add_category(self, value: UUID):
+        new_set = Categories(self.categories | {value})
+        self._update_field("categories", new_set)
+
+    def add_genre(self, value: UUID):
+        new_set = Genres(self.genres | {value})
+        self._update_field("genres", new_set)
+
+    def add_cast_member(self, value: UUID):
+        new_set = CastMembers(self.cast_members | {value})
+        self._update_field("cast_members", new_set)
+
+    def update_banner(self, value: ImageMedia | None):
+        self._update_field("banner", value)
+
+    def update_thumbnail(self, value: ImageMedia | None):
+        self._update_field("thumbnail", value)
+
+    def update_thumbnail_half(self, value: ImageMedia | None):
+        self._update_field("thumbnail_half", value)
+
+    def update_trailer(self, value: AudioVideoMedia | None):
+        self._update_field("trailer", value)
+
+    def update_video(self, value: AudioVideoMedia | None):
+        self._update_field("video", value)
+
+    def __repr__(self):
+        return f"<Video {self.title} ({self.launched_at}) - {self.id}>"
+
+    def __str__(self):
+        return f"{self.title} ({self.launched_at}) - {self.description}"

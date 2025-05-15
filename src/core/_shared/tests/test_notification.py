@@ -33,3 +33,10 @@ class TestNotification(unittest.TestCase):
         notification.add_error("Error 1")
         notification.add_error("Error 2")
         self.assertEqual(len(notification), 2)
+
+    def test_clear(self):
+        notification = Notification()
+        notification.add_error("Error 1")
+        notification.add_error("Error 2")
+        notification.clear()
+        self.assertEqual(len(notification), 0)

@@ -6,7 +6,7 @@ from src.core._shared.common_types import Name
 from src.core._shared.notification import Notification
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, slots=True)
 class Entity(ABC):
     id: UUID = field(default_factory=uuid4)
     notification: Notification = field(default_factory=Notification, init=False)

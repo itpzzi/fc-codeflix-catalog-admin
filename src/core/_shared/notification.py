@@ -13,6 +13,9 @@ class Notification:
     def messages(self) -> str:
         return "; ".join(self._errors)
 
+    def clear(self):
+        self._errors.clear()
+
     def __len__(self):
         return len(self._errors)
 
