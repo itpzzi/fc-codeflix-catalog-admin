@@ -3,7 +3,6 @@ from unittest.mock import Mock, create_autospec
 
 import pytest
 
-from core.video.domain.video import Video
 from src.core.cast_member.domain.cast_member_repository import ICastMemberRepository
 from src.core.category.domain.category_repository import ICategoryRepository
 from src.core.genre.domain.genre_repository import IGenreRepository
@@ -21,6 +20,7 @@ from src.core.video.domain.value_objects import (
     Rating,
     Title,
 )
+from src.core.video.domain.video import Video
 from src.core.video.domain.video_repository import IVideoRepository
 
 

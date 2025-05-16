@@ -24,6 +24,7 @@ class Description(str):
             raise ValueError("description cannot be longer than 1000 characters")
         return super().__new__(cls, value)
 
+
 class Duration(Decimal):
     def __new__(cls, value: Union[int, float, str, Decimal]):
         try:
@@ -79,11 +80,6 @@ class Rating(Enum):
     AGE_16 = auto()
     AGE_18 = auto()
 
-    @classmethod
-    def _missing_(cls, value: object):
-        if value not in cls._value2member_map_:
-            raise ValueError("rating must be a valid Rating")
-        return cls._value2member_map_[value]
 
 @unique
 class MediaStatus(Enum):
@@ -92,11 +88,6 @@ class MediaStatus(Enum):
     COMPLETED = auto()
     ERROR = auto()
 
-    @classmethod
-    def _missing_(cls, value: object):
-        if value not in cls._value2member_map_:
-            raise ValueError("status must be a valid MediaStatus")
-        return cls._value2member_map_[value]
 
 @dataclass(frozen=True)
 class ImageMedia:

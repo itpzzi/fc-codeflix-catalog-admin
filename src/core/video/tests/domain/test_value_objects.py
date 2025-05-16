@@ -1,6 +1,7 @@
-import pytest
 from decimal import Decimal
 from uuid import uuid4
+
+import pytest
 
 from src.core._shared.common_types import CheckSum, Location
 from src.core.video.domain.value_objects import (
@@ -33,7 +34,9 @@ class TestInvalidTitle:
             Title("")
 
     def test_too_long(self):
-        with pytest.raises(ValueError, match="title cannot be longer than 255 characters"):
+        with pytest.raises(
+            ValueError, match="title cannot be longer than 255 characters"
+        ):
             Title("a" * 256)
 
 
@@ -43,7 +46,9 @@ class TestInvalidDescription:
             Description("")
 
     def test_too_long(self):
-        with pytest.raises(ValueError, match="description cannot be longer than 1000 characters"):
+        with pytest.raises(
+            ValueError, match="description cannot be longer than 1000 characters"
+        ):
             Description("a" * 1001)
 
 
@@ -61,21 +66,29 @@ class TestInvalidDuration:
             Duration(0)
 
     def test_non_numeric_string(self):
-        with pytest.raises(TypeError, match="duration must be a number or numeric string"):
+        with pytest.raises(
+            TypeError, match="duration must be a number or numeric string"
+        ):
             Duration("invalid")
 
     def test_invalid_type(self):
-        with pytest.raises(TypeError, match="duration must be a number or numeric string"):
+        with pytest.raises(
+            TypeError, match="duration must be a number or numeric string"
+        ):
             Duration(object())
 
 
 class TestInvalidLaunchYear:
     def test_low(self):
-        with pytest.raises(ValueError, match="launch year must be between 1900 and 2100"):
+        with pytest.raises(
+            ValueError, match="launch year must be between 1900 and 2100"
+        ):
             LaunchYear(1800)
 
     def test_high(self):
-        with pytest.raises(ValueError, match="launch year must be between 1900 and 2100"):
+        with pytest.raises(
+            ValueError, match="launch year must be between 1900 and 2100"
+        ):
             LaunchYear(2200)
 
 
@@ -85,11 +98,15 @@ class TestInvalidCheckSum:
             CheckSum("")
 
     def test_too_short(self):
-        with pytest.raises(ValueError, match="checksum must be between 32 and 64 characters"):
+        with pytest.raises(
+            ValueError, match="checksum must be between 32 and 64 characters"
+        ):
             CheckSum("a" * 31)
 
     def test_too_long(self):
-        with pytest.raises(ValueError, match="checksum must be between 32 and 64 characters"):
+        with pytest.raises(
+            ValueError, match="checksum must be between 32 and 64 characters"
+        ):
             CheckSum("a" * 65)
 
 

@@ -51,7 +51,7 @@ class Video(Entity):
         self._validate_value_object("description", Description, ValueError)
         self._validate_value_object("duration", Duration, (ValueError, TypeError))
         self._validate_value_object("launch_year", LaunchYear, (ValueError, TypeError))
-        self._validate_value_object("rating", Rating, ValueError)
+        self._validate_rating()
 
         self._validate_primitive_type("opened", bool)
         self._validate_primitive_type("published", bool)
@@ -74,6 +74,11 @@ class Video(Entity):
             self.notification.add_error(
                 f"{field_name} must be a {expected_type.__name__}"
             )
+
+    def _validate_rating(self):
+        value = getattr(self, "rating")
+        if not isinstance(value, Rating):
+            self.notification.add_error("rating must be a valid Rating")
 
     def _update_field(self, field_name: str, value):
         setattr(self, field_name, value)
