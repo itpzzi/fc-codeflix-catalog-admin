@@ -6,6 +6,8 @@ from src.core.video.domain.value_objects import MediaStatus, Rating
 
 
 class Video(models.Model):
+    app_label = "video_app"
+
     RATING_CHOICES = [(rating.name, rating.name) for rating in Rating]
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
 
@@ -57,6 +59,8 @@ class Video(models.Model):
 
 
 class ImageMedia(models.Model):
+    app_label = "video_app"
+
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
 
     checksum = models.CharField(max_length=255)
@@ -65,6 +69,8 @@ class ImageMedia(models.Model):
 
 
 class AudioVideoMedia(models.Model):
+    app_label = "video_app"
+
     STATUS_CHOICES = [(status.name, status.name) for status in MediaStatus]
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
