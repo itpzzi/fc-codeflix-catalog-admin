@@ -13,7 +13,7 @@ from src.core.video.domain.value_objects import (
     Description,
     Duration,
     Genres,
-    LaunchedAt,
+    LaunchYear,
     Rating,
     Title,
 )
@@ -26,7 +26,7 @@ class CreateVideoWithoutMedia:
     class Input:
         title: Title
         description: Description
-        launched_at: LaunchedAt
+        launch_year: LaunchYear
         opened: bool
         duration: Duration
         rating: Rating
@@ -86,7 +86,7 @@ class CreateVideoWithoutMedia:
             return Video(
                 title=input.title,
                 description=input.description,
-                launched_at=input.launched_at,
+                launch_year=input.launch_year,
                 opened=input.opened,
                 duration=input.duration,
                 rating=input.rating,

@@ -1,5 +1,7 @@
 from dataclasses import dataclass
+from decimal import Decimal
 from enum import Enum, auto, unique
+from typing import Union
 from uuid import UUID
 
 from src.core._shared.common_types import Location, Name
@@ -22,25 +24,27 @@ class Description(str):
             raise ValueError("description cannot be longer than 1000 characters")
         return super().__new__(cls, value)
 
+class Duration(Decimal):
+    def __new__(cls, value: Union[int, float, str, Decimal]):
+        try:
+            decimal_value = Decimal(str(value))
+        except Exception:
+            raise TypeError("duration must be a number or numeric string")
 
-class Duration(float):
-    def __new__(cls, value):
-        if not isinstance(value, (int, float)):
-            raise TypeError("duration must be a number")
-        value = float(value)
-        if value <= 0:
+        if decimal_value <= 0:
             raise ValueError("duration must be a positive number")
-        if value > 1000:
+        if decimal_value > Decimal("1000"):
             raise ValueError("duration is unrealistically long")
-        return super().__new__(cls, value)
+
+        return super().__new__(cls, decimal_value)
 
 
-class LaunchedAt(int):
+class LaunchYear(int):
     def __new__(cls, value: int):
         if not isinstance(value, int):
-            raise TypeError("launched year must be a integer number")
+            raise TypeError("launch year must be a integer number")
         if value < 1900 or value > 2100:
-            raise ValueError("launched year must be between 1900 and 2100")
+            raise ValueError("launch year must be between 1900 and 2100")
         return super().__new__(cls, value)
 
 
@@ -81,7 +85,6 @@ class Rating(Enum):
             raise ValueError("rating must be a valid Rating")
         return cls._value2member_map_[value]
 
-
 @unique
 class MediaStatus(Enum):
     PENDING = auto()
@@ -94,7 +97,6 @@ class MediaStatus(Enum):
         if value not in cls._value2member_map_:
             raise ValueError("status must be a valid MediaStatus")
         return cls._value2member_map_[value]
-
 
 @dataclass(frozen=True)
 class ImageMedia:

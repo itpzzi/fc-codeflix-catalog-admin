@@ -1,3 +1,4 @@
+from decimal import Decimal
 import uuid
 from unittest.mock import Mock, patch
 
@@ -8,7 +9,7 @@ from src.core.video.domain.value_objects import (
     AudioVideoMedia,
     Duration,
     ImageMedia,
-    LaunchedAt,
+    LaunchYear,
     MediaStatus,
     Rating,
 )
@@ -21,7 +22,7 @@ def valid_data():
         title="Test Title",
         description="Test Description",
         duration=Duration(150),
-        launched_at=LaunchedAt(2023),
+        launch_year=LaunchYear(2023),
         rating=Rating(Rating.AGE_10),
         opened=True,
         categories=set(),
@@ -53,7 +54,7 @@ class TestVideoInitialization:
         assert video.title == "Test Title"
         assert video.description == "Test Description"
         assert video.duration == Duration(150)
-        assert video.launched_at == LaunchedAt(2023)
+        assert video.launch_year == LaunchYear(2023)
         assert video.rating == Rating(Rating.AGE_10)
         assert video.opened is True
         assert video.categories == set()
@@ -86,7 +87,7 @@ class TestVideoUpdate:
             ("update_title", "New Title"),
             ("update_description", "New Description"),
             ("update_duration", Duration(70)),
-            ("update_launched_at", LaunchedAt(1997)),
+            ("update_launch_year", LaunchYear(1997)),
             ("update_rating", Rating(Rating.AGE_18)),
             ("update_opened", True),
             ("add_category", uuid.uuid4()),
@@ -179,7 +180,7 @@ class TestVideoRequiredFields:
             ("title", "", "title cannot be empty"),
             ("description", "", "description cannot be empty"),
             ("duration", -1, "duration must be a positive number"),
-            ("launched_at", 1899, "launched year must be between 1900 and 2100"),
+            ("launch_year", 1899, "launch year must be between 1900 and 2100"),
             ("rating", "INVALID", ""),
             ("opened", None, "opened must be a bool"),
             ("categories", ["not", "uuids"], "Categories must be a set"),
@@ -202,7 +203,7 @@ class TestVideoRequiredFields:
 
     def test_video_should_store_duration_as_decimal(self, valid_data):
         video = Video(**valid_data)
-        assert isinstance(video.duration, float)
+        assert isinstance(video.duration, Decimal)
 
 
 class TestVideoValidation:
@@ -212,14 +213,14 @@ class TestVideoValidation:
         invalid_data = {
             **valid_data,
             "title": "",
-            "launched_at": 1200,
+            "launch_year": 1200,
             "duration": -1,
         }
         with pytest.raises(ValueError) as exc:
             Video(**invalid_data)
         assert "title cannot be empty" in str(exc.value)
         assert "duration must be a positive number" in str(exc.value)
-        assert "launched year must be between 1900 and 2100" in str(exc.value)
+        assert "launch year must be between 1900 and 2100" in str(exc.value)
 
 
 class TestVideoDunderBehavior:

@@ -17,7 +17,7 @@ from src.core.video.domain.value_objects import (
     Description,
     Duration,
     Genres,
-    LaunchedAt,
+    LaunchYear,
     Rating,
     Title,
 )
@@ -30,7 +30,7 @@ def valid_data():
         title="Test Title",
         description="Test Description",
         duration=Duration(150),
-        launched_at=LaunchedAt(2023),
+        launch_year=LaunchYear(2023),
         rating=Rating(Rating.AGE_10),
         opened=True,
         categories=set(),
@@ -82,7 +82,7 @@ class TestCreateVideoWithoutMedia:
         input = CreateVideoWithoutMedia.Input(
             title=Title("The Matrix"),
             description=Description("A journey to the Matrix"),
-            launched_at=LaunchedAt(2019),
+            launch_year=LaunchYear(2019),
             opened=False,
             duration=Duration(136),
             rating=Rating(Rating.AGE_16),
@@ -120,7 +120,7 @@ class TestCreateVideoWithoutMedia:
         input = CreateVideoWithoutMedia.Input(
             title="",  # inválido
             description=Description("Any"),
-            launched_at=LaunchedAt(2020),
+            launch_year=LaunchYear(2020),
             opened=False,
             duration=Duration(100),
             rating=Rating(Rating.AGE_10),
@@ -159,7 +159,7 @@ class TestCreateVideoWithoutMedia:
         input = CreateVideoWithoutMedia.Input(
             title=Title("Valid"),
             description=Description("Valid"),
-            launched_at=LaunchedAt(2020),
+            launch_year=LaunchYear(2020),
             opened=True,
             duration=Duration(150),
             rating=Rating(Rating.AGE_16),

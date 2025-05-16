@@ -10,7 +10,7 @@ from src.core.video.domain.value_objects import (
     Duration,
     Genres,
     ImageMedia,
-    LaunchedAt,
+    LaunchYear,
     MediaStatus,
     Rating,
     Title,
@@ -22,7 +22,7 @@ class Video(Entity):
     title: Title
     description: Description
     duration: Duration
-    launched_at: LaunchedAt
+    launch_year: LaunchYear
     rating: Rating
     opened: bool
     published: bool = field(default=False, init=False)
@@ -50,7 +50,7 @@ class Video(Entity):
         self._validate_value_object("title", Title, ValueError)
         self._validate_value_object("description", Description, ValueError)
         self._validate_value_object("duration", Duration, (ValueError, TypeError))
-        self._validate_value_object("launched_at", LaunchedAt, (ValueError, TypeError))
+        self._validate_value_object("launch_year", LaunchYear, (ValueError, TypeError))
         self._validate_value_object("rating", Rating, ValueError)
 
         self._validate_primitive_type("opened", bool)
@@ -88,8 +88,8 @@ class Video(Entity):
     def update_duration(self, value: Duration):
         self._update_field("duration", value)
 
-    def update_launched_at(self, value: LaunchedAt):
-        self._update_field("launched_at", value)
+    def update_launch_year(self, value: LaunchYear):
+        self._update_field("launch_year", value)
 
     def update_rating(self, value: Rating):
         self._update_field("rating", value)
@@ -125,7 +125,7 @@ class Video(Entity):
         self._update_field("video", value)
 
     def __repr__(self):
-        return f"<Video {self.title} ({self.launched_at}) - {self.id}>"
+        return f"<Video {self.title} ({self.launch_year}) - {self.id}>"
 
     def __str__(self):
-        return f"{self.title} ({self.launched_at}) - {self.description}"
+        return f"{self.title} ({self.launch_year}) - {self.description}"
