@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from uuid import UUID
 
-from src.core._shared.list_entity import ListEntityInput, ListEntityOutput
+from src.core._shared.application.list_entity import ListEntityInput, ListEntityOutput
 from src.core.genre.domain.genre_repository import IGenreRepository
 
 

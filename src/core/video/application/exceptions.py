@@ -4,3 +4,7 @@ class InvalidVideo(Exception):
 
 class RelatedEntitiesNotFound(Exception):
     pass
+
+
+class VideoNotFound(Exception):
+    pass
