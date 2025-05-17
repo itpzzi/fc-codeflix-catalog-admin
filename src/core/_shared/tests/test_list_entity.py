@@ -2,7 +2,11 @@ from dataclasses import dataclass
 
 import pytest
 
-from src.core._shared.list_entity import ListEntityInput, ListEntityOutput, MetaData
+from src.core._shared.application.list_entity import (
+    ListEntityInput,
+    ListEntityOutput,
+    MetaData,
+)
 
 
 @dataclass
