@@ -6,45 +6,62 @@ from django.db import transaction
 from src.core.video.domain.video import Video
 from src.core.video.domain.video_repository import IVideoRepository
 from src.django_project.video_app.mapper import VideoModelMapper
-from src.django_project.video_app.models import Video as VideoModel
+from src.django_project.video_app.models import (
+    Video as VideoModel,
+    AudioVideoMedia as AudioVideoMediaModel,
+)
 
 
 class DjangoORMVideoRepository(IVideoRepository):
     def __init__(self, model: VideoModel = VideoModel):
         self.model = model
 
-    def save(self, entity: Video) -> None:
+    def save(self, video: Video) -> None:
         with transaction.atomic():
-            model = VideoModelMapper.to_model(entity)
+            model = VideoModelMapper.to_model(video)
             model.save()
-            model.categories.set(entity.categories)
-            model.genres.set(entity.genres)
-            model.cast_members.set(entity.cast_members)
+            model.categories.set(video.categories)
+            model.genres.set(video.genres)
+            model.cast_members.set(video.cast_members)
 
     def get_by_id(self, id: UUID) -> Video | None:
         try:
             model = self.model.objects.get(id=id)
             return VideoModelMapper.to_entity(model)
-        except ObjectDoesNotExist:
+        except self.model.DoesNotExist:
             return None
 
     def delete(self, id: UUID) -> None:
         self.model.objects.filter(id=id).delete()
 
     def update(self, video: Video) -> None:
-        with transaction.atomic():
-            model = self.model.objects.get(id=video.id)
-            model.title = video.title
-            model.description = video.description
-            model.duration = video.duration
-            model.launch_year = video.launch_year
-            model.rating = video.rating.name
-            model.opened = video.opened
-            model.published = video.published
-            model.save()
-            model.categories.set(video.categories)
-            model.genres.set(video.genres)
-            model.cast_members.set(video.cast_members)
+        try:
+            video_model = self.model.objects.get(id=video.id)
+        except self.model.DoesNotExist:
+            return None
+        else:
+            AudioVideoMediaModel.objects.filter(id=video.id).delete()
+
+            video_model.categories.set(video.categories)
+            video_model.genres.set(video.genres)
+            video_model.cast_members.set(video.cast_members)
+
+            video_model.video = AudioVideoMediaModel.objects.create(
+                name=video.video.name,
+                raw_location=video.video.raw_location,
+                encoded_location=video.video.encoded_location,
+                status=video.video.status,
+            )
+
+            video_model.title = video.title
+            video_model.description = video.description
+            video_model.duration = video.duration
+            video_model.launch_year = video.launch_year
+            video_model.rating = video.rating.name
+            video_model.opened = video.opened
+            video_model.published = video.published
+
+            video_model.save()
 
     def list(self) -> list[Video]:
         models = self.model.objects.all()

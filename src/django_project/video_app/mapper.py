@@ -1,7 +1,12 @@
-from src.core.video.domain.value_objects import Rating
+from src.core.video.domain.value_objects import MediaStatus, Rating
 from src.core.video.domain.video import Video
 from src.django_project.video_app.models import Video as VideoModel
 
+
+def parse_media_status_enum(value: str) -> MediaStatus:
+    if "." in value:
+        return MediaStatus[value.split(".")[-1]]
+    return MediaStatus[value]
 
 def parse_rating_enum(value: str) -> Rating:
     if "." in value:

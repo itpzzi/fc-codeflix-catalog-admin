@@ -63,7 +63,6 @@ class ImageMedia(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
 
-    checksum = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     raw_location = models.CharField(max_length=255)
 
@@ -75,7 +74,6 @@ class AudioVideoMedia(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
 
-    checksum = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     raw_location = models.CharField(max_length=255)
     encoded_location = models.CharField(max_length=255)

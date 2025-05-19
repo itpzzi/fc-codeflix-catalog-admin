@@ -2,11 +2,14 @@ import uuid
 
 import pytest
 
-from src.core.video.domain.value_objects import Rating
+from src.django_project.video_app.mapper import parse_media_status_enum
+from src.core.video.domain.value_objects import AudioVideoMedia, MediaStatus, Rating
 from src.core.video.domain.video import Video
 from src.django_project.video_app.models import Video as VideoModel
 from src.django_project.video_app.repository import DjangoORMVideoRepository
-
+from src.django_project.video_app.models import (
+    AudioVideoMedia as AudioVideoMediaModel,
+)
 
 @pytest.fixture
 def video_repository():
@@ -73,6 +76,10 @@ class TestDelete:
 @pytest.mark.django_db
 class TestUpdate:
     def test_can_update_video(self, video_repository, saved_video):
+        found = video_repository.get_by_id(saved_video.id)
+        assert found is not None
+        assert found.video is None
+
         updated = Video(
             id=saved_video.id,
             title="Updated Title",
@@ -84,14 +91,35 @@ class TestUpdate:
             categories=set(),
             genres=set(),
             cast_members=set(),
+            video=AudioVideoMedia(
+                name="Ghost",
+                raw_location="/tmp/ghost.mp4",
+                encoded_location="/tmp/ghost.mp4",
+                status=MediaStatus.PENDING,
+            ),
         )
         video_repository.update(updated)
         found = video_repository.get_by_id(saved_video.id)
 
         assert found is not None
         assert found.title == "Updated Title"
+        assert found.description == "Updated Description"
+        assert found.duration == 120 
         assert found.rating == Rating.AGE_16
-        assert found.duration == 120
+        assert found.launch_year == 2025
+        assert found.opened is False
+        assert found.published is False
+        assert found.categories == set()
+        assert found.genres == set()
+        assert found.cast_members == set()
+
+        video_model = VideoModel.objects.filter(id=saved_video.id).first()
+
+        assert video_model.video is not None
+        assert video_model.video.name == "Ghost"
+        assert video_model.video.raw_location == "/tmp/ghost.mp4"
+        assert video_model.video.encoded_location == "/tmp/ghost.mp4"
+        assert parse_media_status_enum(video_model.video.status) == MediaStatus.PENDING
 
     def test_update_nonexistent_video_does_nothing(self, video_repository):
         fake = Video(
@@ -104,10 +132,9 @@ class TestUpdate:
             opened=False,
             categories=set(),
             genres=set(),
-            cast_members=set(),
+            cast_members=set()
         )
-        with pytest.raises(VideoModel.DoesNotExist):
-            video_repository.update(fake)
+        video_repository.update(fake)
         assert video_repository.get_by_id(fake.id) is None
         assert len(video_repository.list()) == 0
 
