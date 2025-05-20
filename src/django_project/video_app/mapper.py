@@ -8,6 +8,7 @@ def parse_media_status_enum(value: str) -> MediaStatus:
         return MediaStatus[value.split(".")[-1]]
     return MediaStatus[value]
 
+
 def parse_rating_enum(value: str) -> Rating:
     if "." in value:
         return Rating[value.split(".")[-1]]

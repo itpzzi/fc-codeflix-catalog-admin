@@ -2,14 +2,12 @@ import uuid
 
 import pytest
 
-from src.django_project.video_app.mapper import parse_media_status_enum
 from src.core.video.domain.value_objects import AudioVideoMedia, MediaStatus, Rating
 from src.core.video.domain.video import Video
+from src.django_project.video_app.mapper import parse_media_status_enum
 from src.django_project.video_app.models import Video as VideoModel
 from src.django_project.video_app.repository import DjangoORMVideoRepository
-from src.django_project.video_app.models import (
-    AudioVideoMedia as AudioVideoMediaModel,
-)
+
 
 @pytest.fixture
 def video_repository():
@@ -104,7 +102,7 @@ class TestUpdate:
         assert found is not None
         assert found.title == "Updated Title"
         assert found.description == "Updated Description"
-        assert found.duration == 120 
+        assert found.duration == 120
         assert found.rating == Rating.AGE_16
         assert found.launch_year == 2025
         assert found.opened is False
@@ -132,7 +130,7 @@ class TestUpdate:
             opened=False,
             categories=set(),
             genres=set(),
-            cast_members=set()
+            cast_members=set(),
         )
         video_repository.update(fake)
         assert video_repository.get_by_id(fake.id) is None

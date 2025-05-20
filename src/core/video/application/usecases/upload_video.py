@@ -5,7 +5,10 @@ from uuid import UUID
 from src.core._shared.infra.storage.abstract_storage_service import (
     AbstractStorageService,
 )
-from src.core.video.application.exceptions import VideoNotFound
+from src.core.video.application.exceptions import (
+    CouldNotStoreMedia,
+    VideoNotFound,
+)
 from src.core.video.domain.value_objects import AudioVideoMedia, MediaStatus
 from src.core.video.domain.video import Video
 from src.core.video.domain.video_repository import IVideoRepository
@@ -64,11 +67,14 @@ class UploadVideo:
         )
 
     def _store_file(self, data: UploadVideoData) -> None:
-        self.storage.store(
-            file_name=data.full_path,
-            content_type=data.content_type,
-            content=data.content,
-        )
+        try:
+            self.storage.store(
+                file_name=data.full_path,
+                content_type=data.content_type,
+                content=data.content,
+            )
+        except Exception as error:
+            raise CouldNotStoreMedia(f"Failed to store video file: {str(error)}")
 
     def _persist_video_changes(self, video: Video, media: AudioVideoMedia) -> None:
         video.update_video(media)

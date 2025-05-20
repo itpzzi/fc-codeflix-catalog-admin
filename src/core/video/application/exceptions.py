@@ -8,3 +8,7 @@ class RelatedEntitiesNotFound(Exception):
 
 class VideoNotFound(Exception):
     pass
+
+
+class CouldNotStoreMedia(Exception):
+    pass

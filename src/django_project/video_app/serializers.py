@@ -42,3 +42,29 @@ class CreateVideoWithoutMediaDeserializer(serializers.Serializer):
 
 class CreateVideoWithoutMediaSerializer(serializers.Serializer):
     id = serializers.UUIDField()
+
+
+class UploadVideoDeserializer(serializers.Serializer):
+    video_id = serializers.UUIDField(required=True)
+    video_file = serializers.FileField(required=True)
+
+    def to_internal_value(self, data):
+        validated = super().to_internal_value(data)
+        file = validated["video_file"]
+        errors = {}
+
+        self._validate_content_type(file, errors)
+
+        if errors:
+            raise serializers.ValidationError(errors)
+
+        return {
+            "video_id": validated["video_id"],
+            "file_name": file.name,
+            "content_type": file.content_type,
+            "content": file.read(),
+        }
+
+    def _validate_content_type(self, file, errors):
+        if not file.content_type.startswith("video/"):
+            errors["content_type"] = f"Invalid content type: {file.content_type}"

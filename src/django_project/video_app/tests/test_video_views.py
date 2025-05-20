@@ -1,10 +1,45 @@
 import uuid
+from unittest.mock import Mock
 
 import pytest
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from src.django_project.video_app.models import Video as VideoModel
+from src.core.video.domain.value_objects import Rating
+from src.core.video.domain.video import Video
+from src.django_project.video_app.models import (
+    AudioVideoMedia as AudioVideoMediaModel,
+)
+from src.django_project.video_app.models import (
+    Video as VideoModel,
+)
+from src.django_project.video_app.repository import DjangoORMVideoRepository
+
+
+@pytest.fixture
+def valid_data():
+    return {
+        "id": uuid.uuid4(),
+        "title": "Test Video",
+        "description": "This is a test video.",
+        "duration": 60,
+        "launch_year": 2023,
+        "opened": False,
+        "rating": Rating.L,
+        "categories": set(),
+        "genres": set(),
+        "cast_members": set(),
+    }
+
+
+@pytest.fixture
+def valid_video(valid_data):
+    return Video(**valid_data)
+
+
+@pytest.fixture
+def video_repository():
+    return DjangoORMVideoRepository()
 
 
 @pytest.mark.django_db
@@ -86,3 +121,42 @@ class TestCreateVideoAPI:
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert VideoModel.objects.count() == 0
         assert response.data.get("error") == error_messages
+
+
+@pytest.mark.django_db
+class TestUploadVideoAPI:
+    def setup_test_data(self, repository, entity):
+        """Helper to setup test data"""
+        repository.save(entity)
+
+    def test_upload_video_api_with_valid_data(self, valid_video, video_repository):
+        self.setup_test_data(repository=video_repository, entity=valid_video)
+        dummy_content = b"fake content"
+        file = Mock(name="test.mp4", content=dummy_content, content_type="video/mp4")
+        url = f"/api/videos/{valid_video.id}/"
+        data = {"video_file": file}
+
+        response = APIClient().patch(url, data=data, format="multipart")
+
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        assert AudioVideoMediaModel.objects.count() == 1
+
+        video = VideoModel.objects.filter(id=valid_video.id).first()
+
+        assert video.video is not None
+        assert video.video.name is not None
+        assert video.video.raw_location is not None
+        assert video.video.encoded_location is not None
+        assert video.video.status is not None
+
+    def test_upload_rejects_invalid_data(self, valid_video, video_repository):
+        self.setup_test_data(repository=video_repository, entity=valid_video)
+        dummy_content = b""
+        file = Mock(name="test.mp3", content=dummy_content, content_type="audio/mp3")
+        url = f"/api/videos/{valid_video.id}/"
+        data = {"video_file": file}
+
+        response = APIClient().patch(url, data=data, format="multipart")
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert str(response.data["content_type"]) == "Invalid content type: audio/mp3"

@@ -1,14 +1,15 @@
 from uuid import UUID
 
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 
 from src.core.video.domain.video import Video
 from src.core.video.domain.video_repository import IVideoRepository
 from src.django_project.video_app.mapper import VideoModelMapper
 from src.django_project.video_app.models import (
-    Video as VideoModel,
     AudioVideoMedia as AudioVideoMediaModel,
+)
+from src.django_project.video_app.models import (
+    Video as VideoModel,
 )
 
 
