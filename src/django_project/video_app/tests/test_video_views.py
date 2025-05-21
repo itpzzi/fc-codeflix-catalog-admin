@@ -1,11 +1,18 @@
 import uuid
-from unittest.mock import Mock
+from unittest.mock import Mock, create_autospec
 
 import pytest
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from src.core.video.domain.value_objects import Rating
+from core._shared.events.message_bus import MessageBus
+from core.video.application.events.handlers import (
+    PublishAudioVideoMediaUpdatedEventHandler,
+)
+from core.video.application.events.integration_events import (
+    AudioVideoMediaUpdatedIntegrationEvent,
+)
+from src.core.video.domain.value_objects import MediaType, Rating
 from src.core.video.domain.video import Video
 from src.django_project.video_app.models import (
     AudioVideoMedia as AudioVideoMediaModel,
@@ -160,3 +167,28 @@ class TestUploadVideoAPI:
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert str(response.data["content_type"]) == "Invalid content type: audio/mp3"
+
+
+@pytest.fixture
+def message_bus():
+    return MessageBus()
+
+
+class TestMessageBusIntegration:
+    def test_register_handler(self, message_bus):
+        fake_id = uuid.uuid4()
+        media_type = MediaType.VIDEO
+        file_path = "videos/video.mp4"
+
+        event = AudioVideoMediaUpdatedIntegrationEvent(
+            resource_id=f"{fake_id}.{media_type}", file_path=file_path
+        )
+        handler = create_autospec(
+            PublishAudioVideoMediaUpdatedEventHandler, instance=True
+        )
+
+        message_bus.register_handler(event_type=type(event), handler=handler)
+        message_bus.handle([event])
+
+        assert len(message_bus.handlers) == 1
+        handler.handle.assert_called_once_with(event)

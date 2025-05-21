@@ -4,6 +4,13 @@ from rest_framework import status, viewsets
 from rest_framework.request import Request
 from rest_framework.response import Response
 
+from core._shared.infra.events.rabitmq_dispatcher import RabitMQDispatcher
+from core.video.application.events.handlers import (
+    PublishAudioVideoMediaUpdatedEventHandler,
+)
+from core.video.application.events.integration_events import (
+    AudioVideoMediaUpdatedIntegrationEvent,
+)
 from src.core._shared.events.message_bus import MessageBus
 from src.core._shared.infra.storage.local_storage import LocalStorage
 from src.core.video.application.exceptions import (
@@ -32,6 +39,13 @@ cast_member_repository = DjangoORMCastMemberRepository()
 video_repository = DjangoORMVideoRepository()
 local_storage = LocalStorage()
 message_bus = MessageBus()
+
+message_bus.register_handler(
+    event_type=type(AudioVideoMediaUpdatedIntegrationEvent),
+    handler=PublishAudioVideoMediaUpdatedEventHandler(
+        dispatcher=RabitMQDispatcher(),
+    ),
+)
 
 
 class VideoViewSet(viewsets.ViewSet):
