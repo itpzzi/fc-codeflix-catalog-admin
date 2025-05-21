@@ -4,8 +4,12 @@ from uuid import uuid4
 
 import pytest
 
+from src.core._shared.events.abstract_message_bus import AbstractMessageBus
 from src.core._shared.infra.storage.abstract_storage_service import (
     AbstractStorageService,
+)
+from src.core.video.application.events.integration_events import (
+    AudioVideoMediaUpdatedIntegrationEvent,
 )
 from src.core.video.application.exceptions import VideoNotFound
 from src.core.video.application.usecases.upload_video import UploadVideo
@@ -53,12 +57,19 @@ def mock_storage() -> AbstractStorageService:
     return storage_service
 
 
+@pytest.fixture
+def mock_message_bus() -> AbstractMessageBus:
+    message_bus = create_autospec(AbstractMessageBus)
+    return message_bus
+
+
 class TestUploadVideo:
     def test_should_upload_video(
         self,
         valid_video: Video,
         mock_storage: AbstractStorageService,
         mock_repository: IVideoRepository,
+        mock_message_bus: AbstractStorageService,
     ):
 
         mock_repository.get_by_id.return_value = valid_video
@@ -75,7 +86,11 @@ class TestUploadVideo:
             content=content,
         )
 
-        use_case = UploadVideo(repository=mock_repository, storage=mock_storage)
+        use_case = UploadVideo(
+            repository=mock_repository,
+            storage=mock_storage,
+            message_bus=mock_message_bus,
+        )
 
         use_case.execute(input)
 
@@ -83,6 +98,7 @@ class TestUploadVideo:
             file_name=full_path, content_type=content_type, content=content
         )
         assert mock_repository.update.called is True
+        mock_repository.update.assert_called_once_with(valid_video)
         assert valid_video.video is not None
 
         assert valid_video.video == AudioVideoMedia(
@@ -92,6 +108,13 @@ class TestUploadVideo:
             status=MediaStatus.PENDING,
             media_type=MediaType.VIDEO,
         )
+
+        integration_event = AudioVideoMediaUpdatedIntegrationEvent(
+            resource_id=f"{valid_video.id}.MediaType.VIDEO",
+            file_path=f"videos/{valid_video.id}/{file_name}",
+        )
+
+        mock_message_bus.handle.assert_called_once_with([integration_event])
 
     def test_should_raise_video_not_found_when_video_does_not_exist(
         self, mock_repository: IVideoRepository, mock_storage: AbstractStorageService

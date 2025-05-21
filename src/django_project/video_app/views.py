@@ -4,6 +4,7 @@ from rest_framework import status, viewsets
 from rest_framework.request import Request
 from rest_framework.response import Response
 
+from src.core._shared.events.message_bus import MessageBus
 from src.core._shared.infra.storage.local_storage import LocalStorage
 from src.core.video.application.exceptions import (
     CouldNotStoreMedia,
@@ -30,6 +31,7 @@ genre_repository = DjangoORMGenreRepository()
 cast_member_repository = DjangoORMCastMemberRepository()
 video_repository = DjangoORMVideoRepository()
 local_storage = LocalStorage()
+message_bus = MessageBus()
 
 
 class VideoViewSet(viewsets.ViewSet):
@@ -66,8 +68,7 @@ class VideoViewSet(viewsets.ViewSet):
 
         input = UploadVideo.Input(**deserializer.validated_data)
         use_case = UploadVideo(
-            repository=video_repository,
-            storage=local_storage,
+            repository=video_repository, storage=local_storage, message_bus=message_bus
         )
 
         try:

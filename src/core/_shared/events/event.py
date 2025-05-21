@@ -21,4 +21,12 @@ class Event(ABC):
         return f"<{self.__class__.__name__}>"
 
 
+class DomainEvent(Event):
+    pass
+
+
+class IntegrationEvent(Event):
+    pass
+
+
 TEvent = TypeVar("TEvent", bound=Event)

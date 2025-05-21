@@ -3,5 +3,5 @@ from src.core._shared.events.event import Event
 
 
 class MessageBus(AbstractMessageBus):
-    def handle(self, event_list: list[Event]) -> None:
+    def handle(self, events: list[Event]) -> None:
         pass

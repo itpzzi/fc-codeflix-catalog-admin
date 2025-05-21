@@ -23,3 +23,12 @@ class TestDispatch:
         dummy_entity.dispatch(dummy_event)
         assert len(dummy_entity.events) == 1
         message_bus.handle.assert_called_once_with([dummy_event])
+
+    def test_pull_events(self):
+        message_bus = create_autospec(AbstractMessageBus)
+        dummy_event = DummyEvent()
+        dummy_entity = DummyEntity(message_bus=message_bus)
+        dummy_entity.dispatch(dummy_event)
+        assert len(dummy_entity.events) == 1
+        assert dummy_entity.pull_events() == [dummy_event]
+        assert dummy_entity.events == []
