@@ -5,12 +5,14 @@ from unittest.mock import Mock, patch
 import pytest
 
 from src.core._shared.domain.entity import Entity
+from src.core.video.domain.events.domain_events import AudioVideoMediaUpdatedEvent
 from src.core.video.domain.value_objects import (
     AudioVideoMedia,
     Duration,
     ImageMedia,
     LaunchYear,
     MediaStatus,
+    MediaType,
     Rating,
 )
 from src.core.video.domain.video import Video
@@ -122,6 +124,7 @@ class TestVideoUpdate:
                 raw_location=None,
                 encoded_location=None,
                 status=None,
+                media_type=None,
             )
 
         method = getattr(valid_video, update_method)
@@ -129,6 +132,25 @@ class TestVideoUpdate:
 
         assert getattr(valid_video, attr) is dummy_instance
         mock_validate.assert_called_once()
+
+    def test_video_should_update_video_and_dispatch_update_event(self, valid_video):
+        media = AudioVideoMedia(
+            name="test",
+            raw_location="/tmp/test.mp4",
+            encoded_location="/tmp/test.mp4",
+            status=MediaStatus.PENDING,
+            media_type=MediaType.VIDEO,
+        )
+        valid_video.update_video(media)
+        assert valid_video.video == media
+        assert len(valid_video.events) == 1
+        assert valid_video.events == [
+            AudioVideoMediaUpdatedEvent(
+                aggregate_id=valid_video.id,
+                full_path="/tmp/test.mp4",
+                media_type=MediaType.VIDEO,
+            )
+        ]
 
 
 class TestVideoPublishing:

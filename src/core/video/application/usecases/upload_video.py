@@ -9,7 +9,7 @@ from src.core.video.application.exceptions import (
     CouldNotStoreMedia,
     VideoNotFound,
 )
-from src.core.video.domain.value_objects import AudioVideoMedia, MediaStatus
+from src.core.video.domain.value_objects import AudioVideoMedia, MediaStatus, MediaType
 from src.core.video.domain.video import Video
 from src.core.video.domain.video_repository import IVideoRepository
 
@@ -64,6 +64,7 @@ class UploadVideo:
             raw_location=str(data.full_path),
             encoded_location="",
             status=MediaStatus.PENDING,
+            media_type=MediaType.VIDEO,
         )
 
     def _store_file(self, data: UploadVideoData) -> None:

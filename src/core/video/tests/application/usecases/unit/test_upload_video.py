@@ -14,6 +14,7 @@ from src.core.video.domain.value_objects import (
     Duration,
     LaunchYear,
     MediaStatus,
+    MediaType,
     Rating,
 )
 from src.core.video.domain.video import Video
@@ -89,6 +90,7 @@ class TestUploadVideo:
             raw_location=str(full_path),
             encoded_location="",
             status=MediaStatus.PENDING,
+            media_type=MediaType.VIDEO,
         )
 
     def test_should_raise_video_not_found_when_video_does_not_exist(

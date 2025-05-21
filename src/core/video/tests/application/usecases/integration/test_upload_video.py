@@ -9,6 +9,7 @@ from src.core.video.domain.value_objects import (
     Duration,
     LaunchYear,
     MediaStatus,
+    MediaType,
     Rating,
 )
 from src.core.video.domain.video import Video
@@ -67,6 +68,7 @@ def test_upload_video_integration(valid_data, local_storage, repository, tmp_pat
         raw_location=str(raw_location),
         encoded_location="",
         status=MediaStatus.PENDING,
+        media_type=MediaType.VIDEO,
     )
 
     expected_path = tmp_path / raw_location

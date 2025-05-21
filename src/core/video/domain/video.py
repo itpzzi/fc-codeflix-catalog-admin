@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from uuid import UUID
 
 from src.core._shared.domain.entity import Entity
+from src.core.video.domain.events.domain_events import AudioVideoMediaUpdatedEvent
 from src.core.video.domain.value_objects import (
     AudioVideoMedia,
     CastMembers,
@@ -12,6 +13,7 @@ from src.core.video.domain.value_objects import (
     ImageMedia,
     LaunchYear,
     MediaStatus,
+    MediaType,
     Rating,
     Title,
 )
@@ -128,6 +130,13 @@ class Video(Entity):
 
     def update_video(self, value: AudioVideoMedia | None):
         self._update_field("video", value)
+        self.dispatch(
+            AudioVideoMediaUpdatedEvent(
+                aggregate_id=self.id,
+                full_path=value.raw_location,
+                media_type=MediaType.VIDEO,
+            )
+        )
 
     def __repr__(self):
         return f"<Video {self.title} ({self.launch_year}) - {self.id}>"

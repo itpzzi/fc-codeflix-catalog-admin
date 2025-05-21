@@ -89,6 +89,11 @@ class MediaStatus(Enum):
     ERROR = auto()
 
 
+class MediaType(Enum):
+    VIDEO = "VIDEO"
+    TRAILER = "TRAILER"
+
+
 @dataclass(frozen=True)
 class ImageMedia:
     name: Name
@@ -101,3 +106,4 @@ class AudioVideoMedia:
     raw_location: Location
     encoded_location: Location
     status: MediaStatus
+    media_type: MediaType

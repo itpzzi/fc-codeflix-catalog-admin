@@ -2,7 +2,12 @@ import uuid
 
 import pytest
 
-from src.core.video.domain.value_objects import AudioVideoMedia, MediaStatus, Rating
+from src.core.video.domain.value_objects import (
+    AudioVideoMedia,
+    MediaStatus,
+    MediaType,
+    Rating,
+)
 from src.core.video.domain.video import Video
 from src.django_project.video_app.mapper import parse_media_status_enum
 from src.django_project.video_app.models import Video as VideoModel
@@ -94,6 +99,7 @@ class TestUpdate:
                 raw_location="/tmp/ghost.mp4",
                 encoded_location="/tmp/ghost.mp4",
                 status=MediaStatus.PENDING,
+                media_type=MediaType.VIDEO,
             ),
         )
         video_repository.update(updated)
