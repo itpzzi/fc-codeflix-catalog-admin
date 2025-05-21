@@ -5,11 +5,11 @@ import pytest
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from core._shared.events.message_bus import MessageBus
-from core.video.application.events.handlers import (
+from src.core._shared.events.message_bus import MessageBus
+from src.core.video.application.events.handlers import (
     PublishAudioVideoMediaUpdatedEventHandler,
 )
-from core.video.application.events.integration_events import (
+from src.core.video.application.events.integration_events import (
     AudioVideoMediaUpdatedIntegrationEvent,
 )
 from src.core.video.domain.value_objects import MediaType, Rating

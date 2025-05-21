@@ -95,6 +95,7 @@ class UploadVideo:
     def _pull_domain_events_and_convert_to_integration_events(self, video: Video):
         events = video.pull_events()
         integration_events = []
+
         for event in events:
             if isinstance(event, AudioVideoMediaUpdatedEvent):
                 integration_events.append(

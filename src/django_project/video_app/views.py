@@ -4,15 +4,15 @@ from rest_framework import status, viewsets
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from core._shared.infra.events.rabitmq_dispatcher import RabitMQDispatcher
-from core.video.application.events.handlers import (
+from src.core._shared.events.message_bus import MessageBus
+from src.core._shared.infra.events.rabbitmq_dispatcher import RabbitMQDispatcher
+from src.core._shared.infra.storage.local_storage import LocalStorage
+from src.core.video.application.events.handlers import (
     PublishAudioVideoMediaUpdatedEventHandler,
 )
-from core.video.application.events.integration_events import (
+from src.core.video.application.events.integration_events import (
     AudioVideoMediaUpdatedIntegrationEvent,
 )
-from src.core._shared.events.message_bus import MessageBus
-from src.core._shared.infra.storage.local_storage import LocalStorage
 from src.core.video.application.exceptions import (
     CouldNotStoreMedia,
     InvalidVideo,
@@ -41,9 +41,9 @@ local_storage = LocalStorage()
 message_bus = MessageBus()
 
 message_bus.register_handler(
-    event_type=type(AudioVideoMediaUpdatedIntegrationEvent),
+    event_type=AudioVideoMediaUpdatedIntegrationEvent,
     handler=PublishAudioVideoMediaUpdatedEventHandler(
-        dispatcher=RabitMQDispatcher(),
+        dispatcher=RabbitMQDispatcher(),
     ),
 )
 
@@ -97,15 +97,6 @@ class VideoViewSet(viewsets.ViewSet):
             return Response(status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-        # desserializar video_id, file_name, content, content_type
-        # validar dados
-
-        # passar dados válidos para input
-        # tentar atualizar, pode lançar VideoNotFound, retorna 404
-        # executar use case com output
-
-        # retornar output
 
     def destroy(self, request: Request, pk: str) -> Response:
         pass
