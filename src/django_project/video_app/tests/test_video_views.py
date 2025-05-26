@@ -181,7 +181,7 @@ class TestMessageBusIntegration:
         file_path = "videos/video.mp4"
 
         event = AudioVideoMediaUpdatedIntegrationEvent(
-            resource_id=f"{fake_id}.{media_type}", file_path=file_path
+            resource_id=f"{fake_id}.{media_type.name}", file_path=file_path
         )
         handler = create_autospec(
             PublishAudioVideoMediaUpdatedEventHandler, instance=True

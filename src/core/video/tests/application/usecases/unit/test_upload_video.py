@@ -110,7 +110,7 @@ class TestUploadVideo:
         )
 
         integration_event = AudioVideoMediaUpdatedIntegrationEvent(
-            resource_id=f"{valid_video.id}.MediaType.VIDEO",
+            resource_id=f"{valid_video.id}.VIDEO",
             file_path=f"videos/{valid_video.id}/{file_name}",
         )
 

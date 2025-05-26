@@ -52,6 +52,7 @@ class DjangoORMVideoRepository(IVideoRepository):
                 raw_location=video.video.raw_location,
                 encoded_location=video.video.encoded_location,
                 status=video.video.status,
+                media_type=video.video.media_type,
             )
 
             video_model.title = video.title

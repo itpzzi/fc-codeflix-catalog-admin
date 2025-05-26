@@ -100,7 +100,7 @@ class UploadVideo:
             if isinstance(event, AudioVideoMediaUpdatedEvent):
                 integration_events.append(
                     AudioVideoMediaUpdatedIntegrationEvent(
-                        resource_id=f"{event.aggregate_id}.{event.media_type}",
+                        resource_id=f"{event.aggregate_id}.{event.media_type.name}",
                         file_path=event.full_path,
                     )
                 )

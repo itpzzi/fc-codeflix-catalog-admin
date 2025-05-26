@@ -2,7 +2,7 @@ from uuid import uuid4
 
 from django.db import models
 
-from src.core.video.domain.value_objects import MediaStatus, Rating
+from src.core.video.domain.value_objects import MediaStatus, MediaType, Rating
 
 
 class Video(models.Model):
@@ -71,6 +71,7 @@ class AudioVideoMedia(models.Model):
     app_label = "video_app"
 
     STATUS_CHOICES = [(status.name, status.name) for status in MediaStatus]
+    TYPES_CHOICES = [(type.name, type.name) for type in MediaType]
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
 
@@ -78,3 +79,4 @@ class AudioVideoMedia(models.Model):
     raw_location = models.CharField(max_length=255)
     encoded_location = models.CharField(max_length=255)
     status = models.CharField(max_length=255, choices=STATUS_CHOICES)
+    media_type = models.CharField(max_length=255, choices=TYPES_CHOICES)

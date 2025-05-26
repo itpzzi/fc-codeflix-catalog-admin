@@ -9,7 +9,10 @@ from src.core.video.domain.value_objects import (
     Rating,
 )
 from src.core.video.domain.video import Video
-from src.django_project.video_app.mapper import parse_media_status_enum
+from src.django_project.video_app.mapper import (
+    parse_media_status_enum,
+    parse_media_type_enum,
+)
 from src.django_project.video_app.models import Video as VideoModel
 from src.django_project.video_app.repository import DjangoORMVideoRepository
 
@@ -124,6 +127,7 @@ class TestUpdate:
         assert video_model.video.raw_location == "/tmp/ghost.mp4"
         assert video_model.video.encoded_location == "/tmp/ghost.mp4"
         assert parse_media_status_enum(video_model.video.status) == MediaStatus.PENDING
+        assert parse_media_type_enum(video_model.video.media_type) == MediaType.VIDEO
 
     def test_update_nonexistent_video_does_nothing(self, video_repository):
         fake = Video(
