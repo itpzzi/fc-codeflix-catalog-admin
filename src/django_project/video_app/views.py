@@ -26,7 +26,7 @@ from src.core.video.application.usecases.upload_video import UploadVideo
 from src.django_project.cast_member_app.repository import DjangoORMCastMemberRepository
 from src.django_project.category_app.repository import DjangoORMCategoryRepository
 from src.django_project.genre_app.repository import DjangoORMGenreRepository
-from src.django_project.video_app.repository import DjangoORMVideoRepository
+from src.django_project.video_app.repository import video_repository
 from src.django_project.video_app.serializers import (
     CreateVideoWithoutMediaDeserializer,
     CreateVideoWithoutMediaSerializer,
@@ -36,7 +36,6 @@ from src.django_project.video_app.serializers import (
 category_repository = DjangoORMCategoryRepository()
 genre_repository = DjangoORMGenreRepository()
 cast_member_repository = DjangoORMCastMemberRepository()
-video_repository = DjangoORMVideoRepository()
 local_storage = LocalStorage()
 message_bus = MessageBus()
 

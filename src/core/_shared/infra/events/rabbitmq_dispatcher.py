@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 
 import pika
 
@@ -8,9 +9,12 @@ from src.core._shared.events.event_dispatcher import EventDispatcher
 
 logger = logging.getLogger(__name__)
 
+RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST", "rabbitmq")
+RABBITMQ_PORT = os.environ.get("RABBITMQ_PORT", "5672")
+
 
 class RabbitMQDispatcher(EventDispatcher):
-    def __init__(self, host="localhost", queue_name="videos.new"):
+    def __init__(self, host=RABBITMQ_HOST, queue_name="videos.new"):
         self.host = host
         self.queue_name = queue_name
         self.connection = None
@@ -19,7 +23,9 @@ class RabbitMQDispatcher(EventDispatcher):
 
     def dispatch(self, event: IntegrationEvent):
         self._open_connection_if_needed()
-        logger.info(f"Dispatching {event.__class__.__name__} to RabbitMQ")
+        logger.info(
+            f"Dispatching {event.__class__.__name__} to RabbitMQ {RABBITMQ_HOST}:{RABBITMQ_PORT}"
+        )
         payload = self._serialize_event(event)
         self._publish(payload)
         logger.info(f"Dispatched event payload: {payload}")

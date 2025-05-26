@@ -68,3 +68,6 @@ class DjangoORMVideoRepository(IVideoRepository):
     def list(self) -> list[Video]:
         models = self.model.objects.all()
         return [VideoModelMapper.to_entity(model) for model in models]
+
+
+video_repository = DjangoORMVideoRepository()
