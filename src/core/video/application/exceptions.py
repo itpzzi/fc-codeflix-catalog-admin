@@ -12,3 +12,11 @@ class VideoNotFound(Exception):
 
 class CouldNotStoreMedia(Exception):
     pass
+
+
+class MediaNotFound(Exception):
+    pass
+
+
+class UnsupportedMediaType(Exception):
+    pass

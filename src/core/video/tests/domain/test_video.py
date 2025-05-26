@@ -153,6 +153,46 @@ class TestVideoUpdate:
         ]
 
 
+class TestVideoProcess:
+    def test_process_video_completed_should_update_location_and_publish(
+        self, valid_video
+    ):
+        fake_path = "/remote-path/test_encoded.mp4"
+        media = AudioVideoMedia(
+            name="test",
+            raw_location="/tmp/test.mp4",
+            encoded_location="",
+            status=MediaStatus.PENDING,
+            media_type=MediaType.VIDEO,
+        )
+        valid_video.update_video(media)
+
+        valid_video.process(status=MediaStatus.COMPLETED, encoded_location=fake_path)
+
+        assert valid_video.video.status == MediaStatus.COMPLETED
+        assert valid_video.video.encoded_location == fake_path
+        assert valid_video.published is True
+
+    def test_process_failed_video_should_update_status_not_change_path_and_not_publish(
+        self, valid_video
+    ):
+        fake_path = "/remote-path/test_encoded.mp4"
+        media = AudioVideoMedia(
+            name="test",
+            raw_location="/tmp/test.mp4",
+            encoded_location="",
+            status=MediaStatus.PENDING,
+            media_type=MediaType.VIDEO,
+        )
+        valid_video.update_video(media)
+
+        valid_video.process(status=MediaStatus.ERROR, encoded_location=fake_path)
+
+        assert valid_video.video.status == MediaStatus.ERROR
+        assert valid_video.video.encoded_location == ""
+        assert valid_video.published is False
+
+
 class TestVideoPublishing:
     def test_video_should_require_a_video_to_be_published(self, valid_video):
         video_without_media = valid_video

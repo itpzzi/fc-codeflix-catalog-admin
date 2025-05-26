@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from decimal import Decimal
 from enum import Enum, auto, unique
 from typing import Union
@@ -107,3 +107,11 @@ class AudioVideoMedia:
     encoded_location: Location
     status: MediaStatus
     media_type: MediaType
+
+    def complete(self, encoded_location: str):
+        return replace(
+            self, encoded_location=encoded_location, status=MediaStatus.COMPLETED
+        )
+
+    def fail(self):
+        return replace(self, status=MediaStatus.ERROR)

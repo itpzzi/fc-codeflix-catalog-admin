@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from uuid import UUID
 
+from src.core._shared.common_types import Location
 from src.core._shared.domain.entity import Entity
 from src.core.video.domain.events.domain_events import AudioVideoMediaUpdatedEvent
 from src.core.video.domain.value_objects import (
@@ -38,6 +39,15 @@ class Video(Entity):
     thumbnail_half: ImageMedia | None = None
     trailer: AudioVideoMedia | None = None
     video: AudioVideoMedia | None = None
+
+    def process(self, status: MediaStatus, encoded_location: Location):
+        if status == MediaStatus.COMPLETED:
+            self.video = self.video.complete(encoded_location=encoded_location)
+            self.publish()
+        else:
+            self.video = self.video.fail()
+
+        self.validate()
 
     def publish(self):
         if not isinstance(self.video, AudioVideoMedia):
