@@ -7,9 +7,22 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-
     healthcheck:
       test: [ "CMD", "rabbitmq-diagnostics", "check_port_connectivity" ]
       interval: 10s
       timeout: 5s
       retries: 5
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.2.4
+    command: start-dev
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+
+volumes:
+  keycloak_data:
