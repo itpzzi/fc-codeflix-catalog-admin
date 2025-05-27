@@ -26,6 +26,7 @@ from src.core.video.application.usecases.upload_video import UploadVideo
 from src.django_project.cast_member_app.repository import DjangoORMCastMemberRepository
 from src.django_project.category_app.repository import DjangoORMCategoryRepository
 from src.django_project.genre_app.repository import DjangoORMGenreRepository
+from src.django_project.permissions import IsAdmin, IsAuthenticated
 from src.django_project.video_app.repository import video_repository
 from src.django_project.video_app.serializers import (
     CreateVideoWithoutMediaDeserializer,
@@ -48,6 +49,8 @@ message_bus.register_handler(
 
 
 class VideoViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated | IsAdmin]
+
     def create(self, request: Request) -> Response:
         deserializer = CreateVideoWithoutMediaDeserializer(data=request.data)
         deserializer.is_valid(raise_exception=True)

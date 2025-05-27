@@ -19,7 +19,7 @@ def valid_payload():
 def jwt_service():
     return JWTService()
 
-
+@pytest.mark.skip_fake_auth
 class TestJWTService:
     def test_service_start_with_private_and_public_keys(self, jwt_service):
         assert JWT_PRIVATE_KEY == jwt_service.private_key

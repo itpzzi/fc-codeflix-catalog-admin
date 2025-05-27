@@ -29,9 +29,11 @@ from src.django_project.cast_member_app.serializers import (
     UpdateCastMemberDeserializer,
 )
 from src.django_project.genre_app.serializers import ListEntityInputDeserializer
+from src.django_project.permissions import IsAdmin, IsAuthenticated
 
 
 class CastMemberViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated | IsAdmin]
 
     def create(self, request: Request) -> Response:
         deserializer = CreateCastMemberDeserializer(data=request.data)

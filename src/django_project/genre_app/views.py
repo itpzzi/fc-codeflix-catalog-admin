@@ -38,9 +38,12 @@ from src.django_project.genre_app.serializers import (
     ListGenreSerializer,
     UpdateGenreDeserializer,
 )
+from src.django_project.permissions import IsAdmin, IsAuthenticated
 
 
 class GenreViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated | IsAdmin]
+
     def list(self, request: Request) -> Response:
         deserializer = ListEntityInputDeserializer(data=request.query_params)
         deserializer.is_valid(raise_exception=True)
