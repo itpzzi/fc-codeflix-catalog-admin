@@ -204,7 +204,7 @@ class TestE2E2ETestUserCanProcessAndPublishCompletedVideo:
         }
         rabbitmq_manager.publish_message(queue_name, encoded_message)
 
-    def _wait_for_video_processing_completion(self, video_id, timeout_seconds=10):
+    def _wait_for_video_processing_completion(self, video_id, timeout_seconds=3):
         self._log(f"🚀 Iniciando consumer para processamento do vídeo {video_id}...")
         call_command("startconsumer", "--once")
         self._log(

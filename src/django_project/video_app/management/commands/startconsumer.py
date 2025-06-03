@@ -5,6 +5,7 @@ import time
 
 import pika
 from django.core.management.base import BaseCommand
+from dotenv import load_dotenv
 from pika.exceptions import (
     AMQPConnectionError,
     ChannelClosedByBroker,
@@ -25,6 +26,7 @@ from src.core.video.infra.process_audio_video_media_deserializer import (
 from src.django_project.video_app.repository import video_repository
 
 logger = logging.getLogger(__name__)
+load_dotenv()
 
 QUEUE_NAME = "videos.converted"
 RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST", "rabbitmq")
@@ -50,6 +52,7 @@ class Command(BaseCommand):
                     self._process_single_message(channel, connection)
                     return
                 else:
+                    print("Waiting for messages...")
                     self._start_continuous_consuming(channel)
 
             except (AMQPConnectionError, ChannelClosedByBroker) as e:
@@ -73,6 +76,7 @@ class Command(BaseCommand):
     def _setup_channel(self, connection):
         """Setup and configure the RabbitMQ channel"""
         channel = connection.channel()
+        self.stdout.write(f"Declaring a queue with name '{QUEUE_NAME}'...")
         channel.queue_declare(queue=QUEUE_NAME, durable=True)
         return channel
 

@@ -64,12 +64,21 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-3. Inicie o consumer responsável pelo processamento das mensagens:
+3. Não é necessário iniciar o consumidor, ele será executado automaticamente no teste end-to-end, mais detalhes em "O que o teste faz".
 
 ```bash
 python manage.py startconsumer
 ```
 
+4. Aguarde por:
+```
+Connecting to RabbitMQ at localhost:5672...
+Declaring a queue with name 'videos.converted'...
+Waiting for messages...
+```
+
+Erros conhecidos:
+- inequivalent arg 'durable' for queue 'videos.converted': adicionar 'durable' em todos os parâmetros de declaração da fila é necessário para que a fila seja criada como persistente.
 ---
 
 ## ✅ Testes End-to-End
